@@ -1,0 +1,316 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#F8F9FA"
+    tools:context=".DoctordashboardActivity">
+
+    <!-- Scrollable content area -->
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:scrollbars="none"
+        android:overScrollMode="never"
+        app:layout_constraintBottom_toTopOf="@+id/bottom_navigation"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:clipToPadding="false"
+            android:orientation="vertical"
+            android:paddingBottom="24dp">
+
+            <!-- Header: DOCTOR -->
+            <LinearLayout
+                android:id="@+id/header"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:paddingHorizontal="24dp"
+                android:paddingTop="32dp"
+                android:paddingBottom="16dp">
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="DOCTOR"
+                        android:textColor="@color/text_dark"
+                        android:textSize="22sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Dr. Sarah Wilson"
+                        android:textColor="@color/text_secondary"
+                        android:textSize="14sp" />
+                </LinearLayout>
+
+                <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/card_notifications"
+                    android:layout_width="44dp"
+                    android:layout_height="44dp"
+                    app:cardCornerRadius="22dp"
+                    app:cardElevation="4dp"
+                    app:cardBackgroundColor="@color/white"
+                    app:strokeWidth="0dp"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:foreground="?attr/selectableItemBackground">
+
+                    <ImageView
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:layout_gravity="center"
+                        android:src="@drawable/ic_notifications"
+                        app:tint="@color/text_dark" />
+                    
+                    <View
+                        android:layout_width="8dp"
+                        android:layout_height="8dp"
+                        android:layout_gravity="top|end"
+                        android:layout_marginTop="10dp"
+                        android:layout_marginEnd="10dp"
+                        android:background="@drawable/chip_red_rounded" />
+                </com.google.android.material.card.MaterialCardView>
+            </LinearLayout>
+
+            <!-- Summary Cards -->
+            <LinearLayout
+                android:id="@+id/summaryLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:paddingHorizontal="12dp"
+                android:paddingVertical="8dp">
+
+                <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/card_total_patients"
+                    style="@style/DashboardSummaryCard"
+                    android:layout_weight="1">
+                    <LinearLayout style="@style/DashboardSummaryContent">
+                        <TextView style="@style/DashboardSummaryNumber" android:text="24" />
+                        <TextView style="@style/DashboardSummaryLabel" android:text="Total Patients" />
+                    </LinearLayout>
+                </com.google.android.material.card.MaterialCardView>
+
+                <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/card_critical_patients"
+                    style="@style/DashboardSummaryCard"
+                    android:layout_weight="1">
+                    <LinearLayout style="@style/DashboardSummaryContent">
+                        <TextView
+                            style="@style/DashboardSummaryNumber"
+                            android:text="4"
+                            android:textColor="@color/red_critical" />
+                        <TextView
+                            style="@style/DashboardSummaryLabel"
+                            android:text="Critical" />
+                    </LinearLayout>
+                </com.google.android.material.card.MaterialCardView>
+
+                <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/card_warning_patients"
+                    style="@style/DashboardSummaryCard"
+                    android:layout_weight="1">
+                    <LinearLayout style="@style/DashboardSummaryContent">
+                        <TextView
+                            style="@style/DashboardSummaryNumber"
+                            android:text="2"
+                            android:textColor="@color/orange_warning" />
+                        <TextView
+                            style="@style/DashboardSummaryLabel"
+                            android:text="Warning" />
+                    </LinearLayout>
+                </com.google.android.material.card.MaterialCardView>
+            </LinearLayout>
+
+            <!-- Needs Attention -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:paddingHorizontal="24dp"
+                android:paddingTop="24dp">
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Needs Attention"
+                    android:textColor="@color/text_dark"
+                    android:textSize="18sp"
+                    android:textStyle="bold" />
+                <TextView
+                    android:id="@+id/tv_view_all"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="View All"
+                    android:textColor="@color/primary_teal"
+                    android:textSize="14sp"
+                    android:textStyle="bold"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:background="?attr/selectableItemBackground" />
+            </LinearLayout>
+
+            <!-- Patient Card 1 -->
+            <com.google.android.material.card.MaterialCardView 
+                android:id="@+id/home_patient_card_1"
+                style="@style/PatientCard">
+                <LinearLayout style="@style/PatientListItem">
+                    <FrameLayout
+                        android:layout_width="48dp"
+                        android:layout_height="48dp">
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:background="@drawable/chip_red_rounded"
+                            android:alpha="0.1" />
+                        <ImageView
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"
+                            android:layout_gravity="center"
+                            android:src="@drawable/ic_notifications"
+                            app:tint="@color/red_critical" />
+                    </FrameLayout>
+                    <LinearLayout style="@style/PatientCardDetails" android:layout_marginStart="16dp">
+                        <TextView style="@style/PatientCardName" android:text="Robert Chen" />
+                        <TextView style="@style/PatientCardInfo" android:text="ID: #8832 • Room 302" />
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="8dp">
+                            <TextView style="@style/PatientChip.Red" android:text="SpO2 86%" />
+                            <TextView style="@style/PatientChip.Grey" android:text="pH 7.32" />
+                        </LinearLayout>
+                    </LinearLayout>
+                    <ImageView
+                        style="@style/PatientCardChevron"
+                        android:src="@drawable/ic_chevron_right" />
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- Patient Card 2 -->
+            <com.google.android.material.card.MaterialCardView 
+                android:id="@+id/home_patient_card_2"
+                style="@style/PatientCard">
+                <LinearLayout style="@style/PatientListItem">
+                    <FrameLayout
+                        android:layout_width="48dp"
+                        android:layout_height="48dp">
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:background="@drawable/chip_orange_rounded"
+                            android:alpha="0.1" />
+                        <ImageView
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"
+                            android:layout_gravity="center"
+                            android:src="@drawable/ic_warning"
+                            app:tint="@color/orange_warning" />
+                    </FrameLayout>
+                    <LinearLayout style="@style/PatientCardDetails" android:layout_marginStart="16dp">
+                        <TextView style="@style/PatientCardName" android:text="Maria Garcia" />
+                        <TextView style="@style/PatientCardInfo" android:text="ID: #9921 • Room 204" />
+                        <TextView style="@style/PatientChip.Yellow" android:text="Trend Worsening" android:layout_marginTop="8dp"/>
+                    </LinearLayout>
+                    <ImageView
+                        style="@style/PatientCardChevron"
+                        android:src="@drawable/ic_chevron_right" />
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- Quick Actions -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingHorizontal="24dp"
+                android:paddingTop="32dp"
+                android:paddingBottom="12dp"
+                android:text="Quick Actions"
+                android:textColor="@color/text_dark"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:paddingHorizontal="16dp">
+
+                <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/card_patient_list"
+                    style="@style/QuickActionCard"
+                    android:layout_weight="1">
+                    <LinearLayout style="@style/QuickActionContent">
+                        <FrameLayout
+                            android:layout_width="56dp"
+                            android:layout_height="56dp">
+                            <View
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:background="@drawable/circle_bg_light_teal"
+                                android:alpha="0.5" />
+                            <ImageView
+                                android:layout_width="28dp"
+                                android:layout_height="28dp"
+                                android:layout_gravity="center"
+                                android:src="@drawable/ic_patients"
+                                app:tint="@color/qa_patient_icon" />
+                        </FrameLayout>
+                        <TextView style="@style/QuickActionLabel" android:text="Patient List" android:layout_marginTop="16dp"/>
+                    </LinearLayout>
+                </com.google.android.material.card.MaterialCardView>
+
+                <com.google.android.material.card.MaterialCardView
+                    style="@style/QuickActionCard"
+                    android:layout_weight="1">
+                    <LinearLayout style="@style/QuickActionContent">
+                        <FrameLayout
+                            android:layout_width="56dp"
+                            android:layout_height="56dp">
+                            <View
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:background="@drawable/rounded_bg_light_blue"
+                                android:alpha="0.5" />
+                            <ImageView
+                                android:layout_width="28dp"
+                                android:layout_height="28dp"
+                                android:layout_gravity="center"
+                                android:src="@drawable/heartbeat"
+                                app:tint="@color/qa_ai_icon" />
+                        </FrameLayout>
+                        <TextView style="@style/QuickActionLabel" android:text="AI Analysis" android:layout_marginTop="16dp"/>
+                    </LinearLayout>
+                </com.google.android.material.card.MaterialCardView>
+            </LinearLayout>
+
+        </LinearLayout>
+    </ScrollView>
+
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/bottom_navigation"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white"
+        app:itemIconTint="@color/nav_item_color"
+        app:itemTextColor="@color/nav_item_color"
+        app:labelVisibilityMode="labeled"
+        app:elevation="8dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:menu="@menu/bottom_nav_menu" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
