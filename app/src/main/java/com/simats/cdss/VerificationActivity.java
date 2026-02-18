@@ -12,11 +12,14 @@ import androidx.appcompat.app.AppCompatActivity;
 public class VerificationActivity extends AppCompatActivity {
 
     private EditText otp1, otp2, otp3, otp4, otp5, otp6;
+    private String userRole;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_verification);
+
+        userRole = getIntent().getStringExtra("role");
 
         otp1 = findViewById(R.id.otp_1);
         otp2 = findViewById(R.id.otp_2);
@@ -34,7 +37,9 @@ public class VerificationActivity extends AppCompatActivity {
         });
 
         findViewById(R.id.btn_verify).setOnClickListener(v -> {
-            startActivity(new Intent(VerificationActivity.this, TermsActivity.class));
+            Intent intent = new Intent(VerificationActivity.this, TermsActivity.class);
+            intent.putExtra("role", userRole);
+            startActivity(intent);
         });
 
         setupOtpInputs();

@@ -8,10 +8,14 @@ import androidx.appcompat.app.AppCompatActivity;
 
 public class TermsActivity extends AppCompatActivity {
 
+    private String userRole;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_terms);
+
+        userRole = getIntent().getStringExtra("role");
 
         CheckBox cbAgree = findViewById(R.id.cb_agree);
         Button btnAccept = findViewById(R.id.btn_accept);
@@ -25,7 +29,12 @@ public class TermsActivity extends AppCompatActivity {
         });
 
         btnAccept.setOnClickListener(v -> {
-            Intent intent = new Intent(TermsActivity.this, DoctordashboardActivity.class);
+            Intent intent;
+            if ("staff".equals(userRole)) {
+                intent = new Intent(TermsActivity.this, StaffDashboardActivity.class);
+            } else {
+                intent = new Intent(TermsActivity.this, DoctordashboardActivity.class);
+            }
             startActivity(intent);
             finish();
         });

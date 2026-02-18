@@ -5,23 +5,18 @@ import android.os.Bundle;
 import androidx.appcompat.app.AppCompatActivity;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
-public class OxygenActivity extends AppCompatActivity {
+public class TherapyRecommendationActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_oxygen);
+        setContentView(R.layout.activity_therapy_recommendation);
 
         findViewById(R.id.iv_back).setOnClickListener(v -> onBackPressed());
 
-        // Navigation to AI Analysis
-        findViewById(R.id.btn_review_ai).setOnClickListener(v -> {
-            startActivity(new Intent(this, AIAnalysisActivity.class));
-        });
-
-        // Navigation to Oxygen Requirement Screen
-        findViewById(R.id.btn_therapy_rec).setOnClickListener(v -> {
-            startActivity(new Intent(this, OxygenRequirementActivity.class));
+        findViewById(R.id.btn_accept).setOnClickListener(v -> {
+            Intent intent = new Intent(this, ScheduleReassessmentActivity.class);
+            startActivity(intent);
         });
 
         setupBottomNav();

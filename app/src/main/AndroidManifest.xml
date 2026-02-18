@@ -12,6 +12,21 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Cdss">
         <activity
+            android:name=".StaffDashboardActivity"
+            android:exported="false" />
+        <activity
+            android:name=".StaffLoginActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ScheduleReassessmentActivity"
+            android:exported="false" />
+        <activity
+            android:name=".TherapyRecommendationActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ReviewRecommendationActivity"
+            android:exported="false" />
+        <activity
             android:name=".DeviceSelectionActivity"
             android:exported="false" />
         <activity

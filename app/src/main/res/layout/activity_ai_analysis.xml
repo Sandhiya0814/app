@@ -109,24 +109,23 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="16dp"
                         android:text="HIGH RISK"
-                        android:textColor="#EF4444"
+                        android:textColor="#B91C1C"
                         android:textSize="36sp"
                         android:textStyle="bold" />
 
-                    <!-- High Risk Indicator Bar -->
+                    <!-- Two-Toned Progress Bar: 92% Dark Red, 8% Grey -->
                     <LinearLayout
                         android:layout_width="match_parent"
-                        android:layout_height="10dp"
+                        android:layout_height="8dp"
                         android:layout_marginTop="24dp"
                         android:orientation="horizontal"
                         android:weightSum="100">
-                        
                         <View
                             android:layout_width="0dp"
                             android:layout_height="match_parent"
                             android:layout_weight="92"
-                            android:background="@drawable/chip_red_rounded" />
-                            
+                            android:background="@drawable/chip_red_rounded"
+                            android:backgroundTint="#B91C1C" />
                         <View
                             android:layout_width="0dp"
                             android:layout_height="match_parent"

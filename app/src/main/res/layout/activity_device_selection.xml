@@ -54,7 +54,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="24dp"
-                app:cardBackgroundColor="#0F172A"
+                app:cardBackgroundColor="#139487"
                 app:cardCornerRadius="24dp"
                 app:cardElevation="4dp"
                 app:strokeWidth="0dp">
@@ -75,13 +75,13 @@
                             android:layout_width="20dp"
                             android:layout_height="20dp"
                             android:src="@drawable/ic_target"
-                            app:tint="#139487" />
+                            app:tint="#FFFFFF" />
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginStart="12dp"
                             android:text="Target SpO₂"
-                            android:textColor="#139487"
+                            android:textColor="#FFFFFF"
                             android:textSize="14sp"
                             android:textStyle="bold" />
                     </LinearLayout>
@@ -100,7 +100,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="12dp"
                         android:text="Controlled oxygen required to prevent hypercapnia"
-                        android:textColor="#94A3B8"
+                        android:textColor="#E2E8F0"
                         android:textSize="12sp"
                         android:gravity="center"/>
                 </LinearLayout>
@@ -116,22 +116,25 @@
                 android:textStyle="bold" />
 
             <!-- Device Cards -->
-            <!-- Venturi Mask (Recommended) -->
-            <com.google.android.material.card.MaterialCardView
-                android:id="@+id/card_venturi"
+            <!-- Venturi Mask with RECOMMENDED badge -->
+            <FrameLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
-                app:cardBackgroundColor="#FFFFFF"
-                app:cardCornerRadius="16dp"
-                app:cardElevation="2dp"
-                app:strokeColor="#139487"
-                app:strokeWidth="1dp">
+                android:clipChildren="false">
 
-                <LinearLayout
+                <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/card_venturi"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical">
+                    android:layout_marginTop="8dp"
+                    app:cardBackgroundColor="#FFFFFF"
+                    app:cardCornerRadius="16dp"
+                    app:cardElevation="2dp"
+                    app:strokeWidth="0dp"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:foreground="?attr/selectableItemBackground">
 
                     <RelativeLayout
                         android:layout_width="match_parent"
@@ -187,23 +190,23 @@
                             android:textColor="#64748B"
                             android:textSize="13sp" />
                     </RelativeLayout>
+                </com.google.android.material.card.MaterialCardView>
 
-                    <!-- Recommended Badge -->
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="end"
-                        android:layout_marginTop="-120dp"
-                        android:layout_marginEnd="12dp"
-                        android:background="@drawable/chip_bg_teal"
-                        android:paddingHorizontal="12dp"
-                        android:paddingVertical="4dp"
-                        android:text="✓ RECOMMENDED"
-                        android:textColor="#FFFFFF"
-                        android:textSize="10sp"
-                        android:textStyle="bold" />
-                </LinearLayout>
-            </com.google.android.material.card.MaterialCardView>
+                <TextView
+                    android:id="@+id/tv_recommended_badge"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="top|end"
+                    android:layout_marginEnd="16dp"
+                    android:background="@drawable/chip_bg_teal"
+                    android:paddingHorizontal="12dp"
+                    android:paddingVertical="4dp"
+                    android:text="✓ RECOMMENDED"
+                    android:textColor="#FFFFFF"
+                    android:textSize="10sp"
+                    android:textStyle="bold"
+                    android:elevation="4dp" />
+            </FrameLayout>
 
             <!-- Nasal Cannula -->
             <com.google.android.material.card.MaterialCardView
@@ -221,8 +224,7 @@
                             android:layout_width="24dp"
                             android:layout_height="24dp"
                             android:layout_gravity="center"
-                            android:src="@drawable/resp_rate"
-                            app:tint="#64748B" />
+                            android:src="@drawable/nasal" />
                     </com.google.android.material.card.MaterialCardView>
                     <TextView
                         android:id="@+id/tv_nasal_title"
@@ -274,8 +276,7 @@
                             android:layout_width="24dp"
                             android:layout_height="24dp"
                             android:layout_gravity="center"
-                            android:src="@drawable/ic_warning"
-                            app:tint="#F59E0B" />
+                            android:src="@drawable/highflow" />
                     </com.google.android.material.card.MaterialCardView>
                     <TextView
                         android:id="@+id/tv_hf_title"
@@ -328,8 +329,7 @@
                             android:layout_width="24dp"
                             android:layout_height="24dp"
                             android:layout_gravity="center"
-                            android:src="@drawable/ic_warning"
-                            app:tint="#EF4444" />
+                            android:src="@drawable/nonreb" />
                     </com.google.android.material.card.MaterialCardView>
                     <TextView
                         android:id="@+id/tv_nrm_title"

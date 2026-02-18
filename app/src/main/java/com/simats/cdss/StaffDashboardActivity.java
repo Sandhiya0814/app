@@ -5,51 +5,32 @@ import android.os.Bundle;
 import androidx.appcompat.app.AppCompatActivity;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
-public class OxygenActivity extends AppCompatActivity {
+public class StaffDashboardActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_oxygen);
-
-        findViewById(R.id.iv_back).setOnClickListener(v -> onBackPressed());
-
-        // Navigation to AI Analysis
-        findViewById(R.id.btn_review_ai).setOnClickListener(v -> {
-            startActivity(new Intent(this, AIAnalysisActivity.class));
-        });
-
-        // Navigation to Oxygen Requirement Screen
-        findViewById(R.id.btn_therapy_rec).setOnClickListener(v -> {
-            startActivity(new Intent(this, OxygenRequirementActivity.class));
-        });
+        setContentView(R.layout.activity_staff_dashboard);
 
         setupBottomNav();
     }
 
     private void setupBottomNav() {
         BottomNavigationView bottomNav = findViewById(R.id.bottom_navigation);
-        bottomNav.setSelectedItemId(R.id.nav_patients);
+        bottomNav.setSelectedItemId(R.id.nav_home);
         bottomNav.setOnItemSelectedListener(item -> {
             int itemId = item.getItemId();
-            if (itemId == R.id.nav_home) {
-                startActivity(new Intent(this, DoctordashboardActivity.class));
-                finish();
-                return true;
-            } else if (itemId == R.id.nav_patients) {
+            if (itemId == R.id.nav_patients) {
                 startActivity(new Intent(this, PatientListActivity.class));
-                finish();
                 return true;
             } else if (itemId == R.id.nav_alerts) {
                 startActivity(new Intent(this, AlertsActivity.class));
-                finish();
                 return true;
             } else if (itemId == R.id.nav_settings) {
                 startActivity(new Intent(this, SettingsActivity.class));
-                finish();
                 return true;
             }
-            return false;
+            return itemId == R.id.nav_home;
         });
     }
 }
