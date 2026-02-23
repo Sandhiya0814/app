@@ -106,6 +106,7 @@
 
                 <!-- Add Patient -->
                 <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/card_add_patient"
                     android:layout_width="0dp"
                     android:layout_height="160dp"
                     android:layout_columnWeight="1"
@@ -129,8 +130,8 @@
                             app:cardCornerRadius="28dp"
                             app:cardElevation="0dp">
                             <ImageView
-                                android:layout_width="28dp"
-                                android:layout_height="28dp"
+                                android:layout_width="24dp"
+                                android:layout_height="24dp"
                                 android:layout_gravity="center"
                                 android:src="@drawable/add" />
                         </com.google.android.material.card.MaterialCardView>
@@ -146,6 +147,7 @@
 
                 <!-- Enter Vitals -->
                 <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/card_enter_vitals"
                     android:layout_width="0dp"
                     android:layout_height="160dp"
                     android:layout_columnWeight="1"
@@ -186,6 +188,7 @@
 
                 <!-- Symptoms -->
                 <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/card_symptoms"
                     android:layout_width="0dp"
                     android:layout_height="160dp"
                     android:layout_columnWeight="1"
@@ -226,6 +229,7 @@
 
                 <!-- Enter ABG -->
                 <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/card_enter_abg"
                     android:layout_width="0dp"
                     android:layout_height="160dp"
                     android:layout_columnWeight="1"
@@ -297,6 +301,7 @@
 
             <!-- Due Items List -->
             <com.google.android.material.card.MaterialCardView
+                android:id="@+id/card_spo2_due"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="24dp"
@@ -304,7 +309,10 @@
                 app:cardBackgroundColor="@color/white"
                 app:cardCornerRadius="20dp"
                 app:cardElevation="2dp"
-                app:strokeWidth="0dp">
+                app:strokeWidth="0dp"
+                android:clickable="true"
+                android:focusable="true"
+                android:foreground="?attr/selectableItemBackground">
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -356,6 +364,7 @@
             </com.google.android.material.card.MaterialCardView>
 
             <com.google.android.material.card.MaterialCardView
+                android:id="@+id/card_abg_due"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="24dp"
@@ -363,7 +372,10 @@
                 app:cardBackgroundColor="@color/white"
                 app:cardCornerRadius="20dp"
                 app:cardElevation="2dp"
-                app:strokeWidth="0dp">
+                app:strokeWidth="0dp"
+                android:clickable="true"
+                android:focusable="true"
+                android:foreground="?attr/selectableItemBackground">
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
