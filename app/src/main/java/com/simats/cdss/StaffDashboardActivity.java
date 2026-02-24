@@ -14,27 +14,41 @@ public class StaffDashboardActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_staff_dashboard);
 
-        // Corrected: Single click listener for Add Patient card
-        findViewById(R.id.card_add_patient).setOnClickListener(v -> {
-            startActivity(new Intent(StaffDashboardActivity.this, AddNewPatientActivity.class));
+        // Notification Bell Navigation
+        findViewById(R.id.card_notifications).setOnClickListener(v -> {
+            startActivity(new Intent(this, AlertsActivity.class));
         });
 
-        // Find the cards by their unique IDs
+        // Quick Actions Navigation
+        findViewById(R.id.card_add_patient).setOnClickListener(v -> {
+            startActivity(new Intent(this, AddNewPatientActivity.class));
+        });
+
+        findViewById(R.id.card_enter_vitals).setOnClickListener(v -> {
+            startActivity(new Intent(this, VitalsActivity.class));
+        });
+
+        findViewById(R.id.card_symptoms).setOnClickListener(v -> {
+            startActivity(new Intent(this, CurrentSymptomsActivity.class));
+        });
+
+        findViewById(R.id.card_enter_abg).setOnClickListener(v -> {
+            startActivity(new Intent(this, ABGEntryActivity.class));
+        });
+
+        // Reassessment Due Cards Navigation
         MaterialCardView spo2Card = findViewById(R.id.card_spo2_due);
         MaterialCardView abgCard = findViewById(R.id.card_abg_due);
 
-        // Navigation to ReassessmentChecklistActivity
         if (spo2Card != null) {
             spo2Card.setOnClickListener(v -> {
-                Intent intent = new Intent(StaffDashboardActivity.this, ReassessmentChecklistActivity.class);
-                startActivity(intent);
+                startActivity(new Intent(this, ReassessmentChecklistActivity.class));
             });
         }
 
         if (abgCard != null) {
             abgCard.setOnClickListener(v -> {
-                Intent intent = new Intent(StaffDashboardActivity.this, ReassessmentChecklistActivity.class);
-                startActivity(intent);
+                startActivity(new Intent(this, ReassessmentChecklistActivity.class));
             });
         }
 

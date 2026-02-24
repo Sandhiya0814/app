@@ -12,6 +12,24 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Cdss">
         <activity
+            android:name=".ABGEntryActivity"
+            android:exported="false" />
+        <activity
+            android:name=".VitalsActivity"
+            android:exported="false" />
+        <activity
+            android:name=".CurrentSymptomsActivity"
+            android:exported="false" />
+        <activity
+            android:name=".GasExchangeHistoryActivity"
+            android:exported="false" />
+        <activity
+            android:name=".SpirometryDataActivity"
+            android:exported="false" />
+        <activity
+            android:name=".GoldClassificationActivity"
+            android:exported="false" />
+        <activity
             android:name=".BaselineDetailsActivity"
             android:exported="false" />
         <activity

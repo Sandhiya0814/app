@@ -4,30 +4,35 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
-import android.widget.ImageView;
+import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.card.MaterialCardView;
 
 public class BaselineDetailsActivity extends AppCompatActivity {
 
-    private MaterialCardView selectedCard = null;
-    private Button btnNext;
     private MaterialCardView cardYes, cardNo;
-    private ImageView ivCheckYes, ivIconNo;
+    private MaterialCardView cvIconYes, cvPlaceholderYes;
+    private MaterialCardView cvIconNo, cvPlaceholderNo;
+    private TextView tvYes, tvNo;
+    private Button btnNext;
+    private MaterialCardView selectedCard = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_baseline_details);
 
-        btnNext = findViewById(R.id.btn_next);
-        btnNext.setEnabled(false); // Initially disabled
-
+        // Initialize Views
         cardYes = findViewById(R.id.card_yes);
         cardNo = findViewById(R.id.card_no);
-        ivCheckYes = findViewById(R.id.iv_check_yes);
-        ivIconNo = findViewById(R.id.iv_icon_no);
+        cvIconYes = findViewById(R.id.cv_icon_yes);
+        cvPlaceholderYes = findViewById(R.id.cv_placeholder_yes);
+        cvIconNo = findViewById(R.id.cv_icon_no);
+        cvPlaceholderNo = findViewById(R.id.cv_placeholder_no);
+        tvYes = findViewById(R.id.tv_yes);
+        tvNo = findViewById(R.id.tv_no);
+        btnNext = findViewById(R.id.btn_next);
 
         findViewById(R.id.iv_back).setOnClickListener(v -> onBackPressed());
 
@@ -35,7 +40,6 @@ public class BaselineDetailsActivity extends AppCompatActivity {
         cardNo.setOnClickListener(v -> handleSelection(cardNo));
 
         btnNext.setOnClickListener(v -> {
-            // Navigate to GOLD Classification screen
             startActivity(new Intent(this, GoldClassificationActivity.class));
         });
 
@@ -43,28 +47,39 @@ public class BaselineDetailsActivity extends AppCompatActivity {
     }
 
     private void handleSelection(MaterialCardView card) {
-        // Reset previous selection
-        if (selectedCard != null) {
-            selectedCard.setStrokeWidth(0);
-            if (selectedCard.getId() == R.id.card_yes) {
-                ivCheckYes.setVisibility(View.GONE);
-            } else {
-                ivIconNo.setVisibility(View.GONE);
-            }
-        }
+        // Reset all states
+        resetStyles();
 
         selectedCard = card;
-        selectedCard.setStrokeWidth(4);
-        selectedCard.setStrokeColor(getResources().getColor(R.color.primary_teal));
-
-        // Show respective icon
-        if (card.getId() == R.id.card_yes) {
-            ivCheckYes.setVisibility(View.VISIBLE);
-        } else {
-            ivIconNo.setVisibility(View.VISIBLE);
-        }
-
         btnNext.setEnabled(true);
+
+        if (card.getId() == R.id.card_yes) {
+            cardYes.setStrokeWidth(4);
+            cardYes.setStrokeColor(getResources().getColor(R.color.primary_teal));
+            cvIconYes.setVisibility(View.VISIBLE);
+            cvPlaceholderYes.setVisibility(View.GONE);
+            tvYes.setTextColor(getResources().getColor(R.color.primary_teal));
+        } else {
+            cardNo.setStrokeWidth(4);
+            cardNo.setStrokeColor(getResources().getColor(R.color.primary_teal));
+            cvIconNo.setVisibility(View.VISIBLE);
+            cvPlaceholderNo.setVisibility(View.GONE);
+            tvNo.setTextColor(getResources().getColor(R.color.primary_teal));
+        }
+    }
+
+    private void resetStyles() {
+        // Reset Yes Card
+        cardYes.setStrokeWidth(0);
+        cvIconYes.setVisibility(View.INVISIBLE);
+        cvPlaceholderYes.setVisibility(View.VISIBLE);
+        tvYes.setTextColor(getResources().getColor(R.color.text_secondary));
+
+        // Reset No Card
+        cardNo.setStrokeWidth(0);
+        cvIconNo.setVisibility(View.INVISIBLE);
+        cvPlaceholderNo.setVisibility(View.VISIBLE);
+        tvNo.setTextColor(getResources().getColor(R.color.text_secondary));
     }
 
     private void setupBottomNav() {

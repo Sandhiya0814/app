@@ -2,58 +2,60 @@ package com.simats.cdss;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.View;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.widget.Button;
+import android.widget.EditText;
 import androidx.appcompat.app.AppCompatActivity;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
-import com.google.android.material.card.MaterialCardView;
 
-public class GoldClassificationActivity extends AppCompatActivity {
+public class SpirometryDataActivity extends AppCompatActivity {
 
-    private MaterialCardView selectedCard = null;
+    private EditText etFev1, etFev1Fvc;
     private Button btnNext;
-    private MaterialCardView cardGold1, cardGold2, cardGold3, cardGold4;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_gold_classification);
+        setContentView(R.layout.activity_spirometry_data);
 
+        etFev1 = findViewById(R.id.et_fev1);
+        etFev1Fvc = findViewById(R.id.et_fev1_fvc);
         btnNext = findViewById(R.id.btn_next);
-        btnNext.setEnabled(false);
-
-        cardGold1 = findViewById(R.id.card_gold_1);
-        cardGold2 = findViewById(R.id.card_gold_2);
-        cardGold3 = findViewById(R.id.card_gold_3);
-        cardGold4 = findViewById(R.id.card_gold_4);
 
         findViewById(R.id.iv_back).setOnClickListener(v -> onBackPressed());
 
-        View.OnClickListener listener = v -> handleSelection((MaterialCardView) v);
+        // Real-time validation to enable the "Next" button
+        TextWatcher watcher = new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
 
-        cardGold1.setOnClickListener(listener);
-        cardGold2.setOnClickListener(listener);
-        cardGold3.setOnClickListener(listener);
-        cardGold4.setOnClickListener(listener);
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                checkValidation();
+            }
 
+            @Override
+            public void afterTextChanged(Editable s) {}
+        };
+
+        etFev1.addTextChangedListener(watcher);
+        etFev1Fvc.addTextChangedListener(watcher);
+
+        // EXPLICIT Navigation to Gas Exchange History Screen
         btnNext.setOnClickListener(v -> {
-            // Navigate to Spirometry Data screen
-            startActivity(new Intent(this, SpirometryDataActivity.class));
+            Intent intent = new Intent(SpirometryDataActivity.this, GasExchangeHistoryActivity.class);
+            startActivity(intent);
         });
 
         setupBottomNav();
     }
 
-    private void handleSelection(MaterialCardView card) {
-        if (selectedCard != null) {
-            selectedCard.setStrokeWidth(0);
-        }
-
-        selectedCard = card;
-        selectedCard.setStrokeWidth(4);
-        selectedCard.setStrokeColor(getResources().getColor(R.color.primary_teal));
-
-        btnNext.setEnabled(true);
+    private void checkValidation() {
+        boolean isValid = !etFev1.getText().toString().trim().isEmpty() &&
+                         !etFev1Fvc.getText().toString().trim().isEmpty();
+        btnNext.setEnabled(isValid);
+        btnNext.setAlpha(isValid ? 1.0f : 0.5f);
     }
 
     private void setupBottomNav() {
