@@ -14,6 +14,9 @@ public class StaffLoginActivity extends AppCompatActivity {
         findViewById(R.id.iv_back).setOnClickListener(v -> onBackPressed());
 
         findViewById(R.id.btn_login).setOnClickListener(v -> {
+            SessionManager session = new SessionManager(this);
+            session.setRole("staff");
+            
             Intent intent = new Intent(StaffLoginActivity.this, VerificationActivity.class);
             intent.putExtra("role", "staff");
             startActivity(intent);

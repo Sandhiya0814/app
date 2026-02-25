@@ -12,6 +12,21 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Cdss">
         <activity
+            android:name=".DoctorAlertsActivity"
+            android:exported="false" />
+        <activity
+            android:name=".StaffAlertsActivity"
+            android:exported="false" />
+        <activity
+            android:name=".StaffPatientList2Activity"
+            android:exported="false" />
+        <activity
+            android:name=".StaffPatientList3Activity"
+            android:exported="false" />
+        <activity
+            android:name=".StaffPatientListActivity"
+            android:exported="false" />
+        <activity
             android:name=".ABGEntryActivity"
             android:exported="false" />
         <activity

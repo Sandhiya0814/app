@@ -20,6 +20,10 @@ public class DoctorLoginActivity extends AppCompatActivity {
         });
 
         findViewById(R.id.btn_login).setOnClickListener(v -> {
+            // Save role in session
+            SessionManager session = new SessionManager(this);
+            session.setRole("doctor");
+
             Intent intent = new Intent(DoctorLoginActivity.this, VerificationActivity.class);
             intent.putExtra("role", "doctor");
             startActivity(intent);

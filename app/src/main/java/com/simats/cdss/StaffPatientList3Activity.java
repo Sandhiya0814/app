@@ -9,16 +9,16 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.card.MaterialCardView;
 
-public class PatientListActivity extends AppCompatActivity {
+public class StaffPatientList3Activity extends AppCompatActivity {
 
     private MaterialCardView btnAll, btnCritical, btnWarning, btnStable;
     private TextView tvAll, tvCritical, tvWarning, tvStable;
-    private View card1, card2, card3, card4;
+    private View cardRobert, cardMaria, cardJames, cardSarah;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_patient_list);
+        setContentView(R.layout.activity_staff_patient_list3);
 
         // Initialize Filter Buttons
         btnAll = findViewById(R.id.btn_all);
@@ -33,26 +33,23 @@ public class PatientListActivity extends AppCompatActivity {
         tvStable = findViewById(R.id.tv_stable);
 
         // Initialize Patient Cards
-        card1 = findViewById(R.id.patient_card_1); // Robert Chen (Critical)
-        card2 = findViewById(R.id.patient_card_2); // Maria Garcia (Warning)
-        card3 = findViewById(R.id.patient_card_3); // James Wilson (Stable)
-        card4 = findViewById(R.id.patient_card_4); // Sarah Johnson (Stable)
+        cardRobert = findViewById(R.id.patient_card_robert);
+        cardMaria = findViewById(R.id.patient_card_maria);
+        cardJames = findViewById(R.id.patient_card_james);
+        cardSarah = findViewById(R.id.patient_card_sarah);
 
-        // Set click listener for Robert Chen card
-        card1.setOnClickListener(v -> {
-            startActivity(new Intent(this, PatientDetailsActivity.class));
-        });
+        // Set click listeners for patient cards to move to ABG Entry screen
+        View.OnClickListener patientClickListener = v -> {
+            startActivity(new Intent(this, ABGEntryActivity.class));
+        };
+
+        cardRobert.setOnClickListener(patientClickListener);
+        cardMaria.setOnClickListener(patientClickListener);
+        cardJames.setOnClickListener(patientClickListener);
+        cardSarah.setOnClickListener(patientClickListener);
 
         setupFilters();
         setupBottomNav();
-
-        // Check if a filter was passed from the Dashboard
-        String filter = getIntent().getStringExtra("filter");
-        if (filter != null) {
-            filterList(filter);
-        } else {
-            filterList("all"); // Default view
-        }
     }
 
     private void setupFilters() {
@@ -63,38 +60,36 @@ public class PatientListActivity extends AppCompatActivity {
     }
 
     private void filterList(String status) {
-        // Reset all buttons to unselected state
         resetButton(btnAll, tvAll);
         resetButton(btnCritical, tvCritical);
         resetButton(btnWarning, tvWarning);
         resetButton(btnStable, tvStable);
 
-        // Hide all cards first
-        card1.setVisibility(View.GONE);
-        card2.setVisibility(View.GONE);
-        card3.setVisibility(View.GONE);
-        card4.setVisibility(View.GONE);
+        cardRobert.setVisibility(View.GONE);
+        cardMaria.setVisibility(View.GONE);
+        cardJames.setVisibility(View.GONE);
+        cardSarah.setVisibility(View.GONE);
 
         switch (status) {
             case "all":
                 selectButton(btnAll, tvAll);
-                card1.setVisibility(View.VISIBLE);
-                card2.setVisibility(View.VISIBLE);
-                card3.setVisibility(View.VISIBLE);
-                card4.setVisibility(View.VISIBLE);
+                cardRobert.setVisibility(View.VISIBLE);
+                cardMaria.setVisibility(View.VISIBLE);
+                cardJames.setVisibility(View.VISIBLE);
+                cardSarah.setVisibility(View.VISIBLE);
                 break;
             case "critical":
                 selectButton(btnCritical, tvCritical);
-                card1.setVisibility(View.VISIBLE);
+                cardRobert.setVisibility(View.VISIBLE);
                 break;
             case "warning":
                 selectButton(btnWarning, tvWarning);
-                card2.setVisibility(View.VISIBLE);
+                cardMaria.setVisibility(View.VISIBLE);
                 break;
             case "stable":
                 selectButton(btnStable, tvStable);
-                card3.setVisibility(View.VISIBLE);
-                card4.setVisibility(View.VISIBLE);
+                cardJames.setVisibility(View.VISIBLE);
+                cardSarah.setVisibility(View.VISIBLE);
                 break;
         }
     }
@@ -114,34 +109,25 @@ public class PatientListActivity extends AppCompatActivity {
 
     private void setupBottomNav() {
         BottomNavigationView bottomNav = findViewById(R.id.bottom_navigation);
-        bottomNav.setSelectedItemId(R.id.nav_patients);
-        bottomNav.setOnItemSelectedListener(item -> {
-            int itemId = item.getItemId();
-            SessionManager session = new SessionManager(this);
-            String role = session.getRole();
-
-            if (itemId == R.id.nav_home) {
-                if ("staff".equals(role)) {
+        if (bottomNav != null) {
+            bottomNav.setSelectedItemId(R.id.nav_patients);
+            bottomNav.setOnItemSelectedListener(item -> {
+                int itemId = item.getItemId();
+                if (itemId == R.id.nav_home) {
                     startActivity(new Intent(this, StaffDashboardActivity.class));
-                } else {
-                    startActivity(new Intent(this, DoctordashboardActivity.class));
-                }
-                finish();
-                return true;
-            } else if (itemId == R.id.nav_alerts) {
-                if ("staff".equals(role)) {
-                    startActivity(new Intent(this, StaffAlertsActivity.class));
-                } else {
+                    finish();
+                    return true;
+                } else if (itemId == R.id.nav_alerts) {
                     startActivity(new Intent(this, DoctorAlertsActivity.class));
+                    finish();
+                    return true;
+                } else if (itemId == R.id.nav_settings) {
+                    startActivity(new Intent(this, SettingsActivity.class));
+                    finish();
+                    return true;
                 }
-                finish();
-                return true;
-            } else if (itemId == R.id.nav_settings) {
-                startActivity(new Intent(this, SettingsActivity.class));
-                finish();
-                return true;
-            }
-            return itemId == R.id.nav_patients;
-        });
+                return itemId == R.id.nav_patients;
+            });
+        }
     }
 }

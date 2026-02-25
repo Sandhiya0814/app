@@ -5,12 +5,36 @@ import android.os.Bundle;
 import androidx.appcompat.app.AppCompatActivity;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
-public class AlertsActivity extends AppCompatActivity {
+public class DoctorAlertsActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_alerts);
+        setContentView(R.layout.activity_doctor_alerts);
+
+        findViewById(R.id.iv_back).setOnClickListener(v -> onBackPressed());
+
+        // Actions for Robert Chen (Critical)
+        findViewById(R.id.btnReview1).setOnClickListener(v -> {
+            // Logic to mark as reviewed
+        });
+
+        findViewById(R.id.btnViewPatient1).setOnClickListener(v -> {
+            startActivity(new Intent(this, PatientDetailsActivity.class));
+        });
+
+        findViewById(R.id.btnAcceptAI).setOnClickListener(v -> {
+            // Logic to accept AI recommendation
+        });
+
+        findViewById(R.id.btnOverrideAI).setOnClickListener(v -> {
+            // Logic to override AI recommendation
+        });
+
+        // Actions for Maria Garcia (Moderate)
+        findViewById(R.id.btnViewResults).setOnClickListener(v -> {
+            startActivity(new Intent(this, ABGTrendsActivity.class));
+        });
 
         setupBottomNav();
     }

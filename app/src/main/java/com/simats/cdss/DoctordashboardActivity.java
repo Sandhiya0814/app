@@ -44,14 +44,14 @@ public class DoctordashboardActivity extends AppCompatActivity {
             startActivity(new Intent(this, PatientDetailsActivity.class));
         });
 
-        // Add click listener for Maria Garcia card (linking to same details for now or you can create another)
+        // Add click listener for Maria Garcia card
         findViewById(R.id.home_patient_card_2).setOnClickListener(v -> {
             startActivity(new Intent(this, PatientDetailsActivity.class));
         });
 
-        // Add click listener for the notification bell icon using its ID
+        // Notification bell explicitly to DoctorAlertsActivity
         findViewById(R.id.card_notifications).setOnClickListener(v -> {
-             startActivity(new Intent(this, AlertsActivity.class));
+             startActivity(new Intent(this, DoctorAlertsActivity.class));
         });
 
         BottomNavigationView bottomNav = findViewById(R.id.bottom_navigation);
@@ -62,7 +62,8 @@ public class DoctordashboardActivity extends AppCompatActivity {
                 startActivity(new Intent(this, PatientListActivity.class));
                 return true;
             } else if (itemId == R.id.nav_alerts) {
-                startActivity(new Intent(this, AlertsActivity.class));
+                // Navigate to Doctor-specific Alerts
+                startActivity(new Intent(this, DoctorAlertsActivity.class));
                 return true;
             } else if (itemId == R.id.nav_settings) {
                 startActivity(new Intent(this, SettingsActivity.class));

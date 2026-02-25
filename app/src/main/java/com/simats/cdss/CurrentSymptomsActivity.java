@@ -109,7 +109,7 @@ public class CurrentSymptomsActivity extends AppCompatActivity {
                     finish();
                     return true;
                 } else if (itemId == R.id.nav_alerts) {
-                    startActivity(new Intent(this, AlertsActivity.class));
+                    startActivity(new Intent(this, DoctorAlertsActivity.class));
                     finish();
                     return true;
                 } else if (itemId == R.id.nav_settings) {

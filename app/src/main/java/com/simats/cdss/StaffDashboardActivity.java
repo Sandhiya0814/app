@@ -16,7 +16,7 @@ public class StaffDashboardActivity extends AppCompatActivity {
 
         // Notification Bell Navigation
         findViewById(R.id.card_notifications).setOnClickListener(v -> {
-            startActivity(new Intent(this, AlertsActivity.class));
+            startActivity(new Intent(this, StaffAlertsActivity.class));
         });
 
         // Quick Actions Navigation
@@ -24,16 +24,25 @@ public class StaffDashboardActivity extends AppCompatActivity {
             startActivity(new Intent(this, AddNewPatientActivity.class));
         });
 
+        // Navigate to StaffPatientListActivity for Vitals entry
         findViewById(R.id.card_enter_vitals).setOnClickListener(v -> {
-            startActivity(new Intent(this, VitalsActivity.class));
+            Intent intent = new Intent(this, StaffPatientListActivity.class);
+            intent.putExtra("from_action", "vitals");
+            startActivity(intent);
         });
 
+        // Navigate to StaffPatientList2Activity for Symptoms entry
         findViewById(R.id.card_symptoms).setOnClickListener(v -> {
-            startActivity(new Intent(this, CurrentSymptomsActivity.class));
+            Intent intent = new Intent(this, StaffPatientList2Activity.class);
+            intent.putExtra("from_action", "symptoms");
+            startActivity(intent);
         });
 
+        // Navigate to StaffPatientList3Activity for ABG entry
         findViewById(R.id.card_enter_abg).setOnClickListener(v -> {
-            startActivity(new Intent(this, ABGEntryActivity.class));
+            Intent intent = new Intent(this, StaffPatientList3Activity.class);
+            intent.putExtra("from_action", "abg_entry");
+            startActivity(intent);
         });
 
         // Reassessment Due Cards Navigation
@@ -62,10 +71,10 @@ public class StaffDashboardActivity extends AppCompatActivity {
             bottomNav.setOnItemSelectedListener(item -> {
                 int itemId = item.getItemId();
                 if (itemId == R.id.nav_patients) {
-                    startActivity(new Intent(this, PatientListActivity.class));
+                    startActivity(new Intent(this, StaffPatientListActivity.class));
                     return true;
                 } else if (itemId == R.id.nav_alerts) {
-                    startActivity(new Intent(this, AlertsActivity.class));
+                    startActivity(new Intent(this, StaffAlertsActivity.class));
                     return true;
                 } else if (itemId == R.id.nav_settings) {
                     startActivity(new Intent(this, SettingsActivity.class));
