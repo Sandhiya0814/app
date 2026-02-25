@@ -20,7 +20,8 @@ public class StaffAlertsActivity extends AppCompatActivity {
         });
 
         findViewById(R.id.btnViewPatient).setOnClickListener(v -> {
-            startActivity(new Intent(this, PatientDetailsActivity.class));
+            // Updated: Navigate to StaffPatientListActivity as requested
+            startActivity(new Intent(this, StaffPatientListActivity.class));
         });
 
         findViewById(R.id.btnRecheckVitals).setOnClickListener(v -> {

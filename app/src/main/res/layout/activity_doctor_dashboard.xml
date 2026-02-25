@@ -247,53 +247,35 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
+                android:gravity="center"
                 android:paddingHorizontal="16dp">
 
                 <com.google.android.material.card.MaterialCardView
                     android:id="@+id/card_patient_list"
                     style="@style/QuickActionCard"
-                    android:layout_weight="1">
+                    android:layout_width="200dp"
+                    android:layout_height="wrap_content">
                     <LinearLayout style="@style/QuickActionContent">
                         <FrameLayout
-                            android:layout_width="56dp"
-                            android:layout_height="56dp">
+                            android:layout_width="48dp"
+                            android:layout_height="48dp">
                             <View
                                 android:layout_width="match_parent"
                                 android:layout_height="match_parent"
                                 android:background="@drawable/circle_bg_light_teal"
                                 android:alpha="0.5" />
                             <ImageView
-                                android:layout_width="28dp"
-                                android:layout_height="28dp"
+                                android:layout_width="24dp"
+                                android:layout_height="24dp"
                                 android:layout_gravity="center"
                                 android:src="@drawable/ic_patients"
                                 app:tint="@color/qa_patient_icon" />
                         </FrameLayout>
-                        <TextView style="@style/QuickActionLabel" android:text="Patient List" android:layout_marginTop="16dp"/>
-                    </LinearLayout>
-                </com.google.android.material.card.MaterialCardView>
-
-                <com.google.android.material.card.MaterialCardView
-                    style="@style/QuickActionCard"
-                    android:layout_weight="1">
-                    <LinearLayout style="@style/QuickActionContent">
-                        <FrameLayout
-                            android:layout_width="56dp"
-                            android:layout_height="56dp">
-                            <View
-                                android:layout_width="match_parent"
-                                android:layout_height="match_parent"
-                                android:background="@drawable/rounded_bg_light_blue"
-                                android:alpha="0.5" />
-                            <ImageView
-                                android:layout_width="28dp"
-                                android:layout_height="28dp"
-                                android:layout_gravity="center"
-                                android:src="@drawable/heartbeat"
-                                app:tint="@color/qa_ai_icon" />
-                        </FrameLayout>
-                        <TextView style="@style/QuickActionLabel" android:text="AI Analysis" android:layout_marginTop="16dp"/>
+                        <TextView 
+                            style="@style/QuickActionLabel" 
+                            android:text="Patient List" 
+                            android:textSize="14sp"
+                            android:layout_marginTop="12dp"/>
                     </LinearLayout>
                 </com.google.android.material.card.MaterialCardView>
             </LinearLayout>
