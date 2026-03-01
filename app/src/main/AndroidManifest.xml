@@ -11,6 +11,28 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Cdss">
+        
+        <activity
+            android:name=".AdminProfileActivity"
+            android:exported="false" />
+        <activity
+            android:name=".AdminDashboardActivity"
+            android:exported="false" />
+        <activity
+            android:name=".AdminApprovalsActivity"
+            android:exported="false" />
+        <activity
+            android:name=".AdminManageDoctorsActivity"
+            android:exported="false" />
+        <activity
+            android:name=".AdminManageStaffActivity"
+            android:exported="false" />
+        <activity
+            android:name=".SignupActivity"
+            android:exported="false" />
+        <activity
+            android:name=".AdminLoginActivity"
+            android:exported="false" />
         <activity
             android:name=".DoctorAlertsActivity"
             android:exported="false" />
@@ -153,6 +175,16 @@
         <activity
             android:name=".TermsActivity"
             android:exported="false" />
+        
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="${applicationId}.provider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_paths" />
+        </provider>
     </application>
 
 </manifest>

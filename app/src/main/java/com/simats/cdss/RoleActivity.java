@@ -33,5 +33,9 @@ public class RoleActivity extends AppCompatActivity {
         findViewById(R.id.card_staff).setOnClickListener(v -> {
             startActivity(new Intent(RoleActivity.this, StaffLoginActivity.class));
         });
+
+        findViewById(R.id.card_admin).setOnClickListener(v -> {
+            startActivity(new Intent(RoleActivity.this, AdminLoginActivity.class));
+        });
     }
 }

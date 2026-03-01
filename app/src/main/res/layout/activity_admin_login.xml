@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:background="@color/white"
     android:padding="24dp"
-    tools:context=".StaffLoginActivity">
+    tools:context=".AdminLoginActivity">
 
     <ImageView
         android:id="@+id/iv_back"
@@ -23,7 +23,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="48dp"
-        android:text="Staff Login"
+        android:text="Admin Login"
         android:textColor="@color/text_dark"
         android:textSize="28sp"
         android:textStyle="bold"
@@ -35,7 +35,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
-        android:text="Enter your credentials to access the clinical portal."
+        android:text="Enter your admin credentials to manage the system."
         android:textColor="@color/text_secondary"
         android:textSize="16sp"
         app:layout_constraintEnd_toEndOf="parent"
@@ -47,7 +47,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="32dp"
-        android:text="Email Address"
+        android:text="Admin Email"
         android:textColor="@color/text_dark"
         android:textSize="14sp"
         android:textStyle="bold"
@@ -60,7 +60,7 @@
         android:layout_height="56dp"
         android:layout_marginTop="8dp"
         android:background="@drawable/edit_text_bg"
-        android:hint="name@hospital.com"
+        android:hint="admin@hospital.com"
         android:inputType="textEmailAddress"
         android:paddingHorizontal="16dp"
         android:textColor="@color/text_dark"
@@ -92,18 +92,6 @@
         android:textColorHint="#94A3B8"
         app:layout_constraintTop_toBottomOf="@id/tv_password_label" />
 
-    <TextView
-        android:id="@+id/tv_forgot_password"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="12dp"
-        android:text="Forgot Password?"
-        android:textColor="@color/primary_teal"
-        android:textSize="14sp"
-        android:textStyle="bold"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/et_password" />
-
     <com.google.android.material.button.MaterialButton
         android:id="@+id/btn_login"
         android:layout_width="match_parent"
@@ -114,7 +102,7 @@
         android:textSize="16sp"
         app:backgroundTint="@color/primary_teal"
         app:cornerRadius="12dp"
-        app:layout_constraintTop_toBottomOf="@id/tv_forgot_password" />
+        app:layout_constraintTop_toBottomOf="@id/et_password" />
 
     <TextView
         android:id="@+id/tv_signup"

@@ -6,35 +6,42 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/white"
-    android:paddingHorizontal="48dp"
+    android:paddingHorizontal="32dp"
     android:paddingVertical="24dp"
     tools:context=".AIActivity">
 
-    <View
-        android:id="@+id/icon_bg_top"
+    <!-- Top Icon Section -->
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/top_icon_container"
         android:layout_width="80dp"
         android:layout_height="80dp"
         android:layout_marginTop="60dp"
-        android:background="@drawable/circle_bg_light_teal"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent">
 
-    <ImageView
-        android:id="@+id/iv_beat"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:src="@drawable/beat"
-        app:layout_constraintBottom_toBottomOf="@id/icon_bg_top"
-        app:layout_constraintEnd_toEndOf="@id/icon_bg_top"
-        app:layout_constraintStart_toStartOf="@id/icon_bg_top"
-        app:layout_constraintTop_toTopOf="@id/icon_bg_top" />
+        <View
+            android:id="@+id/icon_bg_top"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/circle_bg_light_teal" />
+
+        <ImageView
+            android:id="@+id/iv_beat"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:src="@drawable/beat"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
     <TextView
         android:id="@+id/tv_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="40dp"
+        android:layout_marginTop="32dp"
         android:gravity="center"
         android:text="Clinical Decision\nSupport"
         android:textColor="@color/text_dark"
@@ -42,7 +49,7 @@
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/icon_bg_top" />
+        app:layout_constraintTop_toBottomOf="@id/top_icon_container" />
 
     <TextView
         android:id="@+id/tv_subtitle"
@@ -57,32 +64,40 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/tv_title" />
 
-    <LinearLayout
+    <!-- Feature 1 -->
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/feature_ai"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="48dp"
-        android:gravity="center_vertical"
-        android:orientation="horizontal"
         app:layout_constraintTop_toBottomOf="@id/tv_subtitle">
 
         <View
+            android:id="@+id/feature_ai_bg"
             android:layout_width="56dp"
             android:layout_height="56dp"
-            android:background="@drawable/rounded_bg_light_blue" />
+            android:background="@drawable/rounded_bg_light_blue"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <ImageView
             android:layout_width="24dp"
             android:layout_height="24dp"
-            android:layout_marginStart="-40dp"
-            android:src="@drawable/brain" />
+            android:src="@drawable/brain"
+            app:layout_constraintBottom_toBottomOf="@id/feature_ai_bg"
+            app:layout_constraintEnd_toEndOf="@id/feature_ai_bg"
+            app:layout_constraintStart_toStartOf="@id/feature_ai_bg"
+            app:layout_constraintTop_toTopOf="@id/feature_ai_bg" />
 
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="32dp"
-            android:layout_weight="1"
-            android:orientation="vertical">
+            android:layout_marginStart="16dp"
+            android:orientation="vertical"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/feature_ai_bg"
+            app:layout_constraintTop_toTopOf="parent">
 
             <TextView
                 android:layout_width="wrap_content"
@@ -100,34 +115,42 @@
                 android:textColor="@color/text_secondary"
                 android:textSize="14sp" />
         </LinearLayout>
-    </LinearLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
-    <LinearLayout
+    <!-- Feature 2 -->
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/feature_evidence"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="24dp"
-        android:gravity="center_vertical"
-        android:orientation="horizontal"
         app:layout_constraintTop_toBottomOf="@id/feature_ai">
 
         <View
+            android:id="@+id/feature_evidence_bg"
             android:layout_width="56dp"
             android:layout_height="56dp"
-            android:background="@drawable/rounded_bg_light_green" />
+            android:background="@drawable/rounded_bg_light_green"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <ImageView
             android:layout_width="24dp"
             android:layout_height="24dp"
-            android:layout_marginStart="-40dp"
-            android:src="@drawable/shield" />
+            android:src="@drawable/shield"
+            app:layout_constraintBottom_toBottomOf="@id/feature_evidence_bg"
+            app:layout_constraintEnd_toEndOf="@id/feature_evidence_bg"
+            app:layout_constraintStart_toStartOf="@id/feature_evidence_bg"
+            app:layout_constraintTop_toTopOf="@id/feature_evidence_bg" />
 
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="32dp"
-            android:layout_weight="1"
-            android:orientation="vertical">
+            android:layout_marginStart="16dp"
+            android:orientation="vertical"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/feature_evidence_bg"
+            app:layout_constraintTop_toTopOf="parent">
 
             <TextView
                 android:layout_width="wrap_content"
@@ -145,7 +168,7 @@
                 android:textColor="@color/text_secondary"
                 android:textSize="14sp" />
         </LinearLayout>
-    </LinearLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/btn_get_started"

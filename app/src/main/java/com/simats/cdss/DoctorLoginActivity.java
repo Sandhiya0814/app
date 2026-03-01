@@ -28,5 +28,9 @@ public class DoctorLoginActivity extends AppCompatActivity {
             intent.putExtra("role", "doctor");
             startActivity(intent);
         });
+
+        findViewById(R.id.tv_signup).setOnClickListener(v -> {
+            startActivity(new Intent(DoctorLoginActivity.this, SignupActivity.class));
+        });
     }
 }

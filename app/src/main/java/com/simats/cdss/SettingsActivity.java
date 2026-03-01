@@ -2,6 +2,7 @@ package com.simats.cdss;
 
 import android.content.Intent;
 import android.os.Bundle;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
@@ -35,12 +36,23 @@ public class SettingsActivity extends AppCompatActivity {
         });
 
         findViewById(R.id.btn_logout).setOnClickListener(v -> {
-            // Navigate back to Role selection or Login screen
-            Intent intent = new Intent(this, RoleActivity.class);
-            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-            startActivity(intent);
-            finish();
+            showLogoutConfirmation();
         });
+    }
+
+    private void showLogoutConfirmation() {
+        new AlertDialog.Builder(this)
+                .setTitle("Logout")
+                .setMessage("Are you sure you want to logout?")
+                .setPositiveButton("Logout", (dialog, which) -> {
+                    // Navigate back to Role selection and clear task stack
+                    Intent intent = new Intent(this, RoleActivity.class);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                    startActivity(intent);
+                    finish();
+                })
+                .setNegativeButton("Cancel", null)
+                .show();
     }
 
     private void setupBottomNav() {
