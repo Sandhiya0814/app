@@ -7,7 +7,15 @@ import android.text.TextWatcher;
 import android.widget.Button;
 import android.widget.EditText;
 import androidx.appcompat.app.AppCompatActivity;
+import android.widget.Toast;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.simats.cdss.network.ApiService;
+import com.simats.cdss.network.RetrofitClient;
+import com.simats.cdss.models.GenericResponse;
+import com.simats.cdss.models.VitalsRequest;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class VitalsActivity extends AppCompatActivity {
 
@@ -52,11 +60,52 @@ public class VitalsActivity extends AppCompatActivity {
         btnNext.setAlpha(0.5f);
 
         btnNext.setOnClickListener(v -> {
-            // Navigate to ABG Entry Screen
-            startActivity(new Intent(this, ABGEntryActivity.class));
+            submitVitals();
         });
 
         setupBottomNav();
+    }
+
+    private void submitVitals() {
+        try {
+            double spo2 = Double.parseDouble(etSpo2.getText().toString().trim());
+            int respRate = Integer.parseInt(etRespRate.getText().toString().trim());
+            int heartRate = Integer.parseInt(etHeartRate.getText().toString().trim());
+            double temp = Double.parseDouble(etTemperature.getText().toString().trim());
+            String bp = etBp.getText().toString().trim();
+
+            // Note: Replace 1 with the actual patient ID passed via Intent in a real scenario
+            int patientId = getIntent().getIntExtra("PATIENT_ID", 1);
+
+            ApiService api = RetrofitClient.getClient(this).create(ApiService.class);
+            VitalsRequest request = new VitalsRequest(spo2, respRate, heartRate, temp, bp);
+
+            btnNext.setEnabled(false);
+            btnNext.setText("Submitting...");
+
+            api.addVitalsData(patientId, request).enqueue(new Callback<GenericResponse>() {
+                @Override
+                public void onResponse(Call<GenericResponse> call, Response<GenericResponse> response) {
+                    btnNext.setEnabled(true);
+                    btnNext.setText("NEXT");
+                    if (response.isSuccessful()) {
+                        Toast.makeText(VitalsActivity.this, "Vitals saved. AI processing...", Toast.LENGTH_SHORT).show();
+                        startActivity(new Intent(VitalsActivity.this, ABGEntryActivity.class));
+                    } else {
+                        Toast.makeText(VitalsActivity.this, "Failed to save vitals: " + response.code(), Toast.LENGTH_SHORT).show();
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<GenericResponse> call, Throwable t) {
+                    btnNext.setEnabled(true);
+                    btnNext.setText("NEXT");
+                    Toast.makeText(VitalsActivity.this, "Network error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+                }
+            });
+        } catch (NumberFormatException e) {
+            Toast.makeText(this, "Please enter valid numeric values", Toast.LENGTH_SHORT).show();
+        }
     }
 
     private void checkValidation() {

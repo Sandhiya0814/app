@@ -123,10 +123,11 @@
                             android:src="@drawable/doctor" />
 
                         <TextView
+                            android:id="@+id/tv_total_doctors"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="8dp"
-                            android:text="12"
+                            android:text="--"
                             android:textColor="@color/text_dark"
                             android:textSize="22sp"
                             android:textStyle="bold" />
@@ -166,10 +167,11 @@
                             android:src="@drawable/staff" />
 
                         <TextView
+                            android:id="@+id/tv_total_staff"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="8dp"
-                            android:text="45"
+                            android:text="--"
                             android:textColor="@color/text_dark"
                             android:textSize="22sp"
                             android:textStyle="bold" />
@@ -234,9 +236,10 @@
                             android:textStyle="bold" />
 
                         <TextView
+                            android:id="@+id/tv_pending_requests"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="08 Action Required"
+                            android:text="-- Action Required"
                             android:textColor="@color/admin_warning"
                             android:textSize="12sp"
                             android:textStyle="bold" />

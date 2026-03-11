@@ -21,20 +21,23 @@
     <color name="light_amber">#FFFBEB</color>
     <color name="light_purple">#F5F3FF</color>
     <color name="light_red">#FEF2F2</color>
-    
-    <!-- Dashboard Specific Mappings -->
-    <color name="light_indigo">#EEF2FF</color>
-    <color name="light_emerald">#ECFDF5</color>
-    
+    <color name="gray_light">#F1F5F9</color>
+
     <!-- Mapped Accents for Admin Screens -->
     <color name="accent_blue_light">#F0F7FF</color>
     <color name="accent_green_light">#F0FDF4</color>
     <color name="accent_amber_light">#FFFBEB</color>
     <color name="accent_purple_light">#F5F3FF</color>
     
+    <!-- Dashboard Specific Mappings -->
+    <color name="light_indigo">#EEF2FF</color>
+    <color name="light_emerald">#ECFDF5</color>
+    
     <!-- Neutral Borders -->
     <color name="border_neutral">#E2E8F0</color>
+    <color name="border_light">#E2E8F0</color>
     
+    <color name="bg_light">#F8FAFC</color>
     <color name="bg_light_teal">#F0FDF4</color>
     <color name="bg_light_blue">#F1F5F9</color>
     <color name="bg_light_green">#F0FFF4</color>
