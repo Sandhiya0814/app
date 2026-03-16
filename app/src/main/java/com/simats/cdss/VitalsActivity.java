@@ -74,23 +74,40 @@ public class VitalsActivity extends AppCompatActivity {
             double temp = Double.parseDouble(etTemperature.getText().toString().trim());
             String bp = etBp.getText().toString().trim();
 
-            // Note: Replace 1 with the actual patient ID passed via Intent in a real scenario
-            int patientId = getIntent().getIntExtra("PATIENT_ID", 1);
+            int patientId = getIntent().getIntExtra("patient_id", -1);
 
             ApiService api = RetrofitClient.getClient(this).create(ApiService.class);
-            VitalsRequest request = new VitalsRequest(spo2, respRate, heartRate, temp, bp);
+
+            java.util.Map<String, Object> request = new java.util.HashMap<>();
+            request.put("patient_id", patientId);
+            request.put("spo2", spo2);
+            request.put("respiratory_rate", respRate);
+            request.put("heart_rate", heartRate);
+            request.put("temperature", temp);
+            request.put("blood_pressure", bp);
 
             btnNext.setEnabled(false);
             btnNext.setText("Submitting...");
 
-            api.addVitalsData(patientId, request).enqueue(new Callback<GenericResponse>() {
+            boolean isUpdate = getIntent().getBooleanExtra("is_update", false);
+            Call<GenericResponse> call;
+            if (isUpdate) {
+                call = api.updateStaffVitals(patientId, request);
+            } else {
+                call = api.addVitalsData(request);
+            }
+
+            call.enqueue(new Callback<GenericResponse>() {
                 @Override
                 public void onResponse(Call<GenericResponse> call, Response<GenericResponse> response) {
                     btnNext.setEnabled(true);
                     btnNext.setText("NEXT");
                     if (response.isSuccessful()) {
                         Toast.makeText(VitalsActivity.this, "Vitals saved. AI processing...", Toast.LENGTH_SHORT).show();
-                        startActivity(new Intent(VitalsActivity.this, ABGEntryActivity.class));
+                        Intent intent = new Intent(VitalsActivity.this, ABGEntryActivity.class);
+                        intent.putExtra("patient_id", patientId);
+                        intent.putExtra("is_update", isUpdate);
+                        startActivity(intent);
                     } else {
                         Toast.makeText(VitalsActivity.this, "Failed to save vitals: " + response.code(), Toast.LENGTH_SHORT).show();
                     }

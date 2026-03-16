@@ -20,8 +20,8 @@ public class StaffAlertsActivity extends AppCompatActivity {
         });
 
         findViewById(R.id.btnViewPatient).setOnClickListener(v -> {
-            // Updated: Navigate to StaffPatientListActivity as requested
-            startActivity(new Intent(this, StaffPatientListActivity.class));
+            // Fix: Changed StaffPatientListActivity to StaffPatientsActivity
+            startActivity(new Intent(this, StaffPatientsActivity.class));
         });
 
         findViewById(R.id.btnRecheckVitals).setOnClickListener(v -> {
@@ -50,7 +50,8 @@ public class StaffAlertsActivity extends AppCompatActivity {
                     finish();
                     return true;
                 } else if (itemId == R.id.nav_patients) {
-                    startActivity(new Intent(this, StaffPatientListActivity.class));
+                    // Fix: Changed StaffPatientListActivity to StaffPatientsActivity
+                    startActivity(new Intent(this, StaffPatientsActivity.class));
                     finish();
                     return true;
                 } else if (itemId == R.id.nav_settings) {

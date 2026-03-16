@@ -36,9 +36,55 @@ public class GoldClassificationActivity extends AppCompatActivity {
         cardGold3.setOnClickListener(listener);
         cardGold4.setOnClickListener(listener);
 
+        int patientId = getIntent().getIntExtra("patient_id", -1);
+
         btnNext.setOnClickListener(v -> {
-            // Navigate to Spirometry Data screen
-            startActivity(new Intent(this, SpirometryDataActivity.class));
+            if (selectedCard == null) {
+                android.widget.Toast.makeText(this, "Please select a GOLD stage", android.widget.Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            String goldStage;
+            if (selectedCard.getId() == R.id.card_gold_1) {
+                goldStage = "GOLD 1";
+            } else if (selectedCard.getId() == R.id.card_gold_2) {
+                goldStage = "GOLD 2";
+            } else if (selectedCard.getId() == R.id.card_gold_3) {
+                goldStage = "GOLD 3";
+            } else {
+                goldStage = "GOLD 4";
+            }
+
+            btnNext.setEnabled(false);
+
+            java.util.Map<String, Object> body = new java.util.HashMap<>();
+            body.put("patient_id", patientId);
+            body.put("gold_stage", goldStage);
+
+            com.simats.cdss.network.ApiService apiService = com.simats.cdss.network.RetrofitClient.getClient(this).create(com.simats.cdss.network.ApiService.class);
+            retrofit2.Call<com.simats.cdss.models.GenericResponse> call = apiService.addGoldClassification(body);
+
+            call.enqueue(new retrofit2.Callback<com.simats.cdss.models.GenericResponse>() {
+                @Override
+                public void onResponse(retrofit2.Call<com.simats.cdss.models.GenericResponse> call, retrofit2.Response<com.simats.cdss.models.GenericResponse> response) {
+                    btnNext.setEnabled(true);
+                    if (response.isSuccessful() && response.body() != null) {
+                        android.widget.Toast.makeText(GoldClassificationActivity.this, "GOLD classification saved successfully", android.widget.Toast.LENGTH_SHORT).show();
+                        
+                        Intent intent = new Intent(GoldClassificationActivity.this, SpirometryDataActivity.class);
+                        intent.putExtra("patient_id", patientId);
+                        startActivity(intent);
+                    } else {
+                        android.widget.Toast.makeText(GoldClassificationActivity.this, "Failed to save GOLD classification", android.widget.Toast.LENGTH_LONG).show();
+                    }
+                }
+
+                @Override
+                public void onFailure(retrofit2.Call<com.simats.cdss.models.GenericResponse> call, Throwable t) {
+                    btnNext.setEnabled(true);
+                    android.widget.Toast.makeText(GoldClassificationActivity.this, "Network error. Please try again.", android.widget.Toast.LENGTH_LONG).show();
+                }
+            });
         });
 
         setupBottomNav();

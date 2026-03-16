@@ -3,12 +3,8 @@ package com.simats.cdss;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.text.Editable;
-import android.text.TextWatcher;
-import android.widget.EditText;
+import android.view.View;
 import android.widget.TextView;
-import android.widget.Toast;
-
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -27,7 +23,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class PatientListActivity extends AppCompatActivity {
+public class DoctorPatientsActivity extends AppCompatActivity {
 
     private MaterialCardView btnAll, btnCritical, btnWarning, btnStable;
     private TextView tvAll, tvCritical, tvWarning, tvStable;
@@ -35,7 +31,6 @@ public class PatientListActivity extends AppCompatActivity {
     private RecyclerView rvPatients;
     private DoctorPatientAdapter adapter;
     private List<PatientResponse> allPatients = new ArrayList<>();
-    private EditText etSearch;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,19 +56,22 @@ public class PatientListActivity extends AppCompatActivity {
         rvPatients.setAdapter(adapter);
 
         // Initialize Search
-        etSearch = findViewById(R.id.et_search);
-        etSearch.addTextChangedListener(new TextWatcher() {
+        android.widget.EditText etSearch = findViewById(R.id.et_search);
+        etSearch.addTextChangedListener(new android.text.TextWatcher() {
             @Override public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
             @Override public void onTextChanged(CharSequence s, int start, int before, int count) {
                 searchList(s.toString());
             }
-            @Override public void afterTextChanged(Editable s) {}
+            @Override public void afterTextChanged(android.text.Editable s) {}
         });
-
+        
         setupFilters();
         setupBottomNav();
+    }
 
-        // Fetch patients from API
+    @Override
+    protected void onResume() {
+        super.onResume();
         fetchPatients();
     }
 
@@ -96,7 +94,7 @@ public class PatientListActivity extends AppCompatActivity {
                 if (response.isSuccessful() && response.body() != null) {
                     allPatients = response.body();
                     
-                    // Check if a filter was passed from the Dashboard
+                    // Check if a filter was passed from the Dashboard after data load
                     String filter = getIntent().getStringExtra("filter");
                     if (filter != null) {
                         filterList(filter);
@@ -108,7 +106,7 @@ public class PatientListActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<List<PatientResponse>> call, Throwable t) {
-                Toast.makeText(PatientListActivity.this, "Network error", Toast.LENGTH_SHORT).show();
+                // handle failure
             }
         });
     }
@@ -172,36 +170,34 @@ public class PatientListActivity extends AppCompatActivity {
 
     private void setupBottomNav() {
         BottomNavigationView bottomNav = findViewById(R.id.bottom_navigation);
-        if (bottomNav != null) {
-            bottomNav.setSelectedItemId(R.id.nav_patients);
-            bottomNav.setOnItemSelectedListener(item -> {
-                int itemId = item.getItemId();
-                SessionManager session = new SessionManager(this);
-                String role = session.getRole();
+        bottomNav.setSelectedItemId(R.id.nav_patients);
+        bottomNav.setOnItemSelectedListener(item -> {
+            int itemId = item.getItemId();
+            SessionManager session = new SessionManager(this);
+            String role = session.getRole();
 
-                if (itemId == R.id.nav_home) {
-                    if ("staff".equals(role)) {
-                        startActivity(new Intent(this, StaffDashboardActivity.class));
-                    } else {
-                        startActivity(new Intent(this, DoctordashboardActivity.class));
-                    }
-                    finish();
-                    return true;
-                } else if (itemId == R.id.nav_alerts) {
-                    if ("staff".equals(role)) {
-                        startActivity(new Intent(this, StaffAlertsActivity.class));
-                    } else {
-                        startActivity(new Intent(this, DoctorAlertsActivity.class));
-                    }
-                    finish();
-                    return true;
-                } else if (itemId == R.id.nav_settings) {
-                    startActivity(new Intent(this, SettingsActivity.class));
-                    finish();
-                    return true;
+            if (itemId == R.id.nav_home) {
+                if ("staff".equals(role)) {
+                    startActivity(new Intent(this, StaffDashboardActivity.class));
+                } else {
+                    startActivity(new Intent(this, DoctordashboardActivity.class));
                 }
-                return itemId == R.id.nav_patients;
-            });
-        }
+                finish();
+                return true;
+            } else if (itemId == R.id.nav_alerts) {
+                if ("staff".equals(role)) {
+                    startActivity(new Intent(this, StaffAlertsActivity.class));
+                } else {
+                    startActivity(new Intent(this, DoctorAlertsActivity.class));
+                }
+                finish();
+                return true;
+            } else if (itemId == R.id.nav_settings) {
+                startActivity(new Intent(this, SettingsActivity.class));
+                finish();
+                return true;
+            }
+            return itemId == R.id.nav_patients;
+        });
     }
 }

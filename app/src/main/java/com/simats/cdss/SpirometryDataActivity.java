@@ -42,10 +42,57 @@ public class SpirometryDataActivity extends AppCompatActivity {
         etFev1.addTextChangedListener(watcher);
         etFev1Fvc.addTextChangedListener(watcher);
 
-        // EXPLICIT Navigation to Gas Exchange History Screen
+        int patientId = getIntent().getIntExtra("patient_id", -1);
+
+        // EXPLICIT Navigation to Gas Exchange History Screen via API call
         btnNext.setOnClickListener(v -> {
-            Intent intent = new Intent(SpirometryDataActivity.this, GasExchangeHistoryActivity.class);
-            startActivity(intent);
+            String fev1PercentStr = etFev1.getText().toString().trim();
+            String fev1FvcRatioStr = etFev1Fvc.getText().toString().trim();
+
+            if (fev1PercentStr.isEmpty() || fev1FvcRatioStr.isEmpty()) {
+                android.widget.Toast.makeText(this, "Please fill in all spirometry values", android.widget.Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            try {
+                float fev1Percent = Float.parseFloat(fev1PercentStr);
+                float fev1FvcRatio = Float.parseFloat(fev1FvcRatioStr);
+
+                btnNext.setEnabled(false);
+
+                java.util.Map<String, Object> body = new java.util.HashMap<>();
+                body.put("patient_id", patientId);
+                body.put("fev1_percent", fev1Percent);
+                body.put("fev1_fvc_ratio", fev1FvcRatio);
+
+                com.simats.cdss.network.ApiService apiService = com.simats.cdss.network.RetrofitClient.getClient(this).create(com.simats.cdss.network.ApiService.class);
+                retrofit2.Call<com.simats.cdss.models.GenericResponse> call = apiService.addSpirometryData(body);
+
+                call.enqueue(new retrofit2.Callback<com.simats.cdss.models.GenericResponse>() {
+                    @Override
+                    public void onResponse(retrofit2.Call<com.simats.cdss.models.GenericResponse> call, retrofit2.Response<com.simats.cdss.models.GenericResponse> response) {
+                        btnNext.setEnabled(true);
+                        if (response.isSuccessful() && response.body() != null) {
+                            android.widget.Toast.makeText(SpirometryDataActivity.this, "Spirometry data saved successfully", android.widget.Toast.LENGTH_SHORT).show();
+
+                            Intent intent = new Intent(SpirometryDataActivity.this, GasExchangeHistoryActivity.class);
+                            intent.putExtra("patient_id", patientId);
+                            startActivity(intent);
+                        } else {
+                            android.widget.Toast.makeText(SpirometryDataActivity.this, "Failed to save spirometry data", android.widget.Toast.LENGTH_LONG).show();
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(retrofit2.Call<com.simats.cdss.models.GenericResponse> call, Throwable t) {
+                        btnNext.setEnabled(true);
+                        android.widget.Toast.makeText(SpirometryDataActivity.this, "Network error. Please try again.", android.widget.Toast.LENGTH_LONG).show();
+                    }
+                });
+
+            } catch (NumberFormatException e) {
+                android.widget.Toast.makeText(this, "Please enter valid numeric values", android.widget.Toast.LENGTH_SHORT).show();
+            }
         });
 
         setupBottomNav();

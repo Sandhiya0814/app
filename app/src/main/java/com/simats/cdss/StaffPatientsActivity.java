@@ -3,9 +3,6 @@ package com.simats.cdss;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.text.Editable;
-import android.text.TextWatcher;
-import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -15,7 +12,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.card.MaterialCardView;
-import com.simats.cdss.adapters.DoctorPatientAdapter;
+
+import com.simats.cdss.adapters.StaffPatientAdapter;
 import com.simats.cdss.models.PatientResponse;
 import com.simats.cdss.network.ApiService;
 import com.simats.cdss.network.RetrofitClient;
@@ -27,20 +25,19 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class PatientListActivity extends AppCompatActivity {
+public class StaffPatientsActivity extends AppCompatActivity {
 
     private MaterialCardView btnAll, btnCritical, btnWarning, btnStable;
     private TextView tvAll, tvCritical, tvWarning, tvStable;
     
     private RecyclerView rvPatients;
-    private DoctorPatientAdapter adapter;
+    private StaffPatientAdapter patientAdapter;
     private List<PatientResponse> allPatients = new ArrayList<>();
-    private EditText etSearch;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_patient_list);
+        setContentView(R.layout.activity_staff_patient_list);
 
         // Initialize Filter Buttons
         btnAll = findViewById(R.id.btn_all);
@@ -54,27 +51,25 @@ public class PatientListActivity extends AppCompatActivity {
         tvWarning = findViewById(R.id.tv_warning);
         tvStable = findViewById(R.id.tv_stable);
 
-        // Initialize RecyclerView
+        // Set up RecyclerView
         rvPatients = findViewById(R.id.rv_patients);
         rvPatients.setLayoutManager(new LinearLayoutManager(this));
-        adapter = new DoctorPatientAdapter(this, new ArrayList<>());
-        rvPatients.setAdapter(adapter);
+        String fromAction = getIntent().getStringExtra("from_action");
+        patientAdapter = new StaffPatientAdapter(this, new ArrayList<>(), fromAction);
+        rvPatients.setAdapter(patientAdapter);
 
         // Initialize Search
-        etSearch = findViewById(R.id.et_search);
-        etSearch.addTextChangedListener(new TextWatcher() {
+        android.widget.EditText etSearch = findViewById(R.id.et_search);
+        etSearch.addTextChangedListener(new android.text.TextWatcher() {
             @Override public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
             @Override public void onTextChanged(CharSequence s, int start, int before, int count) {
                 searchList(s.toString());
             }
-            @Override public void afterTextChanged(Editable s) {}
+            @Override public void afterTextChanged(android.text.Editable s) {}
         });
 
         setupFilters();
         setupBottomNav();
-
-        // Fetch patients from API
-        fetchPatients();
     }
 
     private void searchList(String query) {
@@ -85,7 +80,13 @@ public class PatientListActivity extends AppCompatActivity {
                 filteredList.add(p);
             }
         }
-        adapter.updateList(filteredList);
+        patientAdapter.updateList(filteredList);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        fetchPatients();
     }
 
     private void fetchPatients() {
@@ -95,20 +96,15 @@ public class PatientListActivity extends AppCompatActivity {
             public void onResponse(Call<List<PatientResponse>> call, Response<List<PatientResponse>> response) {
                 if (response.isSuccessful() && response.body() != null) {
                     allPatients = response.body();
-                    
-                    // Check if a filter was passed from the Dashboard
-                    String filter = getIntent().getStringExtra("filter");
-                    if (filter != null) {
-                        filterList(filter);
-                    } else {
-                        filterList("all"); // Default view
-                    }
+                    filterList("all"); // Refresh views
+                } else {
+                    Toast.makeText(StaffPatientsActivity.this, "Failed to load patients", Toast.LENGTH_SHORT).show();
                 }
             }
 
             @Override
             public void onFailure(Call<List<PatientResponse>> call, Throwable t) {
-                Toast.makeText(PatientListActivity.this, "Network error", Toast.LENGTH_SHORT).show();
+                Toast.makeText(StaffPatientsActivity.this, "Network error", Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -121,7 +117,6 @@ public class PatientListActivity extends AppCompatActivity {
     }
 
     private void filterList(String status) {
-        // Reset all buttons to unselected state
         resetButton(btnAll, tvAll);
         resetButton(btnCritical, tvCritical);
         resetButton(btnWarning, tvWarning);
@@ -132,29 +127,35 @@ public class PatientListActivity extends AppCompatActivity {
         switch (status.toLowerCase()) {
             case "all":
                 selectButton(btnAll, tvAll);
-                filteredList.addAll(allPatients);
+                filteredList = new ArrayList<>(allPatients);
                 break;
             case "critical":
                 selectButton(btnCritical, tvCritical);
                 for (PatientResponse p : allPatients) {
-                    if ("critical".equalsIgnoreCase(p.getStatus())) filteredList.add(p);
+                    if ("critical".equalsIgnoreCase(p.getStatus())) {
+                        filteredList.add(p);
+                    }
                 }
                 break;
             case "warning":
                 selectButton(btnWarning, tvWarning);
                 for (PatientResponse p : allPatients) {
-                    if ("warning".equalsIgnoreCase(p.getStatus())) filteredList.add(p);
+                    if ("warning".equalsIgnoreCase(p.getStatus())) {
+                        filteredList.add(p);
+                    }
                 }
                 break;
             case "stable":
                 selectButton(btnStable, tvStable);
                 for (PatientResponse p : allPatients) {
-                    if ("stable".equalsIgnoreCase(p.getStatus())) filteredList.add(p);
+                    if ("stable".equalsIgnoreCase(p.getStatus())) {
+                        filteredList.add(p);
+                    }
                 }
                 break;
         }
         
-        adapter.updateList(filteredList);
+        patientAdapter.updateList(filteredList);
     }
 
     private void selectButton(MaterialCardView card, TextView text) {
@@ -176,23 +177,12 @@ public class PatientListActivity extends AppCompatActivity {
             bottomNav.setSelectedItemId(R.id.nav_patients);
             bottomNav.setOnItemSelectedListener(item -> {
                 int itemId = item.getItemId();
-                SessionManager session = new SessionManager(this);
-                String role = session.getRole();
-
                 if (itemId == R.id.nav_home) {
-                    if ("staff".equals(role)) {
-                        startActivity(new Intent(this, StaffDashboardActivity.class));
-                    } else {
-                        startActivity(new Intent(this, DoctordashboardActivity.class));
-                    }
+                    startActivity(new Intent(this, StaffDashboardActivity.class));
                     finish();
                     return true;
                 } else if (itemId == R.id.nav_alerts) {
-                    if ("staff".equals(role)) {
-                        startActivity(new Intent(this, StaffAlertsActivity.class));
-                    } else {
-                        startActivity(new Intent(this, DoctorAlertsActivity.class));
-                    }
+                    startActivity(new Intent(this, StaffAlertsActivity.class));
                     finish();
                     return true;
                 } else if (itemId == R.id.nav_settings) {

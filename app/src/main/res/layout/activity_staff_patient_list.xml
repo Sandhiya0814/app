@@ -61,6 +61,7 @@
                 app:tint="#94A3B8" />
 
             <EditText
+                android:id="@+id/et_search"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_marginStart="8dp"
@@ -188,157 +189,16 @@
     </HorizontalScrollView>
 
     <!-- Patient Cards List -->
-    <ScrollView
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rv_patients"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_marginTop="8dp"
         app:layout_constraintBottom_toTopOf="@+id/bottom_navigation"
-        app:layout_constraintTop_toBottomOf="@id/category_scroll">
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:paddingBottom="24dp">
-
-            <!-- Robert Chen Card -->
-            <com.google.android.material.card.MaterialCardView
-                android:id="@+id/patient_card_robert"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginHorizontal="16dp"
-                android:layout_marginTop="12dp"
-                app:cardBackgroundColor="#FFFFFF"
-                app:cardCornerRadius="16dp"
-                app:cardElevation="2dp"
-                app:strokeWidth="0dp">
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:padding="20dp">
-                    <RelativeLayout android:layout_width="match_parent" android:layout_height="wrap_content">
-                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Robert Chen" android:textColor="#1A1C1E" android:textSize="18sp" android:textStyle="bold" />
-                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_alignParentEnd="true" android:background="@drawable/chip_red_rounded" android:backgroundTint="#FEF2F2" android:paddingHorizontal="12dp" android:paddingVertical="4dp" android:text="CRITICAL" android:textColor="#EF4444" android:textSize="10sp" android:textStyle="bold" />
-                    </RelativeLayout>
-                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="4dp" android:text="68 yrs • Room 302" android:textColor="#64748B" android:textSize="14sp" />
-                    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="16dp" android:orientation="horizontal">
-                        <LinearLayout style="@style/VitalsBox" android:layout_marginEnd="8dp">
-                            <TextView style="@style/VitalsLabel" android:text="SpO2" />
-                            <TextView android:id="@+id/tv_spo2_robert" style="@style/VitalsValue" android:text="86 %" android:textColor="#EF4444" />
-                        </LinearLayout>
-                        <LinearLayout style="@style/VitalsBox" android:layout_marginStart="8dp">
-                            <TextView style="@style/VitalsLabel" android:text="Respiratory" />
-                            <TextView android:id="@+id/tv_resp_robert" style="@style/VitalsValue" android:text="24" />
-                        </LinearLayout>
-                    </LinearLayout>
-                </LinearLayout>
-            </com.google.android.material.card.MaterialCardView>
-
-            <!-- Maria Garcia Card -->
-            <com.google.android.material.card.MaterialCardView
-                android:id="@+id/patient_card_maria"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginHorizontal="16dp"
-                android:layout_marginTop="12dp"
-                app:cardBackgroundColor="#FFFFFF"
-                app:cardCornerRadius="16dp"
-                app:cardElevation="2dp"
-                app:strokeWidth="0dp">
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:padding="20dp">
-                    <RelativeLayout android:layout_width="match_parent" android:layout_height="wrap_content">
-                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Maria Garcia" android:textColor="#1A1C1E" android:textSize="18sp" android:textStyle="bold" />
-                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_alignParentEnd="true" android:background="@drawable/chip_orange_rounded" android:backgroundTint="#FFFBEB" android:paddingHorizontal="12dp" android:paddingVertical="4dp" android:text="WARNING" android:textColor="#F59E0B" android:textSize="10sp" android:textStyle="bold" />
-                    </RelativeLayout>
-                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="4dp" android:text="72 yrs • Room 204" android:textColor="#64748B" android:textSize="14sp" />
-                    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="16dp" android:orientation="horizontal">
-                        <LinearLayout style="@style/VitalsBox" android:layout_marginEnd="8dp">
-                            <TextView style="@style/VitalsLabel" android:text="SpO2" />
-                            <TextView android:id="@+id/tv_spo2_maria" style="@style/VitalsValue" android:text="89 %" android:textColor="#F59E0B" />
-                        </LinearLayout>
-                        <LinearLayout style="@style/VitalsBox" android:layout_marginStart="8dp">
-                            <TextView style="@style/VitalsLabel" android:text="Respiratory" />
-                            <TextView android:id="@+id/tv_resp_maria" style="@style/VitalsValue" android:text="22" />
-                        </LinearLayout>
-                    </LinearLayout>
-                </LinearLayout>
-            </com.google.android.material.card.MaterialCardView>
-
-            <!-- James Wilson Card -->
-            <com.google.android.material.card.MaterialCardView
-                android:id="@+id/patient_card_james"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginHorizontal="16dp"
-                android:layout_marginTop="12dp"
-                app:cardBackgroundColor="#FFFFFF"
-                app:cardCornerRadius="16dp"
-                app:cardElevation="2dp"
-                app:strokeWidth="0dp">
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:padding="20dp">
-                    <RelativeLayout android:layout_width="match_parent" android:layout_height="wrap_content">
-                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="James Wilson" android:textColor="#1A1C1E" android:textSize="18sp" android:textStyle="bold" />
-                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_alignParentEnd="true" android:text="STABLE" android:textColor="#64748B" android:textSize="12sp" android:textStyle="bold" />
-                    </RelativeLayout>
-                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="4dp" android:text="65 yrs • Room 104" android:textColor="#64748B" android:textSize="14sp" />
-                    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="16dp" android:orientation="horizontal">
-                        <LinearLayout style="@style/VitalsBox" android:layout_marginEnd="8dp">
-                            <TextView style="@style/VitalsLabel" android:text="SpO2" />
-                            <TextView android:id="@+id/tv_spo2_james" style="@style/VitalsValue" android:text="94 %" android:textColor="#139487" />
-                        </LinearLayout>
-                        <LinearLayout style="@style/VitalsBox" android:layout_marginStart="8dp">
-                            <TextView style="@style/VitalsLabel" android:text="Respiratory" />
-                            <TextView android:id="@+id/tv_resp_james" style="@style/VitalsValue" android:text="18" />
-                        </LinearLayout>
-                    </LinearLayout>
-                </LinearLayout>
-            </com.google.android.material.card.MaterialCardView>
-
-            <!-- Sarah Johnson Card -->
-            <com.google.android.material.card.MaterialCardView
-                android:id="@+id/patient_card_sarah"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginHorizontal="16dp"
-                android:layout_marginTop="12dp"
-                app:cardBackgroundColor="#FFFFFF"
-                app:cardCornerRadius="16dp"
-                app:cardElevation="2dp"
-                app:strokeWidth="0dp">
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:padding="20dp">
-                    <RelativeLayout android:layout_width="match_parent" android:layout_height="wrap_content">
-                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Sarah Johnson" android:textColor="#1A1C1E" android:textSize="18sp" android:textStyle="bold" />
-                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_alignParentEnd="true" android:text="STABLE" android:textColor="#64748B" android:textSize="12sp" android:textStyle="bold" />
-                    </RelativeLayout>
-                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="4dp" android:text="59 yrs • Room 102" android:textColor="#64748B" android:textSize="14sp" />
-                    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="16dp" android:orientation="horizontal">
-                        <LinearLayout style="@style/VitalsBox" android:layout_marginEnd="8dp">
-                            <TextView style="@style/VitalsLabel" android:text="SpO2" />
-                            <TextView android:id="@+id/tv_spo2_sarah" style="@style/VitalsValue" android:text="95 %" android:textColor="#139487" />
-                        </LinearLayout>
-                        <LinearLayout style="@style/VitalsBox" android:layout_marginStart="8dp">
-                            <TextView style="@style/VitalsLabel" android:text="Respiratory" />
-                            <TextView android:id="@+id/tv_resp_sarah" style="@style/VitalsValue" android:text="16" />
-                        </LinearLayout>
-                    </LinearLayout>
-                </LinearLayout>
-            </com.google.android.material.card.MaterialCardView>
-
-        </LinearLayout>
-    </ScrollView>
+        app:layout_constraintTop_toBottomOf="@id/category_scroll"
+        android:paddingBottom="24dp"
+        android:clipToPadding="false"
+        tools:listitem="@layout/item_staff_patient" />
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottom_navigation"

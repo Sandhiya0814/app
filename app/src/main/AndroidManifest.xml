@@ -56,13 +56,7 @@
             android:name=".StaffAlertsActivity"
             android:exported="false" />
         <activity
-            android:name=".StaffPatientList2Activity"
-            android:exported="false" />
-        <activity
-            android:name=".StaffPatientList3Activity"
-            android:exported="false" />
-        <activity
-            android:name=".StaffPatientListActivity"
+            android:name=".StaffPatientsActivity"
             android:exported="false" />
         <activity
             android:name=".ABGEntryActivity"
@@ -158,7 +152,7 @@
 <!--            android:name=".AlertsActivity"-->
 <!--            android:exported="false" />-->
         <activity
-            android:name=".PatientListActivity"
+            android:name=".DoctorPatientsActivity"
             android:exported="false" />
         <activity
             android:name=".DoctordashboardActivity"

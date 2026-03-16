@@ -5,14 +5,19 @@ import android.os.Bundle;
 import androidx.appcompat.app.AppCompatActivity;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
-public class ABGTrendsActivity extends AppCompatActivity {
+public class OxygenEvaluationActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_abg_trends);
+        setContentView(R.layout.activity_oxygen_requirement);
 
         findViewById(R.id.iv_back).setOnClickListener(v -> onBackPressed());
+
+        findViewById(R.id.btn_proceed).setOnClickListener(v -> {
+            // Navigate to Device Selection Screen
+            startActivity(new Intent(this, DeviceSelectionActivity.class));
+        });
 
         setupBottomNav();
     }
@@ -22,32 +27,16 @@ public class ABGTrendsActivity extends AppCompatActivity {
         bottomNav.setSelectedItemId(R.id.nav_patients);
         bottomNav.setOnItemSelectedListener(item -> {
             int itemId = item.getItemId();
-            SessionManager session = new SessionManager(this);
-            String role = session.getRole();
-
             if (itemId == R.id.nav_home) {
-                if ("staff".equals(role)) {
-                    startActivity(new Intent(this, StaffDashboardActivity.class));
-                } else {
-                    startActivity(new Intent(this, DoctordashboardActivity.class));
-                }
+                startActivity(new Intent(this, DoctordashboardActivity.class));
                 finish();
                 return true;
             } else if (itemId == R.id.nav_patients) {
-                if ("staff".equals(role)) {
-                    startActivity(new Intent(this, StaffPatientsActivity.class));
-                } else {
-                    // Fix: Changed PatientListActivity to DoctorPatientsActivity
-                    startActivity(new Intent(this, DoctorPatientsActivity.class));
-                }
+                startActivity(new Intent(this, PatientListActivity.class));
                 finish();
                 return true;
             } else if (itemId == R.id.nav_alerts) {
-                if ("staff".equals(role)) {
-                    startActivity(new Intent(this, StaffAlertsActivity.class));
-                } else {
-                    startActivity(new Intent(this, DoctorAlertsActivity.class));
-                }
+                startActivity(new Intent(this, DoctorAlertsActivity.class));
                 finish();
                 return true;
             } else if (itemId == R.id.nav_settings) {

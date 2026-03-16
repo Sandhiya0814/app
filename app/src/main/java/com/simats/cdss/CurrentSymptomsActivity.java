@@ -51,9 +51,63 @@ public class CurrentSymptomsActivity extends AppCompatActivity {
         cbFever.setOnCheckedChangeListener(symptomListener);
         cbChestTightness.setOnCheckedChangeListener(symptomListener);
 
+        int patientId = getIntent().getIntExtra("patient_id", -1);
+
         btnNext.setOnClickListener(v -> {
-            // Navigate to Vitals screen
-            startActivity(new Intent(this, VitalsActivity.class));
+            int selectedMmrcId = rgMmrc.getCheckedRadioButtonId();
+            if (selectedMmrcId == -1) {
+                android.widget.Toast.makeText(this, "Please select an mMRC scale", android.widget.Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            int mmrcScore = 0;
+            if (selectedMmrcId == R.id.rb_mmrc_0) mmrcScore = 0;
+            else if (selectedMmrcId == R.id.rb_mmrc_1) mmrcScore = 1;
+            else if (selectedMmrcId == R.id.rb_mmrc_2) mmrcScore = 2;
+            else if (selectedMmrcId == R.id.rb_mmrc_3) mmrcScore = 3;
+            else if (selectedMmrcId == R.id.rb_mmrc_4) mmrcScore = 4;
+
+            boolean increasedCough = cbCough.isChecked();
+            boolean increasedSputum = cbSputum.isChecked();
+            boolean wheezing = cbWheezing.isChecked();
+            boolean fever = cbFever.isChecked();
+            boolean chestTightness = cbChestTightness.isChecked();
+
+            btnNext.setEnabled(false);
+
+            java.util.Map<String, Object> body = new java.util.HashMap<>();
+            body.put("patient_id", patientId);
+            body.put("mmrc_score", mmrcScore);
+            body.put("increased_cough", increasedCough);
+            body.put("increased_sputum", increasedSputum);
+            body.put("wheezing", wheezing);
+            body.put("fever", fever);
+            body.put("chest_tightness", chestTightness);
+
+            com.simats.cdss.network.ApiService apiService = com.simats.cdss.network.RetrofitClient.getClient(this).create(com.simats.cdss.network.ApiService.class);
+            retrofit2.Call<com.simats.cdss.models.GenericResponse> call = apiService.addCurrentSymptoms(body);
+
+            call.enqueue(new retrofit2.Callback<com.simats.cdss.models.GenericResponse>() {
+                @Override
+                public void onResponse(retrofit2.Call<com.simats.cdss.models.GenericResponse> call, retrofit2.Response<com.simats.cdss.models.GenericResponse> response) {
+                    btnNext.setEnabled(true);
+                    if (response.isSuccessful() && response.body() != null) {
+                        android.widget.Toast.makeText(CurrentSymptomsActivity.this, "Current symptoms saved successfully", android.widget.Toast.LENGTH_SHORT).show();
+
+                        Intent intent = new Intent(CurrentSymptomsActivity.this, VitalsActivity.class);
+                        intent.putExtra("patient_id", patientId);
+                        startActivity(intent);
+                    } else {
+                        android.widget.Toast.makeText(CurrentSymptomsActivity.this, "Failed to save current symptoms", android.widget.Toast.LENGTH_LONG).show();
+                    }
+                }
+
+                @Override
+                public void onFailure(retrofit2.Call<com.simats.cdss.models.GenericResponse> call, Throwable t) {
+                    btnNext.setEnabled(true);
+                    android.widget.Toast.makeText(CurrentSymptomsActivity.this, "Network error. Please try again.", android.widget.Toast.LENGTH_LONG).show();
+                }
+            });
         });
 
         setupBottomNav();

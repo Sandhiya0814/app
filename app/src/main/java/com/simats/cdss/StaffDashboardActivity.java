@@ -24,23 +24,23 @@ public class StaffDashboardActivity extends AppCompatActivity {
             startActivity(new Intent(this, AddNewPatientActivity.class));
         });
 
-        // Navigate to StaffPatientListActivity for Vitals entry
+        // Navigate to StaffPatientsActivity for Vitals entry
         findViewById(R.id.card_enter_vitals).setOnClickListener(v -> {
-            Intent intent = new Intent(this, StaffPatientListActivity.class);
+            Intent intent = new Intent(this, StaffPatientsActivity.class);
             intent.putExtra("from_action", "vitals");
             startActivity(intent);
         });
 
-        // Navigate to StaffPatientList2Activity for Symptoms entry
+        // Navigate to StaffPatientsActivity for Symptoms entry
         findViewById(R.id.card_symptoms).setOnClickListener(v -> {
-            Intent intent = new Intent(this, StaffPatientList2Activity.class);
+            Intent intent = new Intent(this, StaffPatientsActivity.class);
             intent.putExtra("from_action", "symptoms");
             startActivity(intent);
         });
 
-        // Navigate to StaffPatientList3Activity for ABG entry
+        // Navigate to StaffPatientsActivity for ABG entry
         findViewById(R.id.card_enter_abg).setOnClickListener(v -> {
-            Intent intent = new Intent(this, StaffPatientList3Activity.class);
+            Intent intent = new Intent(this, StaffPatientsActivity.class);
             intent.putExtra("from_action", "abg_entry");
             startActivity(intent);
         });
@@ -71,7 +71,7 @@ public class StaffDashboardActivity extends AppCompatActivity {
             bottomNav.setOnItemSelectedListener(item -> {
                 int itemId = item.getItemId();
                 if (itemId == R.id.nav_patients) {
-                    startActivity(new Intent(this, StaffPatientListActivity.class));
+                    startActivity(new Intent(this, StaffPatientsActivity.class));
                     return true;
                 } else if (itemId == R.id.nav_alerts) {
                     startActivity(new Intent(this, StaffAlertsActivity.class));

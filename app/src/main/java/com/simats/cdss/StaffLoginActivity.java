@@ -60,6 +60,12 @@ public class StaffLoginActivity extends AppCompatActivity {
             @Override
             public void onResponse(Call<LoginResponse> call, Response<LoginResponse> response) {
                 if (response.isSuccessful() && response.body() != null) {
+                    String accessToken = response.body().getAccess();
+                    String refreshToken = response.body().getRefresh();
+
+                    SessionManager session = new SessionManager(StaffLoginActivity.this);
+                    session.saveTokens(accessToken, refreshToken, "staff");
+
                     Toast.makeText(StaffLoginActivity.this, "Login Successful", Toast.LENGTH_SHORT).show();
                     Intent intent = new Intent(StaffLoginActivity.this, VerificationActivity.class);
                     intent.putExtra("role", "staff");

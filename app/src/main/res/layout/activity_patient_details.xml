@@ -86,6 +86,7 @@
                             android:textStyle="bold" />
 
                         <TextView
+                            android:id="@+id/tv_patient_status"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_alignParentEnd="true"
@@ -99,6 +100,7 @@
                             android:textStyle="bold" />
 
                         <TextView
+                            android:id="@+id/tv_patient_info"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_below="@id/tv_patient_name"
@@ -109,6 +111,7 @@
                     </RelativeLayout>
 
                     <TextView
+                        android:id="@+id/tv_diagnosis"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="20dp"
@@ -168,6 +171,7 @@
                             android:orientation="vertical">
 
                             <TextView
+                                android:id="@+id/tv_spo2_value"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="86 %"
@@ -176,6 +180,7 @@
                                 android:textStyle="bold" />
 
                             <TextView
+                                android:id="@+id/tv_target_spo2"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="Target: 88-92%"
@@ -197,7 +202,7 @@
                             android:gravity="center"
                             android:orientation="vertical">
                             <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Device" android:textColor="#94A3B8" android:textSize="12sp" />
-                            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Venturi Mask" android:textColor="#1A1C1E" android:textSize="16sp" android:textStyle="bold" android:layout_marginTop="4dp" />
+                            <TextView android:id="@+id/tv_device_value" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Venturi Mask" android:textColor="#1A1C1E" android:textSize="16sp" android:textStyle="bold" android:layout_marginTop="4dp" />
                         </LinearLayout>
 
                         <LinearLayout
@@ -207,7 +212,7 @@
                             android:gravity="center"
                             android:orientation="vertical">
                             <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Flow" android:textColor="#94A3B8" android:textSize="12sp" />
-                            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="28%" android:textColor="#1A1C1E" android:textSize="16sp" android:textStyle="bold" android:layout_marginTop="4dp" />
+                            <TextView android:id="@+id/tv_flow_value" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="28%" android:textColor="#1A1C1E" android:textSize="16sp" android:textStyle="bold" android:layout_marginTop="4dp" />
                         </LinearLayout>
                     </LinearLayout>
                 </LinearLayout>
@@ -258,6 +263,7 @@
                             android:textSize="12sp" />
 
                         <TextView
+                            android:id="@+id/tv_heart_rate_value"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="4dp"
@@ -306,6 +312,7 @@
                             android:textSize="12sp" />
 
                         <TextView
+                            android:id="@+id/tv_resp_rate_value"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="4dp"

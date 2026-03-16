@@ -8,6 +8,7 @@ import retrofit2.http.Body;
 import retrofit2.http.DELETE;
 import retrofit2.http.GET;
 import retrofit2.http.POST;
+import retrofit2.http.PUT;
 import retrofit2.http.Path;
 
 import com.simats.cdss.models.*;
@@ -49,22 +50,49 @@ public interface ApiService {
     @POST("api/patients/add/")
     Call<PatientResponse> addPatient(@Body PatientRequest request);
 
+    @GET("api/patient/details/{id}/")
+    Call<PatientDetailResponse> getPatientDetails(@Path("id") int patientId);
+
+    @GET("api/patient/ai-risk/{id}/")
+    Call<AIRiskResponse> getPatientAIRisk(@Path("id") int patientId);
+
+    @GET("api/patient/trend-analysis/{id}/")
+    Call<TrendAnalysisResponse> getPatientTrendAnalysis(@Path("id") int patientId);
+
+    @POST("api/patient/hypoxemia-cause/")
+    Call<GenericResponse> setHypoxemiaCause(@Body Map<String, Object> request);
+
+    @POST("api/baseline-details/add/")
+    Call<GenericResponse> addBaselineDetails(@Body Map<String, Object> request);
+
+    @POST("api/gold-classification/add/")
+    Call<GenericResponse> addGoldClassification(@Body Map<String, Object> request);
+
+    @POST("api/spirometry/add/")
+    Call<GenericResponse> addSpirometryData(@Body Map<String, Object> request);
+
+    @POST("api/gas-exchange-history/add/")
+    Call<GenericResponse> addGasExchangeHistory(@Body Map<String, Object> request);
+
+    @POST("api/current-symptoms/add/")
+    Call<GenericResponse> addCurrentSymptoms(@Body Map<String, Object> request);
+
 
     // ─────────────────────────────────────────
     // 3. Clinical Data
     // ─────────────────────────────────────────
 
-    @POST("api/patients/{id}/abg-entry/")
-    Call<GenericResponse> addABGData(
-            @Path("id") int patientId,
-            @Body ABGRequest request
-    );
+    @POST("api/abg-entry/add/")
+    Call<GenericResponse> addAbgEntry(@Body java.util.Map<String, Object> request);
 
-    @POST("api/patients/{id}/vitals/")
-    Call<GenericResponse> addVitalsData(
-            @Path("id") int patientId,
-            @Body VitalsRequest request
-    );
+    @POST("api/vitals/add/")
+    Call<GenericResponse> addVitalsData(@Body java.util.Map<String, Object> request);
+
+    @PUT("api/staff/update-vitals/{id}/")
+    Call<GenericResponse> updateStaffVitals(@Path("id") int patientId, @Body java.util.Map<String, Object> request);
+
+    @PUT("api/staff/update-abg/{id}/")
+    Call<GenericResponse> updateStaffAbg(@Path("id") int patientId, @Body java.util.Map<String, Object> request);
 
 
     // ─────────────────────────────────────────
@@ -149,4 +177,10 @@ public interface ApiService {
     @GET("api/system-statistics/")
     Call<DashboardStatsResponse> getAdminDashboardStats();
 
+    // ─────────────────────────────────────────
+    // 10. Doctor Dashboard
+    // ─────────────────────────────────────────
+
+    @GET("api/doctor/dashboard/")
+    Call<DoctorDashboardResponse> getDoctorDashboard();
 }

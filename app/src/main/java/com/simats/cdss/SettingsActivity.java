@@ -73,11 +73,8 @@ public class SettingsActivity extends AppCompatActivity {
                     finish();
                     return true;
                 } else if (itemId == R.id.nav_patients) {
-                    if ("staff".equals(role)) {
-                        startActivity(new Intent(this, StaffPatientListActivity.class));
-                    } else {
-                        startActivity(new Intent(this, PatientListActivity.class));
-                    }
+                    // Unified Patient List Activity for both roles
+                    startActivity(new Intent(this, PatientListActivity.class));
                     finish();
                     return true;
                 } else if (itemId == R.id.nav_alerts) {

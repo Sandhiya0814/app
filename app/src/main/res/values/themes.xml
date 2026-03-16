@@ -203,7 +203,7 @@
         <item name="android:layout_width">0dp</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_weight">1</item>
-        <item name="android:background">#F8FAFC</item>
+        <item name="android:background">@drawable/vitals_box_bg</item>
         <item name="android:gravity">center</item>
         <item name="android:orientation">vertical</item>
         <item name="android:padding">12dp</item>
@@ -212,16 +212,17 @@
     <style name="VitalsLabel">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:textColor">#64748B</item>
-        <item name="android:textSize">12sp</item>
+        <item name="android:textColor">#94A3B8</item>
+        <item name="android:textSize">11sp</item>
+        <item name="android:letterSpacing">0.05</item>
     </style>
 
     <style name="VitalsValue">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:layout_marginTop">4dp</item>
-        <item name="android:textColor">@color/text_dark</item>
-        <item name="android:textSize">18sp</item>
+        <item name="android:layout_marginTop">2dp</item>
+        <item name="android:textColor">#1E293B</item>
+        <item name="android:textSize">20sp</item>
         <item name="android:textStyle">bold</item>
     </style>
 

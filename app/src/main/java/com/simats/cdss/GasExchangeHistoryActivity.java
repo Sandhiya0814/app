@@ -39,9 +39,61 @@ public class GasExchangeHistoryActivity extends AppCompatActivity {
         cardOxyYes.setOnClickListener(v -> handleOxySelection(cardOxyYes));
         cardOxyNo.setOnClickListener(v -> handleOxySelection(cardOxyNo));
 
+        int patientId = getIntent().getIntExtra("patient_id", -1);
+
         btnNext.setOnClickListener(v -> {
-            // Corrected: Navigate to Current Symptoms screen
-            startActivity(new Intent(GasExchangeHistoryActivity.this, CurrentSymptomsActivity.class));
+            if (selectedHypo == null || selectedOxy == null) {
+                android.widget.Toast.makeText(this, "Please select options for both questions", android.widget.Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            String chronicHypoxemia = "Unknown";
+            if (selectedHypo.getId() == R.id.card_hypoxemia_yes) {
+                chronicHypoxemia = "Yes";
+            } else if (selectedHypo.getId() == R.id.card_hypoxemia_no) {
+                chronicHypoxemia = "No";
+            } else if (selectedHypo.getId() == R.id.card_hypoxemia_unknown) {
+                chronicHypoxemia = "Unknown";
+            }
+
+            String homeOxygenUse = "No";
+            if (selectedOxy.getId() == R.id.card_oxygen_yes) {
+                homeOxygenUse = "Yes";
+            } else if (selectedOxy.getId() == R.id.card_oxygen_no) {
+                homeOxygenUse = "No";
+            }
+
+            btnNext.setEnabled(false);
+
+            java.util.Map<String, Object> body = new java.util.HashMap<>();
+            body.put("patient_id", patientId);
+            body.put("chronic_hypoxemia", chronicHypoxemia);
+            body.put("home_oxygen_use", homeOxygenUse);
+
+            com.simats.cdss.network.ApiService apiService = com.simats.cdss.network.RetrofitClient.getClient(this).create(com.simats.cdss.network.ApiService.class);
+            retrofit2.Call<com.simats.cdss.models.GenericResponse> call = apiService.addGasExchangeHistory(body);
+
+            call.enqueue(new retrofit2.Callback<com.simats.cdss.models.GenericResponse>() {
+                @Override
+                public void onResponse(retrofit2.Call<com.simats.cdss.models.GenericResponse> call, retrofit2.Response<com.simats.cdss.models.GenericResponse> response) {
+                    btnNext.setEnabled(true);
+                    if (response.isSuccessful() && response.body() != null) {
+                        android.widget.Toast.makeText(GasExchangeHistoryActivity.this, "Gas exchange history saved successfully", android.widget.Toast.LENGTH_SHORT).show();
+
+                        Intent intent = new Intent(GasExchangeHistoryActivity.this, CurrentSymptomsActivity.class);
+                        intent.putExtra("patient_id", patientId);
+                        startActivity(intent);
+                    } else {
+                        android.widget.Toast.makeText(GasExchangeHistoryActivity.this, "Failed to save gas exchange history", android.widget.Toast.LENGTH_LONG).show();
+                    }
+                }
+
+                @Override
+                public void onFailure(retrofit2.Call<com.simats.cdss.models.GenericResponse> call, Throwable t) {
+                    btnNext.setEnabled(true);
+                    android.widget.Toast.makeText(GasExchangeHistoryActivity.this, "Network error. Please try again.", android.widget.Toast.LENGTH_LONG).show();
+                }
+            });
         });
 
         setupBottomNav();

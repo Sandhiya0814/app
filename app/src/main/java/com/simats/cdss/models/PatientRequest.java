@@ -1,17 +1,36 @@
 package com.simats.cdss.models;
 
-public class PatientRequest {
-    private String full_name;
-    private String dob;
-    private String sex;
-    private String ward;
-    private String bed_number;
+import com.google.gson.annotations.SerializedName;
 
-    public PatientRequest(String full_name, String dob, String sex, String ward, String bed_number) {
-        this.full_name = full_name;
-        this.dob = dob;
+public class PatientRequest {
+
+    @SerializedName("full_name")
+    private String fullName;
+
+    @SerializedName("date_of_birth")
+    private String dateOfBirth;
+
+    @SerializedName("sex")
+    private String sex;
+
+    @SerializedName("ward")
+    private String ward;
+
+    @SerializedName("bed_number")
+    private String bedNumber;
+
+    public PatientRequest(String fullName, String dateOfBirth, String sex, String ward, String bedNumber) {
+        this.fullName = fullName;
+        this.dateOfBirth = dateOfBirth;
         this.sex = sex;
         this.ward = ward;
-        this.bed_number = bed_number;
+        this.bedNumber = bedNumber;
     }
+
+    // Getters
+    public String getFullName() { return fullName; }
+    public String getDateOfBirth() { return dateOfBirth; }
+    public String getSex() { return sex; }
+    public String getWard() { return ward; }
+    public String getBedNumber() { return bedNumber; }
 }

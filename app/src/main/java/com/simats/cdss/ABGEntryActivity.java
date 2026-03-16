@@ -6,8 +6,17 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.simats.cdss.models.GenericResponse;
+import com.simats.cdss.network.ApiService;
+import com.simats.cdss.network.RetrofitClient;
+import java.util.HashMap;
+import java.util.Map;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class ABGEntryActivity extends AppCompatActivity {
 
@@ -50,11 +59,74 @@ public class ABGEntryActivity extends AppCompatActivity {
         btnSubmit.setEnabled(false);
         btnSubmit.setAlpha(0.5f);
 
+        int patientId = getIntent().getIntExtra("patient_id", -1);
+
         btnSubmit.setOnClickListener(v -> {
-            Intent intent = new Intent(this, StaffDashboardActivity.class);
-            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
-            startActivity(intent);
-            finish();
+            try {
+                double ph = Double.parseDouble(etPh.getText().toString().trim());
+                double pao2 = Double.parseDouble(etPao2.getText().toString().trim());
+                double paco2 = Double.parseDouble(etPaco2.getText().toString().trim());
+                double hco3 = Double.parseDouble(etHco3.getText().toString().trim());
+                double fio2 = Double.parseDouble(etFio2.getText().toString().trim());
+
+                Map<String, Object> request = new HashMap<>();
+                request.put("patient_id", patientId);
+                request.put("ph", ph);
+                request.put("pao2", pao2);
+                request.put("paco2", paco2);
+                request.put("hco3", hco3);
+                request.put("fio2", fio2);
+
+                btnSubmit.setEnabled(false);
+                btnSubmit.setText("Submitting...");
+
+                boolean isUpdate = getIntent().getBooleanExtra("is_update", false);
+                ApiService apiService = RetrofitClient.getClient(this).create(ApiService.class);
+                Call<GenericResponse> call;
+                if (isUpdate) {
+                    call = apiService.updateStaffAbg(patientId, request);
+                } else {
+                    call = apiService.addAbgEntry(request);
+                }
+
+                call.enqueue(new Callback<GenericResponse>() {
+                    @Override
+                    public void onResponse(Call<GenericResponse> call, Response<GenericResponse> response) {
+                        btnSubmit.setEnabled(true);
+                        btnSubmit.setText("SUBMIT & FINISH");
+                        if (response.isSuccessful()) {
+                            if (isUpdate) {
+                                Toast.makeText(ABGEntryActivity.this, "Patient vitals and ABG updated successfully", Toast.LENGTH_SHORT).show();
+                            } else {
+                                Toast.makeText(ABGEntryActivity.this, "Patient details added successfully", Toast.LENGTH_SHORT).show();
+                            }
+
+                            // Redirect back to list on update, or dashboard on add
+                            Intent intent;
+                            if (isUpdate) {
+                                // Updated to correct class name StaffPatientsActivity
+                                intent = new Intent(ABGEntryActivity.this, StaffPatientsActivity.class);
+                            } else {
+                                intent = new Intent(ABGEntryActivity.this, StaffDashboardActivity.class);
+                            }
+                            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+                            startActivity(intent);
+                            finish();
+                        } else {
+                            Toast.makeText(ABGEntryActivity.this, "Failed to save ABG data", Toast.LENGTH_LONG).show();
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<GenericResponse> call, Throwable t) {
+                        btnSubmit.setEnabled(true);
+                        btnSubmit.setText("SUBMIT & FINISH");
+                        Toast.makeText(ABGEntryActivity.this, "Network error. Please try again.", Toast.LENGTH_LONG).show();
+                    }
+                });
+            } catch (NumberFormatException e) {
+                Toast.makeText(this, "Please enter valid numeric values", Toast.LENGTH_SHORT).show();
+            }
         });
 
         setupBottomNav();
