@@ -77,32 +77,27 @@ public class StaffLoginActivity extends AppCompatActivity {
                         startActivity(intent);
                         finish();
 
+                    } else if ("terms_required".equals(responseStatus)) {
+                        // VERIFIED but Terms not accepted → Navigate to Terms Screen
+                        session.saveTokens("", "", "staff");
+
+                        Intent intent = new Intent(StaffLoginActivity.this, TermsActivity.class);
+                        intent.putExtra("role", "staff");
+                        intent.putExtra("email", email);
+                        startActivity(intent);
+                        finish();
+
                     } else if ("success".equals(responseStatus)) {
-                        // VERIFIED USER → Direct Dashboard (skip OTP & Terms)
+                        // FULLY VERIFIED → Direct Dashboard (skip OTP & Terms)
                         session.saveTokens("", "", "staff");
 
                         Toast.makeText(StaffLoginActivity.this, "Login Successful", Toast.LENGTH_SHORT).show();
 
                         Intent intent = new Intent(StaffLoginActivity.this, StaffDashboardActivity.class);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                         startActivity(intent);
                         finish();
 
-                    } else {
-                        // Fallback for old API format (JWT tokens)
-                        String accessToken = loginResponse.getAccess();
-                        String refreshToken = loginResponse.getRefresh();
-
-                        if (accessToken != null && !accessToken.isEmpty()) {
-                            session.saveTokens(accessToken, refreshToken, "staff");
-
-                            Toast.makeText(StaffLoginActivity.this, "Login Successful", Toast.LENGTH_SHORT).show();
-
-                            Intent intent = new Intent(StaffLoginActivity.this, VerificationActivity.class);
-                            intent.putExtra("role", "staff");
-                            intent.putExtra("email", email);
-                            startActivity(intent);
-                            finish();
-                        }
                     }
                 } else {
                     if (response.code() == 403) {

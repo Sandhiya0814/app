@@ -115,10 +115,25 @@ public class VerificationActivity extends AppCompatActivity {
 
                 if (response.isSuccessful() && response.body() != null) {
                     LoginResponse verifyResponse = response.body();
+                    String responseStatus = verifyResponse.getStatus();
 
-                    if ("success".equals(verifyResponse.getStatus()) || verifyResponse.isVerified()) {
-                        // OTP Verified → is_verified = 1 in DB
-                        // Save session info
+                    if ("terms_required".equals(responseStatus)) {
+                        // OTP verified but Terms not accepted → Terms Screen
+                        SessionManager session = new SessionManager(VerificationActivity.this);
+                        session.saveTokens("", "", userRole);
+                        session.saveEmail(userEmail);
+
+                        Toast.makeText(VerificationActivity.this,
+                                "OTP verified successfully", Toast.LENGTH_SHORT).show();
+
+                        Intent intent = new Intent(VerificationActivity.this, TermsActivity.class);
+                        intent.putExtra("role", userRole);
+                        intent.putExtra("email", userEmail);
+                        startActivity(intent);
+                        finish();
+
+                    } else if ("success".equals(responseStatus) || verifyResponse.isVerified()) {
+                        // OTP verified AND Terms already accepted → Dashboard
                         SessionManager session = new SessionManager(VerificationActivity.this);
                         session.saveTokens("", "", userRole);
                         session.saveEmail(userEmail);
@@ -126,7 +141,6 @@ public class VerificationActivity extends AppCompatActivity {
                         Toast.makeText(VerificationActivity.this,
                                 "Login successful", Toast.LENGTH_SHORT).show();
 
-                        // Navigate directly to Dashboard based on role
                         Intent intent;
                         if ("staff".equals(userRole)) {
                             intent = new Intent(VerificationActivity.this, StaffDashboardActivity.class);
@@ -136,6 +150,7 @@ public class VerificationActivity extends AppCompatActivity {
                         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                         startActivity(intent);
                         finish();
+
                     } else {
                         // Verification failed
                         String message = verifyResponse.getMessage();

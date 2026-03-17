@@ -51,6 +51,10 @@ public interface ApiService {
     @POST("api/staff/verify-otp/")
     Call<LoginResponse> verifyStaffOtp(@Body Map<String, String> request);
 
+    // Accept Terms & Conditions
+    @POST("api/accept-terms/")
+    Call<LoginResponse> acceptTerms(@Body Map<String, String> request);
+
 
     // ─────────────────────────────────────────
     // 2. Patient Management
