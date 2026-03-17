@@ -62,6 +62,15 @@ public interface ApiService {
     @POST("api/patient/hypoxemia-cause/")
     Call<GenericResponse> setHypoxemiaCause(@Body Map<String, Object> request);
 
+    @POST("api/patient/oxygen-requirement/")
+    Call<GenericResponse> setOxygenRequirement(@Body Map<String, Object> request);
+
+    @GET("api/patient/device-recommendation/{id}/")
+    Call<DeviceRecommendationResponse> getDeviceRecommendation(@Path("id") int patientId);
+
+    @POST("api/patient/device-selection/")
+    Call<GenericResponse> saveDeviceSelection(@Body Map<String, Object> request);
+
     @POST("api/baseline-details/add/")
     Call<GenericResponse> addBaselineDetails(@Body Map<String, Object> request);
 

@@ -85,9 +85,10 @@
                         android:orientation="vertical">
 
                         <TextView
+                            android:id="@+id/tv_spo2_value"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="86 %"
+                            android:text="-- %"
                             android:textColor="#1A1C1E"
                             android:textSize="32sp"
                             android:textStyle="bold" />
@@ -123,7 +124,7 @@
                             android:paddingVertical="12dp"
                             android:gravity="center">
                             <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Hypoxemia" android:textColor="#EF4444" android:textSize="10sp" android:textStyle="bold" />
-                            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Severe" android:textColor="#B91C1C" android:textSize="16sp" android:textStyle="bold" android:layout_marginTop="2dp"/>
+                            <TextView android:id="@+id/tv_hypoxemia_level" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="--" android:textColor="#B91C1C" android:textSize="16sp" android:textStyle="bold" android:layout_marginTop="2dp"/>
                         </LinearLayout>
                     </com.google.android.material.card.MaterialCardView>
 
@@ -143,7 +144,7 @@
                             android:paddingVertical="12dp"
                             android:gravity="center">
                             <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Symptoms" android:textColor="#F59E0B" android:textSize="10sp" android:textStyle="bold" />
-                            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Mod" android:textColor="#B45309" android:textSize="16sp" android:textStyle="bold" android:layout_marginTop="2dp"/>
+                            <TextView android:id="@+id/tv_symptoms_level" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="--" android:textColor="#B45309" android:textSize="16sp" android:textStyle="bold" android:layout_marginTop="2dp"/>
                         </LinearLayout>
                     </com.google.android.material.card.MaterialCardView>
 
@@ -167,19 +168,21 @@
                     android:padding="24dp">
 
                     <TextView
+                        android:id="@+id/tv_therapy_indicated"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Oxygen Therapy Indicated"
+                        android:text="Evaluating..."
                         android:textColor="#1A1C1E"
                         android:textSize="16sp"
                         android:textStyle="bold" />
 
                     <TextView
+                        android:id="@+id/tv_therapy_desc"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="12dp"
                         android:lineSpacingExtra="4dp"
-                        android:text="Patient meets criteria for supplemental oxygen therapy due to persistent hypoxemia (SpO₂ &lt; 88%)."
+                        android:text="Loading evaluation criteria..."
                         android:textColor="#64748B"
                         android:textSize="14sp" />
                 </LinearLayout>
