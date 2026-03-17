@@ -40,7 +40,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="12dp"
         android:gravity="center"
-        android:text="We've sent a password reset link to your registered email address."
+        android:text="We've sent a password reset otp to your registered email address."
         android:textColor="@color/text_secondary"
         android:textSize="16sp" />
 
@@ -49,7 +49,7 @@
         android:layout_width="match_parent"
         android:layout_height="56dp"
         android:layout_marginTop="32dp"
-        android:text="Back to Login"
+        android:text="Back to Verify"
         android:textAllCaps="false"
         android:textSize="16sp"
         app:backgroundTint="@color/primary_teal"

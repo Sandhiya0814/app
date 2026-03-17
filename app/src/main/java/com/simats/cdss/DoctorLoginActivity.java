@@ -26,7 +26,9 @@ public class DoctorLoginActivity extends AppCompatActivity {
         });
 
         findViewById(R.id.tv_forgot_password).setOnClickListener(v -> {
-            startActivity(new Intent(DoctorLoginActivity.this, ForgotPasswordActivity.class));
+            Intent intent = new Intent(DoctorLoginActivity.this, ForgotPasswordActivity.class);
+            intent.putExtra("role", "doctor");
+            startActivity(intent);
         });
 
         findViewById(R.id.btn_login).setOnClickListener(v -> {

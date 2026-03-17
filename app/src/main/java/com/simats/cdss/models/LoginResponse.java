@@ -33,6 +33,9 @@ public class LoginResponse {
     @SerializedName("verified")
     private boolean verified;
 
+    @SerializedName("token")
+    private String token;
+
     // Getters
     public String getAccess() { return access; }
     public String getRefresh() { return refresh; }
@@ -44,4 +47,5 @@ public class LoginResponse {
     public String getName() { return name; }
     public String getOtp() { return otp; }
     public boolean isVerified() { return verified; }
+    public String getToken() { return token; }
 }

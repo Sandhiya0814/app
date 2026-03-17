@@ -55,6 +55,18 @@ public interface ApiService {
     @POST("api/accept-terms/")
     Call<LoginResponse> acceptTerms(@Body Map<String, String> request);
 
+    // Forgot Password - sends OTP to email
+    @POST("api/forgot-password/")
+    Call<LoginResponse> forgotPassword(@Body Map<String, String> request);
+
+    // Forgot Password - verify OTP
+    @POST("api/forgot-password/verify-otp/")
+    Call<LoginResponse> forgotPasswordVerifyOtp(@Body Map<String, String> request);
+
+    // Reset Password - updates password
+    @POST("api/reset-password/")
+    Call<LoginResponse> resetPassword(@Body Map<String, String> request);
+
 
     // ─────────────────────────────────────────
     // 2. Patient Management

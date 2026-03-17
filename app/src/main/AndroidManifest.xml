@@ -185,6 +185,9 @@
         <activity
             android:name=".TermsActivity"
             android:exported="false" />
+        <activity
+            android:name=".ForgotPasswordOTPActivity"
+            android:exported="false" />
         
         <provider
             android:name="androidx.core.content.FileProvider"
