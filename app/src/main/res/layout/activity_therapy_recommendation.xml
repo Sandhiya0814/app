@@ -94,19 +94,21 @@
                     </LinearLayout>
 
                     <TextView
+                        android:id="@+id/tv_device_name"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="24dp"
-                        android:text="Venturi Mask"
+                        android:text=""
                         android:textColor="#FFFFFF"
                         android:textSize="32sp"
                         android:textStyle="bold" />
 
                     <TextView
+                        android:id="@+id/tv_fio2_setting"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="8dp"
-                        android:text="28% FiO₂ @ 4 L/min"
+                        android:text=""
                         android:textColor="#FFFFFF"
                         android:textSize="18sp"
                         android:alpha="0.9" />
@@ -123,7 +125,7 @@
                             android:layout_weight="1"
                             android:orientation="vertical">
                             <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Target SpO₂" android:textColor="#FFFFFF" android:textSize="12sp" android:alpha="0.7" />
-                            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="88-92%" android:textColor="#FFFFFF" android:textSize="20sp" android:textStyle="bold" android:layout_marginTop="4dp" />
+                            <TextView android:id="@+id/tv_target_spo2" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="" android:textColor="#FFFFFF" android:textSize="20sp" android:textStyle="bold" android:layout_marginTop="4dp" />
                         </LinearLayout>
 
                         <LinearLayout
@@ -133,7 +135,7 @@
                             android:gravity="end"
                             android:orientation="vertical">
                             <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Next ABG" android:textColor="#FFFFFF" android:textSize="12sp" android:alpha="0.7" />
-                            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="30 mins" android:textColor="#FFFFFF" android:textSize="20sp" android:textStyle="bold" android:layout_marginTop="4dp" />
+                            <TextView android:id="@+id/tv_next_abg" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="" android:textColor="#FFFFFF" android:textSize="20sp" android:textStyle="bold" android:layout_marginTop="4dp" />
                         </LinearLayout>
                     </LinearLayout>
                 </LinearLayout>
@@ -176,11 +178,12 @@
                     </LinearLayout>
 
                     <TextView
+                        android:id="@+id/tv_rationale"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="12dp"
                         android:lineSpacingExtra="4dp"
-                        android:text="Patient shows signs of Type II respiratory failure with mild acidosis. Controlled oxygen therapy is required to prevent worsening hypercapnia."
+                        android:text=""
                         android:textColor="#92400E"
                         android:textSize="14sp" />
                 </LinearLayout>

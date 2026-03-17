@@ -188,6 +188,9 @@
         <activity
             android:name=".ForgotPasswordOTPActivity"
             android:exported="false" />
+        <activity
+            android:name=".DecisionSupportActivity"
+            android:exported="false" />
         
         <provider
             android:name="androidx.core.content.FileProvider"

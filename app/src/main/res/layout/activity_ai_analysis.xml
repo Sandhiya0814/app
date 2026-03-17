@@ -39,7 +39,28 @@
             android:textStyle="bold" />
     </LinearLayout>
 
+    <!-- Empty State -->
+    <LinearLayout
+        android:id="@+id/layout_empty"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:visibility="gone"
+        app:layout_constraintBottom_toTopOf="@+id/bottom_navigation"
+        app:layout_constraintTop_toBottomOf="@id/toolbar">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="No analysis data available\nfor this patient"
+            android:gravity="center"
+            android:textColor="#94A3B8"
+            android:textSize="16sp" />
+    </LinearLayout>
+
     <ScrollView
+        android:id="@+id/scroll_content"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:scrollbars="none"
@@ -109,38 +130,28 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="16dp"
-                        android:text="HIGH RISK"
+                        android:text=""
                         android:textColor="#B91C1C"
                         android:textSize="36sp"
                         android:textStyle="bold" />
 
-                    <!-- Two-Toned Progress Bar: 92% Dark Red, 8% Grey -->
-                    <LinearLayout
+                    <!-- Dynamic Progress Bar -->
+                    <ProgressBar
+                        android:id="@+id/progress_confidence"
+                        style="?android:attr/progressBarStyleHorizontal"
                         android:layout_width="match_parent"
                         android:layout_height="8dp"
                         android:layout_marginTop="24dp"
-                        android:orientation="horizontal"
-                        android:weightSum="100">
-                        <View
-                            android:layout_width="0dp"
-                            android:layout_height="match_parent"
-                            android:layout_weight="92"
-                            android:background="@drawable/chip_red_rounded"
-                            android:backgroundTint="#B91C1C" />
-                        <View
-                            android:layout_width="0dp"
-                            android:layout_height="match_parent"
-                            android:layout_weight="8"
-                            android:background="@drawable/chip_grey_rounded"
-                            android:alpha="0.2" />
-                    </LinearLayout>
+                        android:max="100"
+                        android:progress="0"
+                        android:progressDrawable="@drawable/progress_bar_drawable" />
 
                     <TextView
                         android:id="@+id/tv_confidence_score"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="16dp"
-                        android:text="Confidence Score: 92%"
+                        android:text=""
                         android:textColor="#94A3B8"
                         android:textSize="13sp" />
                 </LinearLayout>
@@ -148,23 +159,97 @@
 
             <!-- Key Factors -->
             <TextView
+                android:id="@+id/tv_key_factors_title"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="32dp"
                 android:text="Key Factors"
                 android:textColor="#1A1C1E"
                 android:textSize="18sp"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                android:visibility="gone" />
 
-            <!-- Key Factors RecyclerView -->
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/rv_key_factors"
+            <!-- Acidosis Card -->
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/card_acidosis"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
-                android:nestedScrollingEnabled="false"
-                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                tools:listitem="@layout/item_key_factor" />
+                android:visibility="gone"
+                app:cardBackgroundColor="#FFFFFF"
+                app:cardCornerRadius="16dp"
+                app:cardElevation="2dp"
+                app:strokeWidth="0dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:padding="16dp">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="Acidosis (pH &lt; 7.35)"
+                        android:textColor="#1A1C1E"
+                        android:textSize="15sp" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/chip_red_rounded"
+                        android:backgroundTint="#FEF2F2"
+                        android:paddingHorizontal="14dp"
+                        android:paddingVertical="6dp"
+                        android:text="Critical"
+                        android:textColor="#EF4444"
+                        android:textSize="11sp"
+                        android:textStyle="bold" />
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- Hypercapnia Card -->
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/card_hypercapnia"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:visibility="gone"
+                app:cardBackgroundColor="#FFFFFF"
+                app:cardCornerRadius="16dp"
+                app:cardElevation="2dp"
+                app:strokeWidth="0dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:padding="16dp">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="Hypercapnia (High CO₂)"
+                        android:textColor="#1A1C1E"
+                        android:textSize="15sp" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/chip_orange_rounded"
+                        android:backgroundTint="#FFFBEB"
+                        android:paddingHorizontal="14dp"
+                        android:paddingVertical="6dp"
+                        android:text="Warning"
+                        android:textColor="#F59E0B"
+                        android:textSize="11sp"
+                        android:textStyle="bold" />
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
 
             <!-- Action Button -->
             <com.google.android.material.button.MaterialButton

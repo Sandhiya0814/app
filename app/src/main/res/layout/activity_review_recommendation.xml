@@ -92,19 +92,21 @@
                     </LinearLayout>
 
                     <TextView
+                        android:id="@+id/tv_device_name"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="12dp"
-                        android:text="Venturi Mask (28%)"
+                        android:text=""
                         android:textColor="#1A1C1E"
                         android:textSize="18sp"
                         android:textStyle="bold" />
 
                     <TextView
+                        android:id="@+id/tv_device_desc"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="8dp"
-                        android:text="Based on high risk of hypercapnia and current SpO₂ levels."
+                        android:text=""
                         android:textColor="#64748B"
                         android:textSize="14sp" />
                 </LinearLayout>

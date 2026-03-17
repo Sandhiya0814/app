@@ -87,6 +87,9 @@ public interface ApiService {
     @GET("api/patient/trend-analysis/{id}/")
     Call<TrendAnalysisResponse> getPatientTrendAnalysis(@Path("id") int patientId);
 
+    @GET("api/patient/decision-support/{id}/")
+    Call<DecisionSupportResponse> getPatientDecisionSupport(@Path("id") int patientId);
+
     @POST("api/patient/hypoxemia-cause/")
     Call<GenericResponse> setHypoxemiaCause(@Body Map<String, Object> request);
 
@@ -98,6 +101,28 @@ public interface ApiService {
 
     @POST("api/patient/device-selection/")
     Call<GenericResponse> saveDeviceSelection(@Body Map<String, Object> request);
+
+    // ── Clinical Decision Support Flow ──
+
+    @GET("api/patient/clinical-review/{id}/")
+    Call<ClinicalReviewResponse> getClinicalReview(@Path("id") int patientId);
+
+    @POST("api/patient/clinical-review/{id}/")
+    Call<GenericResponse> saveClinicalReview(@Path("id") int patientId, @Body Map<String, Object> request);
+
+    @GET("api/patient/clinical-therapy/{id}/")
+    Call<TherapyPlanResponse> getTherapyPlan(@Path("id") int patientId);
+
+    @POST("api/patient/clinical-reassessment/{id}/")
+    Call<GenericResponse> saveReassessment(@Path("id") int patientId, @Body Map<String, Object> request);
+
+    // ── Reassessment Checklist ──
+
+    @POST("api/reassessment/")
+    Call<GenericResponse> saveReassessmentChecklist(@Body Map<String, Object> request);
+
+    @GET("api/reassessment/")
+    Call<ReassessmentResponse> getLatestReassessment(@retrofit2.http.Query("patient_id") int patientId);
 
     @POST("api/baseline-details/add/")
     Call<GenericResponse> addBaselineDetails(@Body Map<String, Object> request);

@@ -49,7 +49,9 @@ public class StaffDashboardActivity extends AppCompatActivity {
         rvReassessments.setLayoutManager(new LinearLayoutManager(this));
         adapter = new ReassessmentAdapter(this, reassessmentItems);
         adapter.setOnItemClickListener(item -> {
-            startActivity(new Intent(this, ReassessmentChecklistActivity.class));
+            Intent intent = new Intent(this, ReassessmentChecklistActivity.class);
+            intent.putExtra("patient_id", item.getPatientId());
+            startActivity(intent);
         });
         rvReassessments.setAdapter(adapter);
 

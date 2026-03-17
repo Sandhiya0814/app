@@ -32,6 +32,9 @@ public class StaffDashboardResponse {
         @SerializedName("type")
         private String type;
 
+        @SerializedName("patient_id")
+        private int patientId;
+
         @SerializedName("patient_name")
         private String patientName;
 
@@ -43,6 +46,7 @@ public class StaffDashboardResponse {
 
         public int getId() { return id; }
         public String getType() { return type; }
+        public int getPatientId() { return patientId; }
         public String getPatientName() { return patientName; }
         public String getBedNumber() { return bedNumber; }
         public int getDueIn() { return dueIn; }

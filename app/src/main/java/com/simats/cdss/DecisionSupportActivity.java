@@ -2,11 +2,9 @@ package com.simats.cdss;
 
 import android.content.Intent;
 import android.graphics.Color;
-import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.LinearLayout;
-import android.widget.ProgressBar;
 import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -15,7 +13,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.card.MaterialCardView;
-import com.simats.cdss.models.AIRiskResponse;
+import com.simats.cdss.models.DecisionSupportResponse;
 import com.simats.cdss.network.ApiService;
 import com.simats.cdss.network.RetrofitClient;
 
@@ -23,46 +21,44 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class AIAnalysisActivity extends AppCompatActivity {
+public class DecisionSupportActivity extends AppCompatActivity {
 
     private int patientId;
-    private TextView tvRiskLevel, tvConfidenceScore, tvKeyFactorsTitle;
-    private ProgressBar progressConfidence;
-    private MaterialCardView cardAcidosis, cardHypercapnia;
+    private TextView tvRiskLevel, tvConfidence, tvActionLevel, tvRecommendation;
+    private TextView tvOverallStatus, tvPaco2, tvPh, tvSpo2;
+    private MaterialCardView cardAcidosis, cardHypercapnia, cardRecommendation;
     private LinearLayout layoutEmpty;
     private ScrollView scrollContent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_ai_analysis);
+        setContentView(R.layout.activity_decision_support);
 
         patientId = getIntent().getIntExtra("patient_id", -1);
 
         // Initialize views
         tvRiskLevel = findViewById(R.id.tv_risk_level);
-        tvConfidenceScore = findViewById(R.id.tv_confidence_score);
-        tvKeyFactorsTitle = findViewById(R.id.tv_key_factors_title);
-        progressConfidence = findViewById(R.id.progress_confidence);
+        tvConfidence = findViewById(R.id.tv_confidence);
+        tvActionLevel = findViewById(R.id.tv_action_level);
+        tvRecommendation = findViewById(R.id.tv_recommendation);
+        tvOverallStatus = findViewById(R.id.tv_overall_status);
+        tvPaco2 = findViewById(R.id.tv_paco2);
+        tvPh = findViewById(R.id.tv_ph);
+        tvSpo2 = findViewById(R.id.tv_spo2);
         cardAcidosis = findViewById(R.id.card_acidosis);
         cardHypercapnia = findViewById(R.id.card_hypercapnia);
+        cardRecommendation = findViewById(R.id.card_recommendation);
         layoutEmpty = findViewById(R.id.layout_empty);
         scrollContent = findViewById(R.id.scroll_content);
 
         findViewById(R.id.iv_back).setOnClickListener(v -> onBackPressed());
 
-        // Navigation to Trend Analysis screen
-        findViewById(R.id.btn_view_trends).setOnClickListener(v -> {
-            Intent intent = new Intent(this, TrendAnalysisActivity.class);
-            intent.putExtra("patient_id", patientId);
-            startActivity(intent);
-        });
-
         setupBottomNav();
-        fetchAIRiskData();
+        fetchDecisionSupportData();
     }
 
-    private void fetchAIRiskData() {
+    private void fetchDecisionSupportData() {
         if (patientId == -1) {
             Toast.makeText(this, "Invalid patient ID", Toast.LENGTH_SHORT).show();
             showEmptyState();
@@ -70,27 +66,26 @@ public class AIAnalysisActivity extends AppCompatActivity {
         }
 
         ApiService apiService = RetrofitClient.getClient(this).create(ApiService.class);
-        apiService.getPatientAIRisk(patientId).enqueue(new Callback<AIRiskResponse>() {
+        apiService.getPatientDecisionSupport(patientId).enqueue(new Callback<DecisionSupportResponse>() {
             @Override
-            public void onResponse(Call<AIRiskResponse> call, Response<AIRiskResponse> response) {
+            public void onResponse(Call<DecisionSupportResponse> call, Response<DecisionSupportResponse> response) {
                 if (response.isSuccessful() && response.body() != null) {
-                    AIRiskResponse data = response.body();
-                    // Check if there's a message indicating no data
-                    if (data.getConfidenceScore() == 0 && data.getMessage() != null) {
-                        showEmptyState();
-                    } else {
+                    DecisionSupportResponse data = response.body();
+                    if (data.isHasData()) {
                         showContent();
                         populateUI(data);
+                    } else {
+                        showEmptyState();
                     }
                 } else {
-                    Toast.makeText(AIAnalysisActivity.this, "Failed to load AI Risk Data", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(DecisionSupportActivity.this, "Failed to load Decision Support Data", Toast.LENGTH_SHORT).show();
                     showEmptyState();
                 }
             }
 
             @Override
-            public void onFailure(Call<AIRiskResponse> call, Throwable t) {
-                Toast.makeText(AIAnalysisActivity.this, "Network error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+            public void onFailure(Call<DecisionSupportResponse> call, Throwable t) {
+                Toast.makeText(DecisionSupportActivity.this, "Network error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
                 showEmptyState();
             }
         });
@@ -106,46 +101,69 @@ public class AIAnalysisActivity extends AppCompatActivity {
         scrollContent.setVisibility(View.VISIBLE);
     }
 
-    private void populateUI(AIRiskResponse data) {
-        // ── Risk Level Display ──
+    private void populateUI(DecisionSupportResponse data) {
+        // ── Risk Level ──
         String risk = data.getRiskLevel();
         tvRiskLevel.setText(risk + " RISK");
 
         int riskColor;
         if ("HIGH".equalsIgnoreCase(risk)) {
-            riskColor = Color.parseColor("#B91C1C"); // RED
+            riskColor = Color.parseColor("#B91C1C");
         } else if ("MODERATE".equalsIgnoreCase(risk)) {
-            riskColor = Color.parseColor("#F59E0B"); // ORANGE
+            riskColor = Color.parseColor("#F59E0B");
         } else {
-            riskColor = Color.parseColor("#10B981"); // GREEN
+            riskColor = Color.parseColor("#10B981");
         }
         tvRiskLevel.setTextColor(riskColor);
+        tvConfidence.setText("Confidence Score: " + data.getConfidenceScore() + "%");
 
-        // ── Confidence Score ──
-        int confidence = data.getConfidenceScore();
-        progressConfidence.setProgress(confidence);
-        progressConfidence.getProgressDrawable().setColorFilter(riskColor, PorterDuff.Mode.SRC_IN);
-        tvConfidenceScore.setText("Confidence Score: " + confidence + "%");
+        // ── Recommendation Card ──
+        String actionLevel = data.getActionLevel();
+        tvActionLevel.setText(actionLevel);
+        tvRecommendation.setText(data.getRecommendation());
 
-        // ── Key Factors (Acidosis / Hypercapnia) ──
-        boolean hasFactors = false;
-
-        if (data.getAcidosis() == 1) {
-            cardAcidosis.setVisibility(View.VISIBLE);
-            hasFactors = true;
+        if ("CRITICAL".equalsIgnoreCase(actionLevel)) {
+            tvActionLevel.setTextColor(Color.parseColor("#B91C1C"));
+            cardRecommendation.setCardBackgroundColor(Color.parseColor("#FEF2F2"));
+        } else if ("WARNING".equalsIgnoreCase(actionLevel)) {
+            tvActionLevel.setTextColor(Color.parseColor("#F59E0B"));
+            cardRecommendation.setCardBackgroundColor(Color.parseColor("#FFFBEB"));
         } else {
-            cardAcidosis.setVisibility(View.GONE);
+            tvActionLevel.setTextColor(Color.parseColor("#10B981"));
+            cardRecommendation.setCardBackgroundColor(Color.parseColor("#ECFDF5"));
         }
 
-        if (data.getHypercapnia() == 1) {
-            cardHypercapnia.setVisibility(View.VISIBLE);
-            hasFactors = true;
-        } else {
-            cardHypercapnia.setVisibility(View.GONE);
-        }
+        // ── Trend Summary ──
+        String overallStatus = data.getOverallStatus() != null ? data.getOverallStatus() : "Stable";
+        tvOverallStatus.setText(overallStatus);
+        applyColor(tvOverallStatus, overallStatus);
 
-        // Show "Key Factors" title only if at least one factor is present
-        tvKeyFactorsTitle.setVisibility(hasFactors ? View.VISIBLE : View.GONE);
+        String paco2 = data.getPaco2Status() != null ? data.getPaco2Status() : "Normal";
+        tvPaco2.setText(paco2);
+        applyColor(tvPaco2, paco2);
+
+        String ph = data.getPhStatus() != null ? data.getPhStatus() : "Normal";
+        tvPh.setText(ph);
+        applyColor(tvPh, ph);
+
+        String spo2 = data.getSpo2Status() != null ? data.getSpo2Status() : "Stable";
+        tvSpo2.setText(spo2);
+        applyColor(tvSpo2, spo2);
+
+        // ── Key Factors ──
+        cardAcidosis.setVisibility(data.getAcidosis() == 1 ? View.VISIBLE : View.GONE);
+        cardHypercapnia.setVisibility(data.getHypercapnia() == 1 ? View.VISIBLE : View.GONE);
+    }
+
+    private void applyColor(TextView textView, String status) {
+        if (status.equalsIgnoreCase("Rising") || status.equalsIgnoreCase("Dropping")
+                || status.equalsIgnoreCase("Worsening") || status.equalsIgnoreCase("Critical")) {
+            textView.setTextColor(Color.parseColor("#EF4444"));
+        } else if (status.equalsIgnoreCase("Unstable")) {
+            textView.setTextColor(Color.parseColor("#F59E0B"));
+        } else {
+            textView.setTextColor(Color.parseColor("#10B981"));
+        }
     }
 
     private void setupBottomNav() {

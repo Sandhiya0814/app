@@ -1,31 +1,58 @@
 package com.simats.cdss.models;
 
 import com.google.gson.annotations.SerializedName;
-import java.util.List;
 
 public class TrendAnalysisResponse {
 
-    @SerializedName("trend_status")
-    private String trendStatus;
+    @SerializedName("overall_status")
+    private String overallStatus;
 
-    @SerializedName("trend_indicators")
-    private List<TrendIndicator> trendIndicators;
+    @SerializedName("paco2_status")
+    private String paco2Status;
 
-    public String getTrendStatus() { return trendStatus; }
-    public List<TrendIndicator> getTrendIndicators() { return trendIndicators; }
+    @SerializedName("ph_status")
+    private String phStatus;
+
+    @SerializedName("spo2_status")
+    private String spo2Status;
+
+    public String getOverallStatus() {
+        return overallStatus;
+    }
+
+    public String getPaco2Status() {
+        return paco2Status;
+    }
+
+    public String getPhStatus() {
+        return phStatus;
+    }
+
+    public String getSpo2Status() {
+        return spo2Status;
+    }
 
     public static class TrendIndicator {
-        @SerializedName("factor")
         private String factor;
-
-        @SerializedName("description")
         private String description;
-
-        @SerializedName("status")
         private String status;
 
-        public String getFactor() { return factor; }
-        public String getDescription() { return description; }
-        public String getStatus() { return status; }
+        public TrendIndicator(String factor, String description, String status) {
+            this.factor = factor;
+            this.description = description;
+            this.status = status;
+        }
+
+        public String getFactor() {
+            return factor;
+        }
+
+        public String getDescription() {
+            return description;
+        }
+
+        public String getStatus() {
+            return status;
+        }
     }
 }

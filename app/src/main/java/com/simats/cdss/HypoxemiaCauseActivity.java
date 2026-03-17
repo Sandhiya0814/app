@@ -159,27 +159,44 @@ public class HypoxemiaCauseActivity extends AppCompatActivity {
 
     private void setupBottomNav() {
         BottomNavigationView bottomNav = findViewById(R.id.bottom_navigation);
-        bottomNav.setSelectedItemId(R.id.nav_patients);
-        bottomNav.setOnItemSelectedListener(item -> {
-            int itemId = item.getItemId();
-            if (itemId == R.id.nav_home) {
-                startActivity(new Intent(this, DoctordashboardActivity.class));
-                finish();
-                return true;
-            } else if (itemId == R.id.nav_patients) {
-                startActivity(new Intent(this, PatientListActivity.class));
-                finish();
-                return true;
-            } else if (itemId == R.id.nav_alerts) {
-                startActivity(new Intent(this, DoctorAlertsActivity.class));
-                finish();
-                return true;
-            } else if (itemId == R.id.nav_settings) {
-                startActivity(new Intent(this, SettingsActivity.class));
-                finish();
-                return true;
-            }
-            return false;
-        });
+        if (bottomNav != null) {
+            bottomNav.setSelectedItemId(R.id.nav_patients);
+            bottomNav.setOnItemSelectedListener(item -> {
+                int itemId = item.getItemId();
+                SessionManager session = new SessionManager(this);
+                String role = session.getRole();
+
+                if (itemId == R.id.nav_home) {
+                    if ("staff".equals(role)) {
+                        startActivity(new Intent(this, StaffDashboardActivity.class));
+                    } else {
+                        startActivity(new Intent(this, DoctordashboardActivity.class));
+                    }
+                    finish();
+                    return true;
+                } else if (itemId == R.id.nav_patients) {
+                    if ("staff".equals(role)) {
+                        startActivity(new Intent(this, StaffPatientsActivity.class));
+                    } else {
+                        startActivity(new Intent(this, DoctorPatientsActivity.class));
+                    }
+                    finish();
+                    return true;
+                } else if (itemId == R.id.nav_alerts) {
+                    if ("staff".equals(role)) {
+                        startActivity(new Intent(this, StaffAlertsActivity.class));
+                    } else {
+                        startActivity(new Intent(this, DoctorAlertsActivity.class));
+                    }
+                    finish();
+                    return true;
+                } else if (itemId == R.id.nav_settings) {
+                    startActivity(new Intent(this, SettingsActivity.class));
+                    finish();
+                    return true;
+                }
+                return false;
+            });
+        }
     }
 }
