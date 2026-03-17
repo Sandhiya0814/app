@@ -22,9 +22,9 @@ import java.util.List;
 public class NeedsAttentionAdapter extends RecyclerView.Adapter<NeedsAttentionAdapter.ViewHolder> {
 
     private Context context;
-    private List<DoctorDashboardResponse.NeedsAttentionPatient> patients;
+    private List<DoctorDashboardResponse.PatientItem> patients;
 
-    public NeedsAttentionAdapter(Context context, List<DoctorDashboardResponse.NeedsAttentionPatient> patients) {
+    public NeedsAttentionAdapter(Context context, List<DoctorDashboardResponse.PatientItem> patients) {
         this.context = context;
         this.patients = patients;
     }
@@ -38,23 +38,24 @@ public class NeedsAttentionAdapter extends RecyclerView.Adapter<NeedsAttentionAd
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        DoctorDashboardResponse.NeedsAttentionPatient patient = patients.get(position);
+        DoctorDashboardResponse.PatientItem patient = patients.get(position);
 
         holder.tvName.setText(patient.getName());
-        holder.tvInfo.setText("ID: #" + patient.getPatientId() + " • Room " + patient.getRoom());
-        
-        String spo2 = patient.getSpo2() != null ? patient.getSpo2() : "--";
-        if (!spo2.equals("--")) spo2 += "%";
-        holder.tvSpo2Chip.setText("SpO2 " + spo2);
+        holder.tvInfo.setText("ID: #" + patient.getId() + " • Room " + patient.getRoom());
 
-        String status = patient.getStatus();
-        if ("CRITICAL".equalsIgnoreCase(status)) {
+        int spo2 = patient.getSpo2();
+        holder.tvSpo2Chip.setText("SpO2 " + spo2 + "%");
+
+        // Color logic based on SpO2 value
+        if (spo2 < 90) {
+            // CRITICAL → RED
             holder.ivStatusIcon.setImageResource(R.drawable.ic_notifications);
             holder.ivStatusIcon.setImageTintList(ColorStateList.valueOf(Color.parseColor("#EF4444")));
             holder.iconBg.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#EF4444")));
             holder.tvSpo2Chip.setBackgroundResource(R.drawable.chip_red_rounded);
             holder.tvSpo2Chip.setTextColor(Color.parseColor("#EF4444"));
         } else {
+            // WARNING → ORANGE
             holder.ivStatusIcon.setImageResource(R.drawable.ic_warning);
             holder.ivStatusIcon.setImageTintList(ColorStateList.valueOf(Color.parseColor("#F59E0B")));
             holder.iconBg.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#F59E0B")));
@@ -64,7 +65,7 @@ public class NeedsAttentionAdapter extends RecyclerView.Adapter<NeedsAttentionAd
 
         holder.itemView.setOnClickListener(v -> {
             Intent intent = new Intent(context, PatientDetailsActivity.class);
-            intent.putExtra("patient_id", patient.getPatientId());
+            intent.putExtra("patient_id", patient.getId());
             context.startActivity(intent);
         });
     }
@@ -74,7 +75,7 @@ public class NeedsAttentionAdapter extends RecyclerView.Adapter<NeedsAttentionAd
         return patients.size();
     }
 
-    public void updateList(List<DoctorDashboardResponse.NeedsAttentionPatient> newList) {
+    public void updateList(List<DoctorDashboardResponse.PatientItem> newList) {
         this.patients = newList;
         notifyDataSetChanged();
     }

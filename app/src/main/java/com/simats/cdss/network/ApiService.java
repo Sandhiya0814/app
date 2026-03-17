@@ -19,6 +19,10 @@ public interface ApiService {
     // 1. Authentication (Admin / Doctor / Staff)
     // ─────────────────────────────────────────
 
+    // Unified Login (Doctor / Staff)
+    @POST("api/login/")
+    Call<LoginResponse> unifiedLogin(@Body Map<String, String> request);
+
     // Admin Login
     @POST("api/admin/login/")
     Call<LoginResponse> adminLogin(@Body Map<String, String> request);
@@ -31,6 +35,10 @@ public interface ApiService {
     @POST("api/doctor/login/")
     Call<LoginResponse> doctorLogin(@Body Map<String, String> request);
 
+    // Doctor Verify OTP
+    @POST("api/doctor/verify-otp/")
+    Call<LoginResponse> verifyDoctorOtp(@Body Map<String, String> request);
+
     // Staff Signup
     @POST("api/staff/signup/")
     Call<GenericResponse> staffSignup(@Body SignupRequest request);
@@ -38,6 +46,10 @@ public interface ApiService {
     // Staff Login
     @POST("api/staff/login/")
     Call<LoginResponse> staffLogin(@Body Map<String, String> request);
+
+    // Staff Verify OTP
+    @POST("api/staff/verify-otp/")
+    Call<LoginResponse> verifyStaffOtp(@Body Map<String, String> request);
 
 
     // ─────────────────────────────────────────
@@ -191,5 +203,13 @@ public interface ApiService {
     // ─────────────────────────────────────────
 
     @GET("api/doctor/dashboard/")
-    Call<DoctorDashboardResponse> getDoctorDashboard();
+    Call<DoctorDashboardResponse> getDoctorDashboard(@retrofit2.http.Query("email") String email);
+
+
+    // ─────────────────────────────────────────
+    // 11. Staff Dashboard
+    // ─────────────────────────────────────────
+
+    @GET("api/staff/dashboard/")
+    Call<StaffDashboardResponse> getStaffDashboard(@retrofit2.http.Query("email") String email);
 }

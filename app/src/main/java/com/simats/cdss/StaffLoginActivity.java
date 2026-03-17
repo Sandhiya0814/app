@@ -53,30 +53,65 @@ public class StaffLoginActivity extends AppCompatActivity {
         ApiService api = RetrofitClient.getClient(this).create(ApiService.class);
         
         Map<String, String> request = new HashMap<>();
-        request.put("email", email);        // backend reads 'email'
+        request.put("email", email);
         request.put("password", password);
 
         api.staffLogin(request).enqueue(new Callback<LoginResponse>() {
             @Override
             public void onResponse(Call<LoginResponse> call, Response<LoginResponse> response) {
                 if (response.isSuccessful() && response.body() != null) {
-                    String accessToken = response.body().getAccess();
-                    String refreshToken = response.body().getRefresh();
+                    LoginResponse loginResponse = response.body();
+                    String responseStatus = loginResponse.getStatus();
 
                     SessionManager session = new SessionManager(StaffLoginActivity.this);
-                    session.saveTokens(accessToken, refreshToken, "staff");
+                    session.saveEmail(email);
 
-                    Toast.makeText(StaffLoginActivity.this, "Login Successful", Toast.LENGTH_SHORT).show();
-                    Intent intent = new Intent(StaffLoginActivity.this, VerificationActivity.class);
-                    intent.putExtra("role", "staff");
-                    startActivity(intent);
-                    finish();
+                    if ("otp_sent".equals(responseStatus)) {
+                        // FIRST-TIME LOGIN → Navigate to OTP Verification Screen
+                        Toast.makeText(StaffLoginActivity.this,
+                            loginResponse.getMessage(), Toast.LENGTH_SHORT).show();
+
+                        Intent intent = new Intent(StaffLoginActivity.this, VerificationActivity.class);
+                        intent.putExtra("role", "staff");
+                        intent.putExtra("email", email);
+                        startActivity(intent);
+                        finish();
+
+                    } else if ("success".equals(responseStatus)) {
+                        // VERIFIED USER → Direct Dashboard (skip OTP & Terms)
+                        session.saveTokens("", "", "staff");
+
+                        Toast.makeText(StaffLoginActivity.this, "Login Successful", Toast.LENGTH_SHORT).show();
+
+                        Intent intent = new Intent(StaffLoginActivity.this, StaffDashboardActivity.class);
+                        startActivity(intent);
+                        finish();
+
+                    } else {
+                        // Fallback for old API format (JWT tokens)
+                        String accessToken = loginResponse.getAccess();
+                        String refreshToken = loginResponse.getRefresh();
+
+                        if (accessToken != null && !accessToken.isEmpty()) {
+                            session.saveTokens(accessToken, refreshToken, "staff");
+
+                            Toast.makeText(StaffLoginActivity.this, "Login Successful", Toast.LENGTH_SHORT).show();
+
+                            Intent intent = new Intent(StaffLoginActivity.this, VerificationActivity.class);
+                            intent.putExtra("role", "staff");
+                            intent.putExtra("email", email);
+                            startActivity(intent);
+                            finish();
+                        }
+                    }
                 } else {
                     if (response.code() == 403) {
                         try {
                             String errorBody = response.errorBody() != null ? response.errorBody().string() : "";
                             if (errorBody.contains("disabled by admin")) {
                                 Toast.makeText(StaffLoginActivity.this, "Can't able to access. Your account is disabled by admin", Toast.LENGTH_LONG).show();
+                            } else if (errorBody.contains("not approved")) {
+                                Toast.makeText(StaffLoginActivity.this, "Your account is not approved yet", Toast.LENGTH_LONG).show();
                             } else {
                                 Toast.makeText(StaffLoginActivity.this, "Your account is waiting for admin approval", Toast.LENGTH_LONG).show();
                             }

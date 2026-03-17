@@ -2,6 +2,8 @@ package com.simats.cdss;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -25,24 +27,36 @@ import retrofit2.Response;
 
 public class DoctordashboardActivity extends AppCompatActivity {
 
+    private static final String TAG = "DoctorDashboard";
+
+    private TextView tvDoctorLabel, tvDoctorName;
     private TextView tvTotalCount, tvCriticalCount, tvWarningCount;
+    private TextView tvNoAttention;
     private RecyclerView rvNeedsAttention;
     private NeedsAttentionAdapter adapter;
+    private List<DoctorDashboardResponse.PatientItem> patientList = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_doctor_dashboard);
 
-        // Initialize UI
+        // Bind header views
+        tvDoctorLabel = findViewById(R.id.tv_doctor_label);
+        tvDoctorName = findViewById(R.id.tv_doctor_name);
+
+        // Bind summary card views
         tvTotalCount = findViewById(R.id.tv_total_count);
         tvCriticalCount = findViewById(R.id.tv_critical_count);
         tvWarningCount = findViewById(R.id.tv_warning_count);
+
+        // Bind needs attention views
+        tvNoAttention = findViewById(R.id.tv_no_attention);
         rvNeedsAttention = findViewById(R.id.rv_needs_attention);
 
         // Setup RecyclerView
         rvNeedsAttention.setLayoutManager(new LinearLayoutManager(this));
-        adapter = new NeedsAttentionAdapter(this, new ArrayList<>());
+        adapter = new NeedsAttentionAdapter(this, patientList);
         rvNeedsAttention.setAdapter(adapter);
 
         // Navigation to Patient List (All)
@@ -72,11 +86,12 @@ public class DoctordashboardActivity extends AppCompatActivity {
             startActivity(intent);
         });
 
-        // Notification bell explicitly to DoctorAlertsActivity
+        // Notification bell
         findViewById(R.id.card_notifications).setOnClickListener(v -> {
-             startActivity(new Intent(this, DoctorAlertsActivity.class));
+            startActivity(new Intent(this, DoctorAlertsActivity.class));
         });
 
+        // Bottom navigation
         BottomNavigationView bottomNav = findViewById(R.id.bottom_navigation);
         bottomNav.setSelectedItemId(R.id.nav_home);
         bottomNav.setOnItemSelectedListener(item -> {
@@ -98,31 +113,70 @@ public class DoctordashboardActivity extends AppCompatActivity {
         fetchDashboardData();
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        fetchDashboardData();
+    }
+
     private void fetchDashboardData() {
+        SessionManager session = new SessionManager(this);
+        String email = session.getEmail();
+
+        if (email == null || email.isEmpty()) {
+            Log.w(TAG, "No doctor email found in session");
+            tvDoctorLabel.setText("DOCTOR");
+            tvDoctorName.setText("");
+            return;
+        }
+
         ApiService apiService = RetrofitClient.getClient(this).create(ApiService.class);
-        apiService.getDoctorDashboard().enqueue(new Callback<DoctorDashboardResponse>() {
+        apiService.getDoctorDashboard(email).enqueue(new Callback<DoctorDashboardResponse>() {
             @Override
             public void onResponse(Call<DoctorDashboardResponse> call, Response<DoctorDashboardResponse> response) {
                 if (response.isSuccessful() && response.body() != null) {
                     DoctorDashboardResponse data = response.body();
-                    
-                    // Update Counts
-                    tvTotalCount.setText(String.valueOf(data.getTotalPatients()));
-                    tvCriticalCount.setText(String.valueOf(data.getCriticalCount()));
-                    tvWarningCount.setText(String.valueOf(data.getWarningCount()));
-                    
-                    // Update List
-                    if (data.getNeedsAttentionPatients() != null) {
-                        adapter.updateList(data.getNeedsAttentionPatients());
+
+                    // Set doctor header: DOCTOR + Dr.<name>
+                    DoctorDashboardResponse.DoctorInfo doc = data.getDoctor();
+                    if (doc != null) {
+                        tvDoctorLabel.setText("DOCTOR");
+                        tvDoctorName.setText("Dr." + doc.getName());
                     }
+
+                    // Set summary card counts
+                    DoctorDashboardResponse.Summary summary = data.getSummary();
+                    if (summary != null) {
+                        tvTotalCount.setText(String.valueOf(summary.getTotalPatients()));
+                        tvCriticalCount.setText(String.valueOf(summary.getCritical()));
+                        tvWarningCount.setText(String.valueOf(summary.getWarning()));
+                    }
+
+                    // Update Needs Attention list
+                    patientList.clear();
+                    List<DoctorDashboardResponse.PatientItem> items = data.getPatients();
+                    if (items != null && !items.isEmpty()) {
+                        patientList.addAll(items);
+                        rvNeedsAttention.setVisibility(View.VISIBLE);
+                        tvNoAttention.setVisibility(View.GONE);
+                    } else {
+                        rvNeedsAttention.setVisibility(View.GONE);
+                        tvNoAttention.setVisibility(View.VISIBLE);
+                    }
+                    adapter.updateList(patientList);
+
                 } else {
-                    Toast.makeText(DoctordashboardActivity.this, "Failed to load dashboard statistics", Toast.LENGTH_SHORT).show();
+                    Log.e(TAG, "Dashboard API error: " + response.code());
+                    Toast.makeText(DoctordashboardActivity.this,
+                            "Failed to load dashboard", Toast.LENGTH_SHORT).show();
                 }
             }
 
             @Override
             public void onFailure(Call<DoctorDashboardResponse> call, Throwable t) {
-                Toast.makeText(DoctordashboardActivity.this, "Network error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+                Log.e(TAG, "Dashboard API failure: " + t.getMessage());
+                Toast.makeText(DoctordashboardActivity.this,
+                        "Network error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
     }

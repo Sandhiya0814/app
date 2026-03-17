@@ -8,6 +8,7 @@ public class SessionManager {
     private static final String KEY_ACCESS_TOKEN = "access_token";
     private static final String KEY_REFRESH_TOKEN = "refresh_token";
     private static final String KEY_ROLE = "user_role";
+    private static final String KEY_EMAIL = "user_email";
     private SharedPreferences pref;
     private SharedPreferences.Editor editor;
 
@@ -21,6 +22,15 @@ public class SessionManager {
         editor.putString(KEY_REFRESH_TOKEN, refresh);
         editor.putString(KEY_ROLE, role);
         editor.apply();
+    }
+
+    public void saveEmail(String email) {
+        editor.putString(KEY_EMAIL, email);
+        editor.apply();
+    }
+
+    public String getEmail() {
+        return pref.getString(KEY_EMAIL, null);
     }
 
     public void setRole(String role) {

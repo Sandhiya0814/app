@@ -53,33 +53,65 @@ public class DoctorLoginActivity extends AppCompatActivity {
         ApiService api = RetrofitClient.getClient(this).create(ApiService.class);
         
         Map<String, String> request = new HashMap<>();
-        request.put("email", username);       // backend reads 'email' or 'username'
+        request.put("email", username);
         request.put("password", password);
 
-        // Using doctorLogin as defined in ApiService
         api.doctorLogin(request).enqueue(new Callback<LoginResponse>() {
             @Override
             public void onResponse(Call<LoginResponse> call, Response<LoginResponse> response) {
                 if (response.isSuccessful() && response.body() != null) {
-                    // Success (200 OK)
-                    String accessToken = response.body().getAccess();
-                    String refreshToken = response.body().getRefresh();
-                    
+                    LoginResponse loginResponse = response.body();
+                    String responseStatus = loginResponse.getStatus();
+
                     SessionManager session = new SessionManager(DoctorLoginActivity.this);
-                    session.saveTokens(accessToken, refreshToken, "doctor");
-                    
-                    Toast.makeText(DoctorLoginActivity.this, "Login Successful", Toast.LENGTH_SHORT).show();
-                    
-                    Intent intent = new Intent(DoctorLoginActivity.this, VerificationActivity.class);
-                    intent.putExtra("role", "doctor");
-                    startActivity(intent);
-                    finish();
+                    session.saveEmail(username);
+
+                    if ("otp_sent".equals(responseStatus)) {
+                        // FIRST-TIME LOGIN → Navigate to OTP Verification Screen
+                        Toast.makeText(DoctorLoginActivity.this, 
+                            loginResponse.getMessage(), Toast.LENGTH_SHORT).show();
+
+                        Intent intent = new Intent(DoctorLoginActivity.this, VerificationActivity.class);
+                        intent.putExtra("role", "doctor");
+                        intent.putExtra("email", username);
+                        startActivity(intent);
+                        finish();
+
+                    } else if ("success".equals(responseStatus)) {
+                        // VERIFIED USER → Direct Dashboard (skip OTP & Terms)
+                        session.saveTokens("", "", "doctor");
+
+                        Toast.makeText(DoctorLoginActivity.this, "Login Successful", Toast.LENGTH_SHORT).show();
+
+                        Intent intent = new Intent(DoctorLoginActivity.this, DoctordashboardActivity.class);
+                        startActivity(intent);
+                        finish();
+
+                    } else {
+                        // Fallback for old API format (JWT tokens)
+                        String accessToken = loginResponse.getAccess();
+                        String refreshToken = loginResponse.getRefresh();
+                        
+                        if (accessToken != null && !accessToken.isEmpty()) {
+                            session.saveTokens(accessToken, refreshToken, "doctor");
+                            
+                            Toast.makeText(DoctorLoginActivity.this, "Login Successful", Toast.LENGTH_SHORT).show();
+                            
+                            Intent intent = new Intent(DoctorLoginActivity.this, VerificationActivity.class);
+                            intent.putExtra("role", "doctor");
+                            intent.putExtra("email", username);
+                            startActivity(intent);
+                            finish();
+                        }
+                    }
                 } else {
                     if (response.code() == 403) {
                         try {
                             String errorBody = response.errorBody() != null ? response.errorBody().string() : "";
                             if (errorBody.contains("disabled by admin")) {
                                 Toast.makeText(DoctorLoginActivity.this, "Can't able to access. Your account is disabled by admin", Toast.LENGTH_LONG).show();
+                            } else if (errorBody.contains("not approved")) {
+                                Toast.makeText(DoctorLoginActivity.this, "Your account is not approved yet", Toast.LENGTH_LONG).show();
                             } else {
                                 Toast.makeText(DoctorLoginActivity.this, "Your account is waiting for admin approval", Toast.LENGTH_LONG).show();
                             }
@@ -103,7 +135,6 @@ public class DoctorLoginActivity extends AppCompatActivity {
         if (code == 401) {
             Toast.makeText(this, "Invalid credentials", Toast.LENGTH_LONG).show();
         } else if (code == 403) {
-            // Try to read the error body to distinguish reason
             Toast.makeText(this, "Can't able to access. Your account is disabled by admin", Toast.LENGTH_LONG).show();
         } else {
             Toast.makeText(this, "Error: " + code, Toast.LENGTH_SHORT).show();

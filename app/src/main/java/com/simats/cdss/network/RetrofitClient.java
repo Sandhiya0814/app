@@ -28,7 +28,11 @@ public class RetrofitClient {
                         Request originalRequest = chain.request();
                         
                         // Skip token for auth endpoints
-                        if (originalRequest.url().encodedPath().contains("/auth/") || originalRequest.url().encodedPath().contains("/register/")) {
+                        String path = originalRequest.url().encodedPath();
+                        if (path.contains("/auth/") || path.contains("/register/")
+                                || path.contains("/login/") || path.contains("/signup/")
+                                || path.contains("/verify-otp/") || path.contains("/forgot-password/")
+                                || path.contains("/reset-password/")) {
                             return chain.proceed(originalRequest);
                         }
 

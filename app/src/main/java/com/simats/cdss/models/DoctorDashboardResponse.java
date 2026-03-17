@@ -5,47 +5,57 @@ import java.util.List;
 
 public class DoctorDashboardResponse {
 
-    @SerializedName("total_patients")
-    private int totalPatients;
+    @SerializedName("doctor")
+    private DoctorInfo doctor;
 
-    @SerializedName("critical_count")
-    private int criticalCount;
+    @SerializedName("summary")
+    private Summary summary;
 
-    @SerializedName("warning_count")
-    private int warningCount;
+    @SerializedName("patients")
+    private List<PatientItem> patients;
 
-    @SerializedName("needs_attention_patients")
-    private List<NeedsAttentionPatient> needsAttentionPatients;
+    public DoctorInfo getDoctor() { return doctor; }
+    public Summary getSummary() { return summary; }
+    public List<PatientItem> getPatients() { return patients; }
 
-    public int getTotalPatients() { return totalPatients; }
-    public int getCriticalCount() { return criticalCount; }
-    public int getWarningCount() { return warningCount; }
-    public List<NeedsAttentionPatient> getNeedsAttentionPatients() { return needsAttentionPatients; }
-
-    public static class NeedsAttentionPatient {
+    public static class DoctorInfo {
         @SerializedName("name")
         private String name;
 
-        @SerializedName("patient_id")
-        private int patientId;
+        public String getName() { return name; }
+    }
+
+    public static class Summary {
+        @SerializedName("total_patients")
+        private int totalPatients;
+
+        @SerializedName("critical")
+        private int critical;
+
+        @SerializedName("warning")
+        private int warning;
+
+        public int getTotalPatients() { return totalPatients; }
+        public int getCritical() { return critical; }
+        public int getWarning() { return warning; }
+    }
+
+    public static class PatientItem {
+        @SerializedName("id")
+        private int id;
+
+        @SerializedName("name")
+        private String name;
 
         @SerializedName("room")
         private String room;
 
         @SerializedName("spo2")
-        private String spo2;
-        
-        @SerializedName("respiratory_rate")
-        private String respiratoryRate;
+        private int spo2;
 
-        @SerializedName("status")
-        private String status;
-
+        public int getId() { return id; }
         public String getName() { return name; }
-        public int getPatientId() { return patientId; }
         public String getRoom() { return room; }
-        public String getSpo2() { return spo2; }
-        public String getRespiratoryRate() { return respiratoryRate; }
-        public String getStatus() { return status; }
+        public int getSpo2() { return spo2; }
     }
 }
