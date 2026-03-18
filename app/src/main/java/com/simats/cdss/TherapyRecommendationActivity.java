@@ -21,6 +21,11 @@ public class TherapyRecommendationActivity extends AppCompatActivity {
     private int patientId = -1;
     private TextView tvDeviceName, tvFio2Setting, tvTargetSpo2, tvNextAbg, tvRationale;
 
+    // Doctor's selected device (passed from review screen)
+    private String doctorSelectedDevice = "";
+    private String doctorSelectedFlowRange = "";
+    private boolean isOverride = false;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -28,11 +33,24 @@ public class TherapyRecommendationActivity extends AppCompatActivity {
 
         patientId = getIntent().getIntExtra("patient_id", -1);
 
+        // Read doctor's device selection
+        String selDev = getIntent().getStringExtra("selected_device");
+        String selFlow = getIntent().getStringExtra("selected_flow_range");
+        doctorSelectedDevice = selDev != null ? selDev : "";
+        doctorSelectedFlowRange = selFlow != null ? selFlow : "";
+        isOverride = getIntent().getBooleanExtra("is_override", false);
+
         tvDeviceName = findViewById(R.id.tv_device_name);
         tvFio2Setting = findViewById(R.id.tv_fio2_setting);
         tvTargetSpo2 = findViewById(R.id.tv_target_spo2);
         tvNextAbg = findViewById(R.id.tv_next_abg);
         tvRationale = findViewById(R.id.tv_rationale);
+
+        // Update card label if doctor overrode
+        TextView tvCardLabel = findViewById(R.id.tv_card_label);
+        if (tvCardLabel != null && isOverride) {
+            tvCardLabel.setText("Doctor Selected Therapy");
+        }
 
         findViewById(R.id.iv_back).setOnClickListener(v -> onBackPressed());
 
@@ -80,8 +98,14 @@ public class TherapyRecommendationActivity extends AppCompatActivity {
     }
 
     private void populateUI(TherapyPlanResponse data) {
-        tvDeviceName.setText(data.getDevice());
-        tvFio2Setting.setText(data.getFio2() + " FiO\u2082 @ " + data.getFlowRate());
+        // If doctor overrode, show doctor's selected device; otherwise show backend result
+        if (isOverride && !doctorSelectedDevice.isEmpty()) {
+            tvDeviceName.setText(doctorSelectedDevice);
+            tvFio2Setting.setText(doctorSelectedFlowRange + " FiO\u2082 @ " + data.getFlowRate());
+        } else {
+            tvDeviceName.setText(data.getDevice());
+            tvFio2Setting.setText(data.getFio2() + " FiO\u2082 @ " + data.getFlowRate());
+        }
         tvTargetSpo2.setText(data.getTargetSpo2());
         tvNextAbg.setText(data.getNextAbgTime());
         tvRationale.setText(data.getRationale());

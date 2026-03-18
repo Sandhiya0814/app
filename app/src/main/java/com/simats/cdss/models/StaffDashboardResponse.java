@@ -41,14 +41,22 @@ public class StaffDashboardResponse {
         @SerializedName("bed_number")
         private String bedNumber;
 
+        @SerializedName("ward_no")
+        private String wardNo;
+
         @SerializedName("due_in")
         private int dueIn;
+
+        @SerializedName("status")
+        private String status;
 
         public int getId() { return id; }
         public String getType() { return type; }
         public int getPatientId() { return patientId; }
         public String getPatientName() { return patientName; }
         public String getBedNumber() { return bedNumber; }
+        public String getWardNo() { return wardNo; }
         public int getDueIn() { return dueIn; }
+        public String getStatus() { return status; }
     }
 }

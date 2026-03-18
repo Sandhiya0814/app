@@ -124,6 +124,24 @@ public interface ApiService {
     @GET("api/reassessment/")
     Call<ReassessmentResponse> getLatestReassessment(@retrofit2.http.Query("patient_id") int patientId);
 
+    // ── Schedule Reassessment ──
+
+    @POST("api/schedule-reassessment/")
+    Call<GenericResponse> saveScheduleReassessment(@Body Map<String, Object> request);
+
+    @GET("api/schedule-reassessment/")
+    Call<ScheduleReassessmentListResponse> getPendingReassessments();
+
+    // ── Staff Checklist (saves reassessment values entered by staff) ──
+
+    @POST("api/staff-checklist/")
+    Call<GenericResponse> saveStaffChecklist(@Body Map<String, Object> request);
+
+    // ── Doctor view: staff-entered reassessment values ──
+
+    @GET("api/patient/staff-reassessments/{id}/")
+    Call<StaffReassessmentValuesResponse> getStaffReassessmentValues(@Path("id") int patientId);
+
     @POST("api/baseline-details/add/")
     Call<GenericResponse> addBaselineDetails(@Body Map<String, Object> request);
 
@@ -160,6 +178,20 @@ public interface ApiService {
     // ─────────────────────────────────────────
     // 4. Alerts & Recommendations
     // ─────────────────────────────────────────
+
+    // Staff Reassessment Alerts
+    @GET("api/staff/alerts/")
+    Call<com.simats.cdss.models.StaffAlertsResponse> getStaffAlerts();
+
+    @POST("api/staff/alerts/")
+    Call<GenericResponse> postStaffAlertAction(@Body Map<String, Object> request);
+
+    // Doctor Alerts
+    @GET("api/doctor/alerts/")
+    Call<com.simats.cdss.models.DoctorAlertsResponse> getDoctorAlerts();
+
+    @POST("api/doctor/alerts/")
+    Call<GenericResponse> postDoctorAlertAction(@Body Map<String, Object> request);
 
     @GET("api/notifications/")
     Call<List<AlertResponse>> getAlerts();

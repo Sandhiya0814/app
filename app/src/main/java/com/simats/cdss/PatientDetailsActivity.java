@@ -3,6 +3,8 @@ package com.simats.cdss;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -10,16 +12,19 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.simats.cdss.models.PatientDetailResponse;
+import com.simats.cdss.models.StaffReassessmentValuesResponse;
 import com.simats.cdss.network.ApiService;
 import com.simats.cdss.network.RetrofitClient;
 
-import java.util.Map;
+import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
 public class PatientDetailsActivity extends AppCompatActivity {
+
+    private static final String TAG = "PatientDetails";
 
     private int patientId;
 
@@ -83,6 +88,13 @@ public class PatientDetailsActivity extends AppCompatActivity {
         setupBottomNav();
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        // Refresh patient details every time doctor returns to this screen
+        fetchPatientDetails();
+    }
+
     private void fetchPatientDetails() {
         if (patientId == -1) {
             Toast.makeText(this, "Invalid patient ID", Toast.LENGTH_SHORT).show();
@@ -93,18 +105,119 @@ public class PatientDetailsActivity extends AppCompatActivity {
         apiService.getPatientDetails(patientId).enqueue(new Callback<PatientDetailResponse>() {
             @Override
             public void onResponse(Call<PatientDetailResponse> call, Response<PatientDetailResponse> response) {
-                if (response.isSuccessful() && response.body() != null) {
-                    populateUI(response.body());
-                } else {
-                    Toast.makeText(PatientDetailsActivity.this, "Failed to load patient details", Toast.LENGTH_SHORT).show();
+                try {
+                    if (response.isSuccessful() && response.body() != null) {
+                        populateUI(response.body());
+                        // After loading patient details, overlay staff reassessment values
+                        fetchAndApplyStaffValues();
+                    } else {
+                        Toast.makeText(PatientDetailsActivity.this, "Failed to load patient details", Toast.LENGTH_SHORT).show();
+                    }
+                } catch (Exception e) {
+                    Log.e(TAG, "Error processing patient details: " + e.getMessage(), e);
+                    Toast.makeText(PatientDetailsActivity.this, "Error displaying patient details", Toast.LENGTH_SHORT).show();
                 }
             }
 
             @Override
             public void onFailure(Call<PatientDetailResponse> call, Throwable t) {
+                Log.e(TAG, "Network error: " + t.getMessage(), t);
                 Toast.makeText(PatientDetailsActivity.this, "Network error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
+    }
+
+    /**
+     * Fetches the latest staff-entered reassessment values and updates
+     * the main SpO2, Heart Rate, and Resp Rate cards directly.
+     * This replaces the old "Reassessment values entered by staff" section.
+     */
+    private void fetchAndApplyStaffValues() {
+        if (patientId == -1) return;
+
+        Log.d(TAG, "Fetching staff reassessment values for patient_id=" + patientId);
+
+        ApiService apiService = RetrofitClient.getClient(this).create(ApiService.class);
+        apiService.getStaffReassessmentValues(patientId).enqueue(new Callback<StaffReassessmentValuesResponse>() {
+            @Override
+            public void onResponse(Call<StaffReassessmentValuesResponse> call, Response<StaffReassessmentValuesResponse> response) {
+                try {
+                    if (response.isSuccessful() && response.body() != null) {
+                        StaffReassessmentValuesResponse data = response.body();
+                        List<StaffReassessmentValuesResponse.StaffEntry> entries = data.getData();
+
+                        if (entries != null && !entries.isEmpty()) {
+                            // Get the latest entry (first one, ordered by -created_at)
+                            StaffReassessmentValuesResponse.StaffEntry latest = entries.get(0);
+
+                            Log.d(TAG, "Updating vitals with staff reassessment: spo2="
+                                    + latest.getSpo2() + " rr=" + latest.getRespiratoryRate()
+                                    + " hr=" + latest.getHeartRate());
+
+                            // Update SpO2 card
+                            double spo2 = latest.getSpo2();
+                            if (spo2 > 0) {
+                                tvSpo2Value.setText((int) spo2 + " %");
+                            }
+
+                            // Update Respiratory Rate card
+                            double rr = latest.getRespiratoryRate();
+                            if (rr > 0) {
+                                tvRespRateValue.setText((int) rr + " /min");
+                            }
+
+                            // Update Heart Rate card (nullable Double — must null-check)
+                            Double hr = latest.getHeartRate();
+                            if (hr != null && hr > 0) {
+                                tvHeartRateValue.setText(hr.intValue() + " bpm");
+                            }
+
+                            // Re-evaluate status based on updated SpO2
+                            if (spo2 > 0) {
+                                updateStatusChip(spo2);
+                            }
+                        }
+                    } else {
+                        Log.e(TAG, "Staff reassessment API error: " + response.code());
+                    }
+                } catch (Exception e) {
+                    Log.e(TAG, "Error processing staff reassessment values: " + e.getMessage(), e);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<StaffReassessmentValuesResponse> call, Throwable t) {
+                Log.e(TAG, "Staff reassessment API failure: " + t.getMessage());
+            }
+        });
+    }
+
+    private void updateStatusChip(double spo2) {
+        String newStatus;
+        if (spo2 < 88) {
+            newStatus = "CRITICAL";
+        } else if (spo2 <= 92) {
+            newStatus = "WARNING";
+        } else {
+            newStatus = "STABLE";
+        }
+        tvPatientStatus.setText(newStatus);
+        if (newStatus.equals("CRITICAL")) {
+            tvPatientStatus.setTextColor(Color.parseColor("#EF4444"));
+            tvPatientStatus.setBackgroundResource(R.drawable.chip_red_rounded);
+            tvPatientStatus.setBackgroundTintList(
+                    android.content.res.ColorStateList.valueOf(Color.parseColor("#FEF2F2")));
+        } else if (newStatus.equals("WARNING")) {
+            tvPatientStatus.setTextColor(Color.parseColor("#854D0E"));
+            tvPatientStatus.setBackgroundResource(R.drawable.chip_orange_rounded);
+            tvPatientStatus.setBackgroundTintList(
+                    android.content.res.ColorStateList.valueOf(Color.parseColor("#FEF3C7")));
+        } else {
+            tvPatientStatus.setTextColor(Color.parseColor("#166534"));
+            tvPatientStatus.setBackgroundResource(R.drawable.chip_green_rounded);
+            tvPatientStatus.setBackgroundTintList(
+                    android.content.res.ColorStateList.valueOf(Color.parseColor("#F0FDF4")));
+        }
     }
 
     private void populateUI(PatientDetailResponse data) {
@@ -116,7 +229,7 @@ public class PatientDetailsActivity extends AppCompatActivity {
         String gender = data.getGender() != null ? data.getGender() : "--";
         String room = data.getRoomNo() != null ? data.getRoomNo() : "--";
         tvPatientInfo.setText(age + " yrs • " + gender + " • Room " + room);
-        
+
         // Diagnosis
         String diagnosisStr = data.getDiagnosis() != null ? data.getDiagnosis() : "Unknown";
         tvDiagnosis.setText("Diagnosis: " + diagnosisStr);
@@ -147,7 +260,7 @@ public class PatientDetailsActivity extends AppCompatActivity {
         } else {
             tvSpo2Value.setText("-- %");
         }
-        
+
         // Target SpO2
         String targetSpo2 = data.getTargetSpo2() != null ? data.getTargetSpo2() : "88-92";
         tvTargetSpo2.setText("Target: " + targetSpo2 + "%");

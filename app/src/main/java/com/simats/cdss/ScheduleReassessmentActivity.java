@@ -96,22 +96,67 @@ public class ScheduleReassessmentActivity extends AppCompatActivity {
             return;
         }
 
-        ApiService apiService = RetrofitClient.getClient(this).create(ApiService.class);
-        Map<String, Object> body = new HashMap<>();
-        body.put("reassessment_time_minutes", selectedMinutes);
+        // Calculate scheduled_time based on selectedMinutes
+        java.util.Calendar calendar = java.util.Calendar.getInstance();
+        calendar.add(java.util.Calendar.MINUTE, selectedMinutes);
+        java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("yyyy-MM-dd HH:mm:ss", java.util.Locale.getDefault());
+        String scheduledTimeStr = sdf.format(calendar.getTime());
 
-        apiService.saveReassessment(patientId, body).enqueue(new Callback<GenericResponse>() {
+        // Get patient details from intent extras if available
+        String patientName = getIntent().getStringExtra("patient_name");
+        String bedNo = getIntent().getStringExtra("bed_no");
+        String wardNo = getIntent().getStringExtra("ward_no");
+        String reassessmentType = getIntent().getStringExtra("reassessment_type");
+        if (reassessmentType == null || reassessmentType.isEmpty()) {
+            reassessmentType = "SpO2"; // Default
+        }
+
+        Map<String, Object> body = new HashMap<>();
+        body.put("patient_id", patientId);
+        if (patientName != null && !patientName.isEmpty()) {
+            body.put("patient_name", patientName);
+        }
+        if (bedNo != null && !bedNo.isEmpty()) {
+            body.put("bed_no", bedNo);
+        }
+        if (wardNo != null && !wardNo.isEmpty()) {
+            body.put("ward_no", wardNo);
+        }
+        body.put("reassessment_type", reassessmentType);
+        body.put("scheduled_time", scheduledTimeStr);
+        body.put("reassessment_minutes", selectedMinutes);
+
+        // Send the role so backend knows who scheduled it
+        SessionManager session = new SessionManager(this);
+        body.put("scheduled_by", session.getRole());
+
+        android.util.Log.d("SCHEDULE_REQ", body.toString());
+
+        ApiService apiService = RetrofitClient.getClient(this).create(ApiService.class);
+        apiService.saveScheduleReassessment(body).enqueue(new Callback<GenericResponse>() {
             @Override
             public void onResponse(Call<GenericResponse> call, Response<GenericResponse> response) {
-                if (response.isSuccessful()) {
+                if (response.isSuccessful() && response.body() != null) {
+                    android.util.Log.d("SCHEDULE_RES", "Success: " + response.body().getMessage());
+                    Toast.makeText(ScheduleReassessmentActivity.this, "Scheduled Successfully", Toast.LENGTH_SHORT).show();
                     showSuccessBottomSheet();
                 } else {
+                    String errorBody = "";
+                    try {
+                        if (response.errorBody() != null) {
+                            errorBody = response.errorBody().string();
+                        }
+                    } catch (Exception e) {
+                        errorBody = "Unable to read error body";
+                    }
+                    android.util.Log.e("SCHEDULE_RES", "Failed code: " + response.code() + " body: " + errorBody);
                     Toast.makeText(ScheduleReassessmentActivity.this, "Failed to schedule reassessment", Toast.LENGTH_SHORT).show();
                 }
             }
 
             @Override
             public void onFailure(Call<GenericResponse> call, Throwable t) {
+                android.util.Log.e("SCHEDULE_RES", "Error: " + t.getMessage());
                 Toast.makeText(ScheduleReassessmentActivity.this, "Network error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });

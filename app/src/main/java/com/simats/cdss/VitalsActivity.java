@@ -6,6 +6,7 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 import android.widget.Toast;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -21,6 +22,7 @@ public class VitalsActivity extends AppCompatActivity {
 
     private EditText etSpo2, etRespRate, etHeartRate, etTemperature, etBp;
     private Button btnNext;
+    private TextView tvPatientName, tvLastRecorded;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,6 +35,29 @@ public class VitalsActivity extends AppCompatActivity {
         etTemperature = findViewById(R.id.et_temperature);
         etBp = findViewById(R.id.et_bp);
         btnNext = findViewById(R.id.btn_next);
+        tvPatientName = findViewById(R.id.tv_patient_name);
+        tvLastRecorded = findViewById(R.id.tv_last_recorded);
+
+        // Set patient info from intent extras
+        String patientName = getIntent().getStringExtra("patient_name");
+        String bedNo = getIntent().getStringExtra("bed_no");
+        String wardNo = getIntent().getStringExtra("ward_no");
+        if (patientName != null && !patientName.isEmpty()) {
+            StringBuilder info = new StringBuilder(patientName);
+            if (bedNo != null && !bedNo.isEmpty()) {
+                info.append(" (Bed ").append(bedNo);
+                if (wardNo != null && !wardNo.isEmpty()) {
+                    info.append(" • Ward ").append(wardNo);
+                }
+                info.append(")");
+            }
+            tvPatientName.setText(info.toString());
+        }
+
+        boolean isReassessment = getIntent().getBooleanExtra("is_reassessment", false);
+        if (isReassessment) {
+            tvLastRecorded.setText("Reassessment entry");
+        }
 
         findViewById(R.id.iv_back).setOnClickListener(v -> onBackPressed());
 
@@ -107,6 +132,15 @@ public class VitalsActivity extends AppCompatActivity {
                         Intent intent = new Intent(VitalsActivity.this, ABGEntryActivity.class);
                         intent.putExtra("patient_id", patientId);
                         intent.putExtra("is_update", isUpdate);
+                        // Forward reassessment details if coming from alert
+                        int reassessmentId = getIntent().getIntExtra("reassessment_id", -1);
+                        if (reassessmentId != -1) {
+                            intent.putExtra("reassessment_id", reassessmentId);
+                            intent.putExtra("is_reassessment", true);
+                        }
+                        intent.putExtra("patient_name", getIntent().getStringExtra("patient_name"));
+                        intent.putExtra("bed_no", getIntent().getStringExtra("bed_no"));
+                        intent.putExtra("ward_no", getIntent().getStringExtra("ward_no"));
                         startActivity(intent);
                     } else {
                         Toast.makeText(VitalsActivity.this, "Failed to save vitals: " + response.code(), Toast.LENGTH_SHORT).show();

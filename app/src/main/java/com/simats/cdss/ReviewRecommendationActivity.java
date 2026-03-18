@@ -44,12 +44,22 @@ public class ReviewRecommendationActivity extends AppCompatActivity {
     private String fio2 = "";
     private String flowRate = "";
 
+    // Doctor's selected device from DeviceSelectionActivity
+    private String doctorSelectedDevice = "";
+    private String doctorSelectedFlowRange = "";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_review_recommendation);
 
         patientId = getIntent().getIntExtra("patient_id", -1);
+
+        // Get doctor's device selection from previous screen
+        doctorSelectedDevice = getIntent().getStringExtra("selected_device");
+        doctorSelectedFlowRange = getIntent().getStringExtra("selected_flow_range");
+        if (doctorSelectedDevice == null) doctorSelectedDevice = "";
+        if (doctorSelectedFlowRange == null) doctorSelectedFlowRange = "";
 
         // Initialize Views
         cardAccept = findViewById(R.id.card_accept);
@@ -132,9 +142,12 @@ public class ReviewRecommendationActivity extends AppCompatActivity {
 
         ApiService apiService = RetrofitClient.getClient(this).create(ApiService.class);
         Map<String, Object> body = new HashMap<>();
-        body.put("device", recommendedDevice);
+        // When overriding, send the doctor's selected device; when accepting, send AI recommendation
+        String finalDevice = isOverrideSelected && !doctorSelectedDevice.isEmpty() ? doctorSelectedDevice : recommendedDevice;
+        String finalFlowRate = isOverrideSelected && !doctorSelectedFlowRange.isEmpty() ? doctorSelectedFlowRange : flowRate;
+        body.put("device", finalDevice);
         body.put("fio2", fio2);
-        body.put("flow_rate", flowRate);
+        body.put("flow_rate", finalFlowRate);
         body.put("decision", isOverrideSelected ? "override" : "accepted");
         if (isOverrideSelected) {
             body.put("override_reason", etOverrideReason.getText().toString().trim());
@@ -147,6 +160,10 @@ public class ReviewRecommendationActivity extends AppCompatActivity {
                     Toast.makeText(ReviewRecommendationActivity.this, "Decision saved successfully", Toast.LENGTH_SHORT).show();
                     Intent intent = new Intent(ReviewRecommendationActivity.this, TherapyRecommendationActivity.class);
                     intent.putExtra("patient_id", patientId);
+                    // Pass the doctor's selected device forward
+                    intent.putExtra("selected_device", doctorSelectedDevice);
+                    intent.putExtra("selected_flow_range", doctorSelectedFlowRange);
+                    intent.putExtra("is_override", isOverrideSelected);
                     startActivity(intent);
                 } else {
                     Toast.makeText(ReviewRecommendationActivity.this, "Failed to save decision", Toast.LENGTH_SHORT).show();

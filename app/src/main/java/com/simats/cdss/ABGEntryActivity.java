@@ -101,12 +101,23 @@ public class ABGEntryActivity extends AppCompatActivity {
                                 Toast.makeText(ABGEntryActivity.this, "Patient details added successfully", Toast.LENGTH_SHORT).show();
                             }
 
-                            // Redirect back to list on update, or dashboard on add
+                            // Check if this is a reassessment flow from alerts
+                            boolean isReassessment = getIntent().getBooleanExtra("is_reassessment", false);
                             Intent intent;
-                            if (isUpdate) {
-                                // Updated to correct class name StaffPatientsActivity
+                            if (isReassessment) {
+                                // Continue to Reassessment Checklist
+                                intent = new Intent(ABGEntryActivity.this, ReassessmentChecklistActivity.class);
+                                intent.putExtra("patient_id", patientId);
+                                intent.putExtra("reassessment_id", getIntent().getIntExtra("reassessment_id", -1));
+                                intent.putExtra("patient_name", getIntent().getStringExtra("patient_name"));
+                                intent.putExtra("bed_no", getIntent().getStringExtra("bed_no"));
+                                intent.putExtra("ward_no", getIntent().getStringExtra("ward_no"));
+                                intent.putExtra("reassessment_type", "scheduled");
+                            } else if (isUpdate) {
+                                // Redirect back to list on update
                                 intent = new Intent(ABGEntryActivity.this, StaffPatientsActivity.class);
                             } else {
+                                // Redirect to dashboard on add
                                 intent = new Intent(ABGEntryActivity.this, StaffDashboardActivity.class);
                             }
                             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);

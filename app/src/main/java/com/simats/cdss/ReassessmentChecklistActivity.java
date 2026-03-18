@@ -5,7 +5,8 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
+import android.widget.CheckBox;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -16,10 +17,7 @@ import com.simats.cdss.models.GenericResponse;
 import com.simats.cdss.network.ApiService;
 import com.simats.cdss.network.RetrofitClient;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.HashMap;
-import java.util.Locale;
 import java.util.Map;
 
 import retrofit2.Call;
@@ -31,7 +29,12 @@ public class ReassessmentChecklistActivity extends AppCompatActivity {
     private static final String TAG = "ReassessmentChecklist";
 
     private int patientId = -1;
-    private EditText etSpo2, etRespiratoryRate, etHeartRate, etNotes;
+    private int reassessmentId = -1;
+    private String patientName = "";
+    private String reassessmentType = "SpO2";
+
+    private CheckBox cbSpo2, cbRespiratoryRate, cbConsciousness, cbDeviceFit, cbRepeatAbg;
+    private TextView tvPatientHeader, tvReassessmentType;
     private Button btnComplete;
 
     @Override
@@ -39,37 +42,71 @@ public class ReassessmentChecklistActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_reassessment_checklist);
 
+        // Get data from intent
         patientId = getIntent().getIntExtra("patient_id", -1);
+        reassessmentId = getIntent().getIntExtra("reassessment_id", -1);
+        patientName = getIntent().getStringExtra("patient_name");
+        reassessmentType = getIntent().getStringExtra("reassessment_type");
+        String bedNo = getIntent().getStringExtra("bed_no");
+        String wardNo = getIntent().getStringExtra("ward_no");
 
+        if (reassessmentType == null || reassessmentType.isEmpty()) {
+            reassessmentType = "SpO2";
+        }
+        if (patientName == null) patientName = "";
+
+        Log.d(TAG, "Opened with patient_id=" + patientId
+                + " reassessment_id=" + reassessmentId
+                + " type=" + reassessmentType);
+
+        // Bind views
         findViewById(R.id.iv_back).setOnClickListener(v -> onBackPressed());
 
-        etSpo2 = findViewById(R.id.et_spo2);
-        etRespiratoryRate = findViewById(R.id.et_respiratory_rate);
-        etHeartRate = findViewById(R.id.et_heart_rate);
-        etNotes = findViewById(R.id.et_notes);
+        cbSpo2 = findViewById(R.id.cb_spo2);
+        cbRespiratoryRate = findViewById(R.id.cb_respiratory_rate);
+        cbConsciousness = findViewById(R.id.cb_consciousness);
+        cbDeviceFit = findViewById(R.id.cb_device_fit);
+        cbRepeatAbg = findViewById(R.id.cb_repeat_abg);
         btnComplete = findViewById(R.id.btn_complete);
 
-        btnComplete.setOnClickListener(v -> saveReassessment());
+        // Pre-fill patient info header if available
+        tvPatientHeader = findViewById(R.id.tv_patient_header);
+        tvReassessmentType = findViewById(R.id.tv_reassessment_type);
+
+        if (tvPatientHeader != null && !patientName.isEmpty()) {
+            StringBuilder header = new StringBuilder(patientName);
+            if (bedNo != null && !bedNo.isEmpty()) {
+                header.append(" • Bed ").append(bedNo);
+            }
+            if (wardNo != null && !wardNo.isEmpty()) {
+                header.append(" • Ward ").append(wardNo);
+            }
+            tvPatientHeader.setText(header.toString());
+            tvPatientHeader.setVisibility(View.VISIBLE);
+            // Show the card
+            findViewById(R.id.card_patient_info).setVisibility(View.VISIBLE);
+        }
+
+        if (tvReassessmentType != null) {
+            tvReassessmentType.setText("Reassessment");
+            tvReassessmentType.setVisibility(View.VISIBLE);
+        }
+
+        btnComplete.setOnClickListener(v -> completeReassessment());
 
         setupBottomNav();
     }
 
-    private void saveReassessment() {
-        // Validate required fields
-        String spo2Str = etSpo2.getText().toString().trim();
-        String rrStr = etRespiratoryRate.getText().toString().trim();
-        String hrStr = etHeartRate.getText().toString().trim();
-        String notes = etNotes.getText().toString().trim();
+    private void completeReassessment() {
+        // Validate: at least one checkbox should be checked
+        boolean spo2Checked = cbSpo2.isChecked();
+        boolean rrChecked = cbRespiratoryRate.isChecked();
+        boolean consciousnessChecked = cbConsciousness.isChecked();
+        boolean deviceFitChecked = cbDeviceFit.isChecked();
+        boolean abgChecked = cbRepeatAbg.isChecked();
 
-        if (spo2Str.isEmpty()) {
-            etSpo2.setError("SpO₂ is required");
-            etSpo2.requestFocus();
-            return;
-        }
-
-        if (rrStr.isEmpty()) {
-            etRespiratoryRate.setError("Respiratory Rate is required");
-            etRespiratoryRate.requestFocus();
+        if (!spo2Checked && !rrChecked && !consciousnessChecked && !deviceFitChecked && !abgChecked) {
+            Toast.makeText(this, "Please complete at least one check", Toast.LENGTH_SHORT).show();
             return;
         }
 
@@ -78,39 +115,75 @@ public class ReassessmentChecklistActivity extends AppCompatActivity {
             return;
         }
 
-        // Build request body
-        String reassessmentTime = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault()).format(new Date());
-
+        // Build request body for staff_checklist API
         Map<String, Object> body = new HashMap<>();
         body.put("patient_id", patientId);
-        body.put("spo2", Double.parseDouble(spo2Str));
-        body.put("respiratory_rate", Double.parseDouble(rrStr));
-        body.put("heart_rate", hrStr.isEmpty() ? 0 : Double.parseDouble(hrStr));
-        body.put("notes", notes);
-        body.put("reassessment_time", reassessmentTime);
+        body.put("check_spo2", spo2Checked);
+        body.put("check_respiratory_rate", rrChecked);
+        body.put("check_consciousness", consciousnessChecked);
+        body.put("check_device_fit", deviceFitChecked);
+        body.put("check_repeat_abg", abgChecked);
 
-        Log.d(TAG, "API_REQUEST: " + body.toString());
+        // Build remarks from checked items
+        StringBuilder remarks = new StringBuilder("Checklist completed: ");
+        if (spo2Checked) remarks.append("SpO2, ");
+        if (rrChecked) remarks.append("Respiratory Rate, ");
+        if (consciousnessChecked) remarks.append("Consciousness/Sensorium, ");
+        if (deviceFitChecked) remarks.append("Device Fit & Position, ");
+        if (abgChecked) remarks.append("Repeat ABG, ");
+        // Remove trailing comma
+        String remarksStr = remarks.toString();
+        if (remarksStr.endsWith(", ")) {
+            remarksStr = remarksStr.substring(0, remarksStr.length() - 2);
+        }
+        body.put("remarks", remarksStr);
 
-        // Send POST request
+        // If we have a reassessment_id, include it so the backend auto-completes the schedule
+        if (reassessmentId != -1) {
+            body.put("reassessment_id", reassessmentId);
+        }
+
+        Log.d(TAG, "API_REQUEST body: " + body.toString());
+
+        // Prevent duplicate submissions
+        btnComplete.setEnabled(false);
+        btnComplete.setText("Saving...");
+
+        // Send POST request to staff-checklist endpoint
         ApiService apiService = RetrofitClient.getClient(this).create(ApiService.class);
-        apiService.saveReassessmentChecklist(body).enqueue(new Callback<GenericResponse>() {
+        apiService.saveStaffChecklist(body).enqueue(new Callback<GenericResponse>() {
             @Override
             public void onResponse(Call<GenericResponse> call, Response<GenericResponse> response) {
                 Log.d(TAG, "API_RESPONSE code: " + response.code());
                 if (response.isSuccessful() && response.body() != null) {
                     Log.d(TAG, "API_RESPONSE body: " + response.body().getMessage());
-                    Toast.makeText(ReassessmentChecklistActivity.this, "Saved Successfully", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(ReassessmentChecklistActivity.this,
+                            "Reassessment completed successfully!", Toast.LENGTH_SHORT).show();
                     showSuccessBottomSheet();
                 } else {
                     Log.e(TAG, "API_RESPONSE error: " + response.code());
-                    Toast.makeText(ReassessmentChecklistActivity.this, "Failed to save reassessment", Toast.LENGTH_SHORT).show();
+                    try {
+                        String errorBody = response.errorBody() != null ? response.errorBody().string() : "Unknown error";
+                        Log.e(TAG, "Error body: " + errorBody);
+                    } catch (Exception e) {
+                        Log.e(TAG, "Could not read error body");
+                    }
+                    Toast.makeText(ReassessmentChecklistActivity.this,
+                            "Failed to save reassessment", Toast.LENGTH_SHORT).show();
+                    // Re-enable button on failure
+                    btnComplete.setEnabled(true);
+                    btnComplete.setText("Complete Reassessment");
                 }
             }
 
             @Override
             public void onFailure(Call<GenericResponse> call, Throwable t) {
                 Log.e(TAG, "API_FAILURE: " + t.getMessage());
-                Toast.makeText(ReassessmentChecklistActivity.this, "Network error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(ReassessmentChecklistActivity.this,
+                        "Network error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+                // Re-enable button on failure
+                btnComplete.setEnabled(true);
+                btnComplete.setText("Complete Reassessment");
             }
         });
     }

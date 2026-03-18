@@ -17,6 +17,7 @@
         android:orientation="horizontal"
         android:paddingHorizontal="24dp"
         android:paddingVertical="16dp"
+        android:elevation="4dp"
         app:layout_constraintTop_toTopOf="parent">
 
         <ImageView
@@ -31,22 +32,33 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:layout_marginStart="16dp"
-            android:text="Alerts Center (Staff)"
+            android:text="Alerts Center"
             android:textColor="#1A1C1E"
             android:textSize="20sp"
             android:textStyle="bold" />
 
-        <ImageView
-            android:layout_width="24dp"
-            android:layout_height="24dp"
-            android:src="@drawable/ic_more_vert"
-            app:tint="#1A1C1E" />
+        <!-- Alert count badge -->
+        <TextView
+            android:id="@+id/tv_alert_count_badge"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/chip_red_rounded"
+            android:backgroundTint="#FEF2F2"
+            android:paddingHorizontal="12dp"
+            android:paddingVertical="4dp"
+            android:text="0"
+            android:textColor="#EF4444"
+            android:textSize="12sp"
+            android:textStyle="bold"
+            android:visibility="gone" />
     </LinearLayout>
 
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:background="#FAFAFA"
+        android:scrollbars="none"
+        android:overScrollMode="never"
         app:layout_constraintBottom_toTopOf="@+id/bottom_navigation"
         app:layout_constraintTop_toBottomOf="@id/toolbar">
 
@@ -57,8 +69,41 @@
             android:paddingHorizontal="16dp"
             android:paddingBottom="24dp">
 
-            <!-- Critical Alerts Section -->
+            <!-- Reassessment Alerts Section Header -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:layout_marginTop="20dp"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:layout_width="18dp"
+                    android:layout_height="18dp"
+                    android:src="@drawable/ic_clock"
+                    app:tint="@color/primary_teal" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:text="Reassessment Alerts"
+                    android:textColor="#1A1C1E"
+                    android:textSize="16sp"
+                    android:textStyle="bold" />
+            </LinearLayout>
+
             <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:text="Showing only doctor-scheduled reassessments"
+                android:textColor="#94A3B8"
+                android:textSize="12sp" />
+
+            <!-- CRITICAL ALERTS Section -->
+            <TextView
+                android:id="@+id/tv_critical_header"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="20dp"
@@ -66,261 +111,92 @@
                 android:textColor="#EF4444"
                 android:textSize="12sp"
                 android:textStyle="bold"
-                android:letterSpacing="0.1" />
+                android:letterSpacing="0.1"
+                android:visibility="gone" />
 
-            <!-- Critical Alert for Staff -->
-            <com.google.android.material.card.MaterialCardView
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rv_critical_alerts"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="12dp"
-                app:cardCornerRadius="16dp"
-                app:cardElevation="2dp"
-                app:strokeColor="#FEE2E2"
-                app:strokeWidth="1dp"
-                app:cardBackgroundColor="@color/white">
+                android:nestedScrollingEnabled="false"
+                android:clipToPadding="false"
+                android:visibility="gone" />
 
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:padding="16dp">
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:gravity="center_vertical">
-                        <ImageView
-                            android:layout_width="20dp"
-                            android:layout_height="20dp"
-                            android:src="@drawable/ic_warning"
-                            app:tint="#EF4444" />
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="8dp"
-                            android:text="Critical Hypoxemia"
-                            android:textColor="#EF4444"
-                            android:textStyle="bold" />
-                        <TextView
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:gravity="end"
-                            android:text="2m ago"
-                            android:textColor="#94A3B8"
-                            android:textSize="12sp" />
-                    </LinearLayout>
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="8dp"
-                        android:text="Robert Chen (Bed 302) • SpO₂ dropped to 85%"
-                        android:textColor="#1A1C1E"
-                        android:textStyle="bold" />
-
-                    <!-- Staff specific actions -->
-                    <GridLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="16dp"
-                        android:columnCount="2"
-                        android:alignmentMode="alignMargins">
-
-                        <com.google.android.material.button.MaterialButton
-                            android:id="@+id/btnNotifyDoctor"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_columnWeight="1"
-                            android:layout_margin="4dp"
-                            android:text="Notify Doctor"
-                            android:textAllCaps="false"
-                            android:textSize="12sp"
-                            app:backgroundTint="#FEE2E2"
-                            android:textColor="#EF4444"
-                            app:cornerRadius="8dp" />
-
-                        <com.google.android.material.button.MaterialButton
-                            android:id="@+id/btnViewPatient"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_columnWeight="1"
-                            android:layout_margin="4dp"
-                            android:text="View Patient"
-                            android:textAllCaps="false"
-                            android:textSize="12sp"
-                            app:backgroundTint="#F1F5F9"
-                            android:textColor="#64748B"
-                            app:cornerRadius="8dp" />
-
-                        <com.google.android.material.button.MaterialButton
-                            android:id="@+id/btnRecheckVitals"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_columnWeight="1"
-                            android:layout_margin="4dp"
-                            android:text="Re-check Vitals"
-                            android:textAllCaps="false"
-                            android:textSize="12sp"
-                            app:backgroundTint="#F1F5F9"
-                            android:textColor="#64748B"
-                            app:cornerRadius="8dp" />
-
-                        <com.google.android.material.button.MaterialButton
-                            android:id="@+id/btnReenterABG"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_columnWeight="1"
-                            android:layout_margin="4dp"
-                            android:text="Re-enter ABG"
-                            android:textAllCaps="false"
-                            android:textSize="12sp"
-                            app:backgroundTint="#F1F5F9"
-                            android:textColor="#64748B"
-                            app:cornerRadius="8dp" />
-                    </GridLayout>
-                </LinearLayout>
-            </com.google.android.material.card.MaterialCardView>
-
-            <!-- Moderate Alerts Section -->
+            <!-- MODERATE ALERTS Section -->
             <TextView
+                android:id="@+id/tv_moderate_header"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="24dp"
-                android:text="MODERATE ALERTS"
+                android:layout_marginTop="20dp"
+                android:text="UPCOMING ALERTS"
                 android:textColor="#F59E0B"
                 android:textSize="12sp"
                 android:textStyle="bold"
-                android:letterSpacing="0.1" />
+                android:letterSpacing="0.1"
+                android:visibility="gone" />
 
-            <com.google.android.material.card.MaterialCardView
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rv_moderate_alerts"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="12dp"
-                app:cardCornerRadius="16dp"
-                app:cardElevation="2dp"
-                app:cardBackgroundColor="@color/white">
+                android:nestedScrollingEnabled="false"
+                android:clipToPadding="false"
+                android:visibility="gone" />
 
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:padding="16dp">
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:gravity="center_vertical">
-                        <ImageView
-                            android:layout_width="20dp"
-                            android:layout_height="20dp"
-                            android:src="@drawable/ic_description"
-                            app:tint="#F59E0B" />
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="8dp"
-                            android:text="ABG Result Ready"
-                            android:textColor="#F59E0B"
-                            android:textStyle="bold" />
-                    </LinearLayout>
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="8dp"
-                        android:text="Maria Garcia (Bed 204) • New result available"
-                        android:textColor="#1A1C1E" />
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="12dp"
-                        android:orientation="horizontal">
-                        <com.google.android.material.button.MaterialButton
-                            android:id="@+id/btnOpenResult"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Open Result"
-                            android:textAllCaps="false"
-                            app:backgroundTint="#FFFBEB"
-                            android:textColor="#B45309"
-                            app:cornerRadius="8dp" />
-                        <com.google.android.material.button.MaterialButton
-                            android:id="@+id/btnConfirmEntry"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="8dp"
-                            android:text="Confirm Data"
-                            android:textAllCaps="false"
-                            app:backgroundTint="#F1F5F9"
-                            android:textColor="#64748B"
-                            app:cornerRadius="8dp" />
-                    </LinearLayout>
-                </LinearLayout>
-            </com.google.android.material.card.MaterialCardView>
-
-            <!-- Informational Section -->
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="24dp"
-                android:text="INFORMATIONAL"
-                android:textColor="#64748B"
-                android:textSize="12sp"
-                android:textStyle="bold"
-                android:letterSpacing="0.1" />
-
-            <com.google.android.material.card.MaterialCardView
+            <!-- Empty state -->
+            <LinearLayout
+                android:id="@+id/layout_empty_state"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="12dp"
-                app:cardCornerRadius="16dp"
-                app:cardElevation="1dp"
-                app:cardBackgroundColor="@color/white">
+                android:gravity="center"
+                android:orientation="vertical"
+                android:paddingTop="80dp"
+                android:paddingBottom="80dp"
+                android:visibility="gone">
 
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:padding="16dp"
-                    android:gravity="center_vertical">
+                <com.google.android.material.card.MaterialCardView
+                    android:layout_width="72dp"
+                    android:layout_height="72dp"
+                    app:cardBackgroundColor="#F0FDF4"
+                    app:cardCornerRadius="36dp"
+                    app:cardElevation="0dp">
 
                     <ImageView
-                        android:layout_width="20dp"
-                        android:layout_height="20dp"
+                        android:layout_width="32dp"
+                        android:layout_height="32dp"
+                        android:layout_gravity="center"
                         android:src="@drawable/ic_check_circle"
                         app:tint="#10B981" />
+                </com.google.android.material.card.MaterialCardView>
 
-                    <LinearLayout
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:layout_marginStart="12dp"
-                        android:orientation="vertical">
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Lab Report Received"
-                            android:textColor="#1A1C1E"
-                            android:textStyle="bold" />
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="General lab results updated for James Wilson"
-                            android:textColor="#64748B"
-                            android:textSize="12sp" />
-                    </LinearLayout>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    android:text="All Clear!"
+                    android:textColor="#1A1C1E"
+                    android:textSize="18sp"
+                    android:textStyle="bold" />
 
-                    <TextView
-                        android:id="@+id/tvMarkReadStaff"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Mark read"
-                        android:textColor="@color/primary_teal"
-                        android:textSize="12sp"
-                        android:textStyle="bold" />
-                </LinearLayout>
-            </com.google.android.material.card.MaterialCardView>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:gravity="center"
+                    android:text="No reassessment alerts right now.\nAlerts will appear when doctors schedule reassessments."
+                    android:textColor="#94A3B8"
+                    android:textSize="14sp" />
+            </LinearLayout>
+
+            <!-- Loading indicator -->
+            <ProgressBar
+                android:id="@+id/progress_loading"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="80dp"
+                android:indeterminateTint="@color/primary_teal"
+                android:visibility="gone" />
 
         </LinearLayout>
     </ScrollView>

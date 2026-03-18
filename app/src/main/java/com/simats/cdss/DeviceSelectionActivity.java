@@ -260,6 +260,8 @@ public class DeviceSelectionActivity extends AppCompatActivity {
                     Toast.makeText(DeviceSelectionActivity.this, "Device selection saved", Toast.LENGTH_SHORT).show();
                     Intent intent = new Intent(DeviceSelectionActivity.this, ReviewRecommendationActivity.class);
                     intent.putExtra("patient_id", patientId);
+                    intent.putExtra("selected_device", selectedDevice);
+                    intent.putExtra("selected_flow_range", selectedFlowRange);
                     startActivity(intent);
                 } else {
                     Toast.makeText(DeviceSelectionActivity.this, "Failed to save device selection", Toast.LENGTH_SHORT).show();

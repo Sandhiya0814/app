@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#F8F9FA"
+    android:background="#F0FAF5"
     tools:context=".ReassessmentChecklistActivity">
 
     <!-- Toolbar -->
@@ -17,6 +17,7 @@
         android:orientation="horizontal"
         android:paddingHorizontal="24dp"
         android:paddingVertical="16dp"
+        android:elevation="2dp"
         app:layout_constraintTop_toTopOf="parent">
 
         <ImageView
@@ -53,165 +54,203 @@
             android:paddingHorizontal="24dp"
             android:paddingBottom="24dp">
 
+            <!-- Subtitle -->
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="24dp"
-                android:text="Enter reassessment vitals for this patient."
+                android:layout_marginTop="16dp"
+                android:text="Complete all checks before confirming reassessment."
                 android:textColor="#64748B"
                 android:textSize="14sp" />
 
-            <!-- SpO2 Input -->
+            <!-- Patient Info Header (shown when opened from alert) -->
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/card_patient_info"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:visibility="gone"
+                app:cardBackgroundColor="#F0FDF4"
+                app:cardCornerRadius="12dp"
+                app:cardElevation="0dp"
+                app:strokeWidth="1dp"
+                app:strokeColor="#D1FAE5">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="16dp">
+
+                    <TextView
+                        android:id="@+id/tv_patient_header"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Patient Name • Bed 302 • Ward 5"
+                        android:textColor="#065F46"
+                        android:textSize="15sp"
+                        android:textStyle="bold"
+                        android:visibility="gone" />
+
+                    <TextView
+                        android:id="@+id/tv_reassessment_type"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="4dp"
+                        android:text="Reassessment"
+                        android:textColor="#047857"
+                        android:textSize="13sp"
+                        android:visibility="gone" />
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- Checklist Item 1: Check SpO2 -->
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
                 app:cardBackgroundColor="#FFFFFF"
-                app:cardCornerRadius="12dp"
-                app:cardElevation="1dp"
+                app:cardCornerRadius="16dp"
+                app:cardElevation="2dp"
                 app:strokeWidth="0dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:padding="16dp">
+                    android:padding="20dp">
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="SpO₂ (%)"
-                        android:textColor="#1A1C1E"
-                        android:textSize="14sp"
-                        android:textStyle="bold" />
-
-                    <EditText
-                        android:id="@+id/et_spo2"
+                    <CheckBox
+                        android:id="@+id/cb_spo2"
                         android:layout_width="match_parent"
-                        android:layout_height="48dp"
-                        android:layout_marginTop="8dp"
-                        android:background="@drawable/bg_edit_text"
-                        android:hint="e.g. 92"
-                        android:inputType="numberDecimal"
-                        android:paddingHorizontal="12dp"
+                        android:layout_height="wrap_content"
+                        android:text="Check SpO₂ (Target 88-92%)"
                         android:textColor="#1A1C1E"
-                        android:textSize="16sp" />
+                        android:textSize="16sp"
+                        android:textStyle="bold"
+                        android:buttonTint="@color/primary_teal"
+                        android:paddingStart="12dp"
+                        android:minHeight="48dp" />
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 
-            <!-- Respiratory Rate Input -->
+            <!-- Checklist Item 2: Respiratory Rate -->
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="12dp"
                 app:cardBackgroundColor="#FFFFFF"
-                app:cardCornerRadius="12dp"
-                app:cardElevation="1dp"
+                app:cardCornerRadius="16dp"
+                app:cardElevation="2dp"
                 app:strokeWidth="0dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:padding="16dp">
+                    android:padding="20dp">
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Respiratory Rate (breaths/min)"
-                        android:textColor="#1A1C1E"
-                        android:textSize="14sp"
-                        android:textStyle="bold" />
-
-                    <EditText
-                        android:id="@+id/et_respiratory_rate"
+                    <CheckBox
+                        android:id="@+id/cb_respiratory_rate"
                         android:layout_width="match_parent"
-                        android:layout_height="48dp"
-                        android:layout_marginTop="8dp"
-                        android:background="@drawable/bg_edit_text"
-                        android:hint="e.g. 24"
-                        android:inputType="numberDecimal"
-                        android:paddingHorizontal="12dp"
+                        android:layout_height="wrap_content"
+                        android:text="Respiratory Rate"
                         android:textColor="#1A1C1E"
-                        android:textSize="16sp" />
+                        android:textSize="16sp"
+                        android:textStyle="bold"
+                        android:buttonTint="@color/primary_teal"
+                        android:paddingStart="12dp"
+                        android:minHeight="48dp" />
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 
-            <!-- Heart Rate Input -->
+            <!-- Checklist Item 3: Consciousness / Sensorium -->
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="12dp"
                 app:cardBackgroundColor="#FFFFFF"
-                app:cardCornerRadius="12dp"
-                app:cardElevation="1dp"
+                app:cardCornerRadius="16dp"
+                app:cardElevation="2dp"
                 app:strokeWidth="0dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:padding="16dp">
+                    android:padding="20dp">
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Heart Rate (bpm)"
-                        android:textColor="#1A1C1E"
-                        android:textSize="14sp"
-                        android:textStyle="bold" />
-
-                    <EditText
-                        android:id="@+id/et_heart_rate"
+                    <CheckBox
+                        android:id="@+id/cb_consciousness"
                         android:layout_width="match_parent"
-                        android:layout_height="48dp"
-                        android:layout_marginTop="8dp"
-                        android:background="@drawable/bg_edit_text"
-                        android:hint="e.g. 98"
-                        android:inputType="numberDecimal"
-                        android:paddingHorizontal="12dp"
+                        android:layout_height="wrap_content"
+                        android:text="Consciousness / Sensorium"
                         android:textColor="#1A1C1E"
-                        android:textSize="16sp" />
+                        android:textSize="16sp"
+                        android:textStyle="bold"
+                        android:buttonTint="@color/primary_teal"
+                        android:paddingStart="12dp"
+                        android:minHeight="48dp" />
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 
-            <!-- Notes Input -->
+            <!-- Checklist Item 4: Device Fit & Position -->
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="12dp"
                 app:cardBackgroundColor="#FFFFFF"
-                app:cardCornerRadius="12dp"
-                app:cardElevation="1dp"
+                app:cardCornerRadius="16dp"
+                app:cardElevation="2dp"
                 app:strokeWidth="0dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:padding="16dp">
+                    android:padding="20dp">
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Clinical Notes"
-                        android:textColor="#1A1C1E"
-                        android:textSize="14sp"
-                        android:textStyle="bold" />
-
-                    <EditText
-                        android:id="@+id/et_notes"
+                    <CheckBox
+                        android:id="@+id/cb_device_fit"
                         android:layout_width="match_parent"
-                        android:layout_height="100dp"
-                        android:layout_marginTop="8dp"
-                        android:background="@drawable/bg_edit_text"
-                        android:gravity="top|start"
-                        android:hint="Enter clinical notes..."
-                        android:inputType="textMultiLine"
-                        android:paddingHorizontal="12dp"
-                        android:paddingTop="12dp"
+                        android:layout_height="wrap_content"
+                        android:text="Device Fit &amp; Position"
                         android:textColor="#1A1C1E"
-                        android:textSize="16sp" />
+                        android:textSize="16sp"
+                        android:textStyle="bold"
+                        android:buttonTint="@color/primary_teal"
+                        android:paddingStart="12dp"
+                        android:minHeight="48dp" />
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- Checklist Item 5: Repeat ABG (if indicated) -->
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                app:cardBackgroundColor="#FFFFFF"
+                app:cardCornerRadius="16dp"
+                app:cardElevation="2dp"
+                app:strokeWidth="0dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="20dp">
+
+                    <CheckBox
+                        android:id="@+id/cb_repeat_abg"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Repeat ABG (if indicated)"
+                        android:textColor="#1A1C1E"
+                        android:textSize="16sp"
+                        android:textStyle="bold"
+                        android:buttonTint="@color/primary_teal"
+                        android:paddingStart="12dp"
+                        android:minHeight="48dp" />
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 
@@ -224,7 +263,7 @@
         android:layout_height="56dp"
         android:layout_marginHorizontal="24dp"
         android:layout_marginBottom="16dp"
-        android:text="Save Reassessment"
+        android:text="Complete Reassessment"
         android:textAllCaps="false"
         android:textSize="16sp"
         app:backgroundTint="@color/primary_teal"

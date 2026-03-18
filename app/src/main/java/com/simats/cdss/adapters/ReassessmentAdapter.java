@@ -42,26 +42,33 @@ public class ReassessmentAdapter extends RecyclerView.Adapter<ReassessmentAdapte
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         StaffDashboardResponse.ReassessmentItem item = items.get(position);
 
-        // Set title based on type
-        if ("SpO2".equalsIgnoreCase(item.getType())) {
-            holder.tvTitle.setText("SpO2 Check Due");
-            holder.iconBg.setBackgroundResource(R.drawable.bg_icon_amber);
-            holder.ivIcon.setImageResource(R.drawable.ic_clock);
-            holder.ivIcon.setColorFilter(context.getColor(R.color.amber_700));
-        } else {
-            holder.tvTitle.setText("ABG Sample Required");
-            holder.iconBg.setBackgroundResource(R.drawable.bg_icon_blue);
-            holder.ivIcon.setImageResource(R.drawable.ic_description);
-            holder.ivIcon.setColorFilter(context.getColor(R.color.blue_600));
-        }
+        // Set title — common "Check Due" for all reassessment types
+        holder.tvTitle.setText("Check Due");
+        holder.iconBg.setBackgroundResource(R.drawable.bg_icon_amber);
+        holder.ivIcon.setImageResource(R.drawable.ic_clock);
+        holder.ivIcon.setColorFilter(context.getColor(R.color.amber_700));
 
-        // Set patient info
-        holder.tvSubtext.setText(item.getPatientName() + " • Bed " + item.getBedNumber());
+        // Set patient info with bed and ward
+        StringBuilder subtext = new StringBuilder(item.getPatientName());
+        String bed = item.getBedNumber();
+        String ward = item.getWardNo();
+        if (bed != null && !bed.isEmpty()) {
+            subtext.append(" • Bed ").append(bed);
+        }
+        if (ward != null && !ward.isEmpty()) {
+            subtext.append(" • Ward ").append(ward);
+        }
+        holder.tvSubtext.setText(subtext.toString());
 
         // Set time status
         int dueIn = item.getDueIn();
-        if (dueIn < 0) {
-            holder.tvTime.setText("Overdue by " + Math.abs(dueIn) + " mins");
+        String status = item.getStatus();
+        if (dueIn < 0 || "due".equalsIgnoreCase(status)) {
+            if (dueIn < 0) {
+                holder.tvTime.setText("Overdue by " + Math.abs(dueIn) + " mins");
+            } else {
+                holder.tvTime.setText("Due now");
+            }
             holder.tvTime.setTextColor(context.getColor(R.color.red_500));
         } else {
             holder.tvTime.setText("Due in " + dueIn + " mins");

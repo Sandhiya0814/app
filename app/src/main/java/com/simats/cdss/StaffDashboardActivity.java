@@ -51,6 +51,11 @@ public class StaffDashboardActivity extends AppCompatActivity {
         adapter.setOnItemClickListener(item -> {
             Intent intent = new Intent(this, ReassessmentChecklistActivity.class);
             intent.putExtra("patient_id", item.getPatientId());
+            intent.putExtra("reassessment_id", item.getId());
+            intent.putExtra("patient_name", item.getPatientName());
+            intent.putExtra("bed_no", item.getBedNumber());
+            intent.putExtra("ward_no", item.getWardNo());
+            intent.putExtra("reassessment_type", item.getType());
             startActivity(intent);
         });
         rvReassessments.setAdapter(adapter);

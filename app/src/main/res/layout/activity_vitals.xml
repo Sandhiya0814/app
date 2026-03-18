@@ -67,18 +67,20 @@
                     android:padding="16dp">
 
                     <TextView
+                        android:id="@+id/tv_patient_name"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Robert Chen (B-102)"
+                        android:text="Patient"
                         android:textColor="#1E40AF"
                         android:textSize="14sp"
                         android:textStyle="bold" />
 
                     <TextView
+                        android:id="@+id/tv_last_recorded"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="4dp"
-                        android:text="Last recorded: 2 hours ago"
+                        android:text=""
                         android:textColor="#3B82F6"
                         android:textSize="12sp" />
                 </LinearLayout>
