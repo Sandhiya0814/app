@@ -67,6 +67,10 @@ public interface ApiService {
     @POST("api/reset-password/")
     Call<LoginResponse> resetPassword(@Body Map<String, String> request);
 
+    // Universal Profile Update
+    @POST("api/update-profile/")
+    Call<Map<String, String>> updateProfile(@Body Map<String, String> request);
+
 
     // ─────────────────────────────────────────
     // 2. Patient Management
@@ -112,6 +116,9 @@ public interface ApiService {
 
     @GET("api/patient/clinical-therapy/{id}/")
     Call<TherapyPlanResponse> getTherapyPlan(@Path("id") int patientId);
+
+    @GET("api/patients/{id}/abg-trends/")
+    Call<ABGTrendResponse> getABGTrends(@Path("id") int patientId);
 
     @POST("api/patient/clinical-reassessment/{id}/")
     Call<GenericResponse> saveReassessment(@Path("id") int patientId, @Body Map<String, Object> request);
@@ -178,6 +185,18 @@ public interface ApiService {
     // ─────────────────────────────────────────
     // 4. Alerts & Recommendations
     // ─────────────────────────────────────────
+
+    @GET("api/patients/{id}/escalation-criteria/")
+    Call<EscalationCriteriaResponse> getEscalationCriteria(@Path("id") int patientId);
+
+    @GET("api/patients/{id}/niv-recommendation/")
+    Call<NIVRecommendationResponse> getNIVRecommendation(@Path("id") int patientId);
+
+    @GET("api/patients/{id}/urgent-action/")
+    Call<UrgentActionResponse> getUrgentAction(@Path("id") int patientId);
+
+    @DELETE("api/patients/{id}/")
+    Call<GenericResponse> deletePatient(@Path("id") int patientId);
 
     // Staff Reassessment Alerts
     @GET("api/staff/alerts/")

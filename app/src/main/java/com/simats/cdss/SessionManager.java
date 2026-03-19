@@ -9,6 +9,8 @@ public class SessionManager {
     private static final String KEY_REFRESH_TOKEN = "refresh_token";
     private static final String KEY_ROLE = "user_role";
     private static final String KEY_EMAIL = "user_email";
+    private static final String KEY_NAME = "user_name";
+    private static final String KEY_IMAGE_URI = "profile_image_uri";
     private SharedPreferences pref;
     private SharedPreferences.Editor editor;
 
@@ -29,8 +31,26 @@ public class SessionManager {
         editor.apply();
     }
 
+    public void saveName(String name) {
+        editor.putString(KEY_NAME, name);
+        editor.apply();
+    }
+
     public String getEmail() {
         return pref.getString(KEY_EMAIL, null);
+    }
+
+    public String getName() {
+        return pref.getString(KEY_NAME, "");
+    }
+
+    public void saveProfileImageUri(String uri) {
+        editor.putString(KEY_IMAGE_URI, uri);
+        editor.apply();
+    }
+
+    public String getProfileImageUri() {
+        return pref.getString(KEY_IMAGE_URI, null);
     }
 
     public void setRole(String role) {

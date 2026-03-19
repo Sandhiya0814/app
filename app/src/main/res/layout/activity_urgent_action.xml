@@ -69,6 +69,7 @@
             </com.google.android.material.card.MaterialCardView>
 
             <TextView
+                android:id="@+id/tv_icu_title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="32dp"
@@ -82,12 +83,13 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
                 android:gravity="center"
-                android:text="Patient meets criteria for immediate ICU\nadmission or outreach review."
+                android:text="When Patient meets criteria immediately rush for ICU\nadmission or outreach review."
                 android:textColor="@color/white"
                 android:textSize="16sp" />
 
             <!-- Triggers Card -->
             <com.google.android.material.card.MaterialCardView
+                android:id="@+id/card_icu_triggers"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="40dp"
@@ -111,45 +113,11 @@
                         android:textStyle="bold" />
 
                     <LinearLayout
+                        android:id="@+id/layout_triggers_container"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="16dp"
-                        android:gravity="center_vertical"
-                        android:orientation="horizontal">
-
-                        <View
-                            android:layout_width="8dp"
-                            android:layout_height="8dp"
-                            android:background="@drawable/chip_red_rounded" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="12dp"
-                            android:text="pH &lt; 7.25 despite NIV"
-                            android:textColor="#1A1C1E"
-                            android:textSize="14sp" />
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="12dp"
-                        android:gravity="center_vertical"
-                        android:orientation="horizontal">
-
-                        <View
-                            android:layout_width="8dp"
-                            android:layout_height="8dp"
-                            android:background="@drawable/chip_red_rounded" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="12dp"
-                            android:text="GCS &lt; 8 (Decreased consciousness)"
-                            android:textColor="#1A1C1E"
-                            android:textSize="14sp" />
+                        android:orientation="vertical">
                     </LinearLayout>
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>

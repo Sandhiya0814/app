@@ -93,21 +93,23 @@ public class DoctordashboardActivity extends AppCompatActivity {
 
         // Bottom navigation
         BottomNavigationView bottomNav = findViewById(R.id.bottom_navigation);
-        bottomNav.setSelectedItemId(R.id.nav_home);
-        bottomNav.setOnItemSelectedListener(item -> {
-            int itemId = item.getItemId();
-            if (itemId == R.id.nav_patients) {
-                startActivity(new Intent(this, DoctorPatientsActivity.class));
-                return true;
-            } else if (itemId == R.id.nav_alerts) {
-                startActivity(new Intent(this, DoctorAlertsActivity.class));
-                return true;
-            } else if (itemId == R.id.nav_settings) {
-                startActivity(new Intent(this, SettingsActivity.class));
-                return true;
-            }
-            return itemId == R.id.nav_home;
-        });
+        if (bottomNav != null) {
+            bottomNav.setOnItemSelectedListener(item -> {
+                int itemId = item.getItemId();
+                if (itemId == R.id.nav_patients) {
+                    startActivity(new Intent(this, DoctorPatientsActivity.class));
+                    return true;
+                } else if (itemId == R.id.nav_alerts) {
+                    startActivity(new Intent(this, DoctorAlertsActivity.class));
+                    return true;
+                } else if (itemId == R.id.nav_settings) {
+                    startActivity(new Intent(this, SettingsActivity.class));
+                    return true;
+                }
+                return itemId == R.id.nav_home;
+            });
+            bottomNav.setSelectedItemId(R.id.nav_home);
+        }
 
         // Fetch Dashboard Data
         fetchDashboardData();

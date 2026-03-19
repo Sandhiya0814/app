@@ -146,6 +146,12 @@
             android:name=".ProfileActivity"
             android:exported="false" />
         <activity
+            android:name=".PatientListActivity"
+            android:exported="false" />
+        <activity
+            android:name=".OxygenEvaluationActivity"
+            android:exported="false" />
+        <activity
             android:name=".SettingsActivity"
             android:exported="false" />
 <!--        <activity-->
@@ -190,6 +196,9 @@
             android:exported="false" />
         <activity
             android:name=".DecisionSupportActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ImageCropActivity"
             android:exported="false" />
         
         <provider

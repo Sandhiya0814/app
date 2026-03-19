@@ -5,12 +5,15 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.PopupMenu;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.simats.cdss.models.GenericResponse;
 import com.simats.cdss.models.PatientDetailResponse;
 import com.simats.cdss.models.StaffReassessmentValuesResponse;
 import com.simats.cdss.network.ApiService;
@@ -54,6 +57,9 @@ public class PatientDetailsActivity extends AppCompatActivity {
 
         findViewById(R.id.iv_back).setOnClickListener(v -> onBackPressed());
 
+        // Three-dots menu with Remove Patient option
+        findViewById(R.id.iv_more).setOnClickListener(v -> showPopupMenu(v));
+
         // Handle click on SpO2 gauge card to move to OxygenActivity
         findViewById(R.id.card_gauge).setOnClickListener(v -> {
             Intent intent = new Intent(this, OxygenActivity.class);
@@ -86,6 +92,49 @@ public class PatientDetailsActivity extends AppCompatActivity {
         fetchPatientDetails();
 
         setupBottomNav();
+    }
+
+    private void showPopupMenu(View anchor) {
+        PopupMenu popup = new PopupMenu(this, anchor);
+        popup.getMenu().add("Remove Patient");
+        popup.setOnMenuItemClickListener(item -> {
+            if ("Remove Patient".equals(item.getTitle())) {
+                confirmRemovePatient();
+                return true;
+            }
+            return false;
+        });
+        popup.show();
+    }
+
+    private void confirmRemovePatient() {
+        new AlertDialog.Builder(this)
+                .setTitle("Remove Patient")
+                .setMessage("Are you sure you want to remove this patient? This action cannot be undone and all patient data will be permanently deleted.")
+                .setPositiveButton("Remove", (dialog, which) -> deletePatient())
+                .setNegativeButton("Cancel", null)
+                .show();
+    }
+
+    private void deletePatient() {
+        ApiService apiService = RetrofitClient.getClient(this).create(ApiService.class);
+        apiService.deletePatient(patientId).enqueue(new Callback<GenericResponse>() {
+            @Override
+            public void onResponse(Call<GenericResponse> call, Response<GenericResponse> response) {
+                if (response.isSuccessful()) {
+                    Toast.makeText(PatientDetailsActivity.this, "Patient removed successfully", Toast.LENGTH_SHORT).show();
+                    finish(); // Go back to patient list
+                } else {
+                    Toast.makeText(PatientDetailsActivity.this, "Failed to remove patient", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<GenericResponse> call, Throwable t) {
+                Log.e(TAG, "Error deleting patient", t);
+                Toast.makeText(PatientDetailsActivity.this, "Network error", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     @Override

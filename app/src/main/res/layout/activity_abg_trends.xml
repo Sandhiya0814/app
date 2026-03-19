@@ -80,10 +80,11 @@
                         app:cardCornerRadius="24dp"
                         app:cardElevation="0dp">
                         <TextView
+                            android:id="@+id/tv_patient_initials"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center"
-                            android:text="RC"
+                            android:text="--"
                             android:textColor="#065F46"
                             android:textStyle="bold" />
                     </com.google.android.material.card.MaterialCardView>
@@ -95,28 +96,31 @@
                         android:layout_weight="1"
                         android:orientation="vertical">
                         <TextView
+                            android:id="@+id/tv_patient_name"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Robert Chen"
+                            android:text="--"
                             android:textColor="#1A1C1E"
                             android:textStyle="bold" />
                         <TextView
+                            android:id="@+id/tv_diagnosis"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="COPD Exacerbation"
+                            android:text="--"
                             android:textColor="#64748B"
                             android:textSize="12sp" />
                     </LinearLayout>
 
                     <TextView
+                        android:id="@+id/tv_status_badge"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:background="@drawable/chip_red_rounded"
-                        android:backgroundTint="#FEF2F2"
+                        android:backgroundTint="#F0FDF4"
                         android:paddingHorizontal="8dp"
                         android:paddingVertical="4dp"
-                        android:text="Critical"
-                        android:textColor="#EF4444"
+                        android:text="Stable"
+                        android:textColor="#166534"
                         android:textSize="10sp"
                         android:textStyle="bold" />
                 </LinearLayout>
@@ -156,6 +160,7 @@
                         android:layout_height="wrap_content"
                         android:orientation="horizontal">
                         <TextView
+                            android:id="@+id/tab_last5"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:background="#F1F5F9"
@@ -166,6 +171,7 @@
                             android:textSize="12sp"
                             android:textStyle="bold" />
                         <TextView
+                            android:id="@+id/tab_8h"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:paddingHorizontal="12dp"
@@ -174,6 +180,7 @@
                             android:textColor="#64748B"
                             android:textSize="12sp" />
                         <TextView
+                            android:id="@+id/tab_24h"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:paddingHorizontal="12dp"
@@ -185,107 +192,191 @@
                 </com.google.android.material.card.MaterialCardView>
             </LinearLayout>
 
-            <!-- Trend Cards -->
-            <com.google.android.material.card.MaterialCardView style="@style/TrendCard">
-                <LinearLayout style="@style/TrendCardContent">
+            <!-- ═══════════════════════════════ -->
+            <!-- pH Status Card -->
+            <!-- ═══════════════════════════════ -->
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                app:cardBackgroundColor="#FFFFFF"
+                app:cardCornerRadius="16dp"
+                app:cardElevation="2dp"
+                app:strokeWidth="0dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="20dp">
+
                     <RelativeLayout android:layout_width="match_parent" android:layout_height="wrap_content">
-                        <TextView android:id="@+id/tv_ph_title" style="@style/TrendTitle" android:text="pH Status" />
-                        <ImageView android:layout_width="16dp" android:layout_height="16dp" android:layout_toEndOf="@id/tv_ph_title" android:layout_marginStart="8dp" android:src="@drawable/ic_warning" app:tint="#EF4444" android:layout_centerVertical="true"/>
-                        <TextView style="@style/TrendTarget" android:text="Target: 7.35 - 7.45" android:layout_alignParentEnd="true" />
+                        <TextView android:id="@+id/tv_ph_label" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="pH Status" android:textColor="#1A1C1E" android:textStyle="bold" android:textSize="14sp" />
+                        <ImageView android:id="@+id/iv_ph_icon" android:layout_width="16dp" android:layout_height="16dp" android:layout_toEndOf="@id/tv_ph_label" android:layout_marginStart="8dp" android:src="@drawable/ic_warning" app:tint="#EF4444" android:layout_centerVertical="true"/>
+                        <TextView android:id="@+id/tv_ph_target" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_alignParentEnd="true" android:background="#FEF2F2" android:paddingHorizontal="8dp" android:paddingVertical="2dp" android:text="Target: 7.35 - 7.45" android:textColor="#B91C1C" android:textSize="10sp" android:textStyle="bold" />
                     </RelativeLayout>
+
                     <LinearLayout android:layout_width="wrap_content" android:layout_height="wrap_content" android:orientation="horizontal" android:gravity="center_vertical" android:layout_marginTop="8dp">
-                        <TextView style="@style/TrendValue" android:text="7.29" android:textColor="#EF4444" />
-                        <ImageView android:layout_width="16dp" android:layout_height="16dp" android:layout_marginStart="8dp" android:src="@drawable/ic_trending_down" app:tint="#EF4444" />
+                        <TextView android:id="@+id/tv_ph_value" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="--" android:textColor="#EF4444" android:textSize="28sp" android:textStyle="bold" />
+                        <ImageView android:id="@+id/iv_ph_trend" android:layout_width="16dp" android:layout_height="16dp" android:layout_marginStart="8dp" android:src="@drawable/ic_trending_down" app:tint="#EF4444" />
                     </LinearLayout>
-                    <ImageView
+
+                    <com.simats.cdss.views.SparkLineView
+                        android:id="@+id/chart_ph"
                         android:layout_width="match_parent"
-                        android:layout_height="100dp"
-                        android:layout_marginTop="16dp"
-                        android:scaleType="fitXY"
-                        android:src="@drawable/ph" />
+                        android:layout_height="130dp"
+                        android:layout_marginTop="12dp" />
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 
-            <com.google.android.material.card.MaterialCardView style="@style/TrendCard">
-                <LinearLayout style="@style/TrendCardContent">
+            <!-- ═══════════════════════════════ -->
+            <!-- PaCO2 Card -->
+            <!-- ═══════════════════════════════ -->
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                app:cardBackgroundColor="#FFFFFF"
+                app:cardCornerRadius="16dp"
+                app:cardElevation="2dp"
+                app:strokeWidth="0dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="20dp">
+
                     <RelativeLayout android:layout_width="match_parent" android:layout_height="wrap_content">
-                        <TextView android:id="@+id/tv_paco2_title" style="@style/TrendTitle" android:text="PaCO2 (Carbon Dioxide)" />
-                        <ImageView android:layout_width="16dp" android:layout_height="16dp" android:layout_toEndOf="@id/tv_paco2_title" android:layout_marginStart="8dp" android:src="@drawable/ic_warning" app:tint="#F59E0B" android:layout_centerVertical="true"/>
-                        <TextView style="@style/TrendTarget" android:text="Target: 35 - 45" android:layout_alignParentEnd="true" />
+                        <TextView android:id="@+id/tv_paco2_label" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="PaCO₂ (Carbon Dioxide)" android:textColor="#1A1C1E" android:textStyle="bold" android:textSize="14sp" />
+                        <ImageView android:id="@+id/iv_paco2_icon" android:layout_width="16dp" android:layout_height="16dp" android:layout_toEndOf="@id/tv_paco2_label" android:layout_marginStart="8dp" android:src="@drawable/ic_warning" app:tint="#F59E0B" android:layout_centerVertical="true" />
+                        <TextView android:id="@+id/tv_paco2_target" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_alignParentEnd="true" android:background="#FFFBEB" android:paddingHorizontal="8dp" android:paddingVertical="2dp" android:text="Target: 35 - 45" android:textColor="#B45309" android:textSize="10sp" android:textStyle="bold" />
                     </RelativeLayout>
+
                     <LinearLayout android:layout_width="wrap_content" android:layout_height="wrap_content" android:orientation="horizontal" android:gravity="center_vertical" android:layout_marginTop="8dp">
-                        <TextView style="@style/TrendValue" android:text="62" android:textColor="#F59E0B" />
+                        <TextView android:id="@+id/tv_paco2_value" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="--" android:textColor="#F59E0B" android:textSize="28sp" android:textStyle="bold" />
                         <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text=" mmHg" android:textColor="#64748B" android:textSize="12sp" />
-                        <ImageView android:layout_width="16dp" android:layout_height="16dp" android:layout_marginStart="8dp" android:src="@drawable/ic_trending_up" />
+                        <ImageView android:id="@+id/iv_paco2_trend" android:layout_width="16dp" android:layout_height="16dp" android:layout_marginStart="8dp" android:src="@drawable/ic_trending_up" app:tint="#F59E0B" />
                     </LinearLayout>
-                    <ImageView
+
+                    <com.simats.cdss.views.SparkLineView
+                        android:id="@+id/chart_paco2"
                         android:layout_width="match_parent"
-                        android:layout_height="100dp"
-                        android:layout_marginTop="16dp"
-                        android:scaleType="fitXY"
-                        android:src="@drawable/paco2" />
+                        android:layout_height="130dp"
+                        android:layout_marginTop="12dp" />
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 
-            <com.google.android.material.card.MaterialCardView style="@style/TrendCard">
-                <LinearLayout style="@style/TrendCardContent">
+            <!-- ═══════════════════════════════ -->
+            <!-- PaO2 Card -->
+            <!-- ═══════════════════════════════ -->
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                app:cardBackgroundColor="#FFFFFF"
+                app:cardCornerRadius="16dp"
+                app:cardElevation="2dp"
+                app:strokeWidth="0dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="20dp">
+
                     <RelativeLayout android:layout_width="match_parent" android:layout_height="wrap_content">
-                        <TextView android:id="@+id/tv_pao2_title" style="@style/TrendTitle" android:text="PaO2 (Oxygen)" />
-                        <ImageView android:layout_width="16dp" android:layout_height="16dp" android:layout_toEndOf="@id/tv_pao2_title" android:layout_marginStart="8dp" android:src="@drawable/ic_warning" app:tint="#EF4444" android:layout_centerVertical="true"/>
-                        <TextView style="@style/TrendTarget" android:text="Target: > 60" android:layout_alignParentEnd="true" />
+                        <TextView android:id="@+id/tv_pao2_label" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="PaO₂ (Oxygen)" android:textColor="#1A1C1E" android:textStyle="bold" android:textSize="14sp" />
+                        <ImageView android:id="@+id/iv_pao2_icon" android:layout_width="16dp" android:layout_height="16dp" android:layout_toEndOf="@id/tv_pao2_label" android:layout_marginStart="8dp" android:src="@drawable/ic_warning" app:tint="#EF4444" android:layout_centerVertical="true" />
+                        <TextView android:id="@+id/tv_pao2_target" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_alignParentEnd="true" android:background="#FEF2F2" android:paddingHorizontal="8dp" android:paddingVertical="2dp" android:text="Target: > 60" android:textColor="#B91C1C" android:textSize="10sp" android:textStyle="bold" />
                     </RelativeLayout>
+
                     <LinearLayout android:layout_width="wrap_content" android:layout_height="wrap_content" android:orientation="horizontal" android:gravity="center_vertical" android:layout_marginTop="8dp">
-                        <TextView style="@style/TrendValue" android:text="52" android:textColor="#EF4444" />
+                        <TextView android:id="@+id/tv_pao2_value" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="--" android:textColor="#EF4444" android:textSize="28sp" android:textStyle="bold" />
                         <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text=" mmHg" android:textColor="#64748B" android:textSize="12sp" />
-                        <ImageView android:layout_width="16dp" android:layout_height="16dp" android:layout_marginStart="8dp" android:src="@drawable/ic_trending_down" app:tint="#EF4444" />
+                        <ImageView android:id="@+id/iv_pao2_trend" android:layout_width="16dp" android:layout_height="16dp" android:layout_marginStart="8dp" android:src="@drawable/ic_trending_down" app:tint="#EF4444" />
                     </LinearLayout>
-                    <ImageView
+
+                    <com.simats.cdss.views.SparkLineView
+                        android:id="@+id/chart_pao2"
                         android:layout_width="match_parent"
-                        android:layout_height="100dp"
-                        android:layout_marginTop="16dp"
-                        android:scaleType="fitXY"
-                        android:src="@drawable/pao2" />
+                        android:layout_height="130dp"
+                        android:layout_marginTop="12dp" />
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 
-            <com.google.android.material.card.MaterialCardView style="@style/TrendCard">
-                <LinearLayout style="@style/TrendCardContent">
+            <!-- ═══════════════════════════════ -->
+            <!-- HCO3 Card -->
+            <!-- ═══════════════════════════════ -->
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                app:cardBackgroundColor="#FFFFFF"
+                app:cardCornerRadius="16dp"
+                app:cardElevation="2dp"
+                app:strokeWidth="0dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="20dp">
+
                     <RelativeLayout android:layout_width="match_parent" android:layout_height="wrap_content">
-                        <TextView android:id="@+id/tv_hco3_title" style="@style/TrendTitle" android:text="HCO3 (Bicarbonate)" />
-                        <ImageView android:layout_width="16dp" android:layout_height="16dp" android:layout_toEndOf="@id/tv_hco3_title" android:layout_marginStart="8dp" android:src="@drawable/ic_warning" app:tint="#139487" android:layout_centerVertical="true"/>
-                        <TextView style="@style/TrendTarget" android:text="Normal: 22 - 28" android:layout_alignParentEnd="true" android:background="#F0FDF4" android:textColor="#166534" />
+                        <TextView android:id="@+id/tv_hco3_label" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="HCO₃ (Bicarbonate)" android:textColor="#1A1C1E" android:textStyle="bold" android:textSize="14sp" />
+                        <ImageView android:id="@+id/iv_hco3_icon" android:layout_width="16dp" android:layout_height="16dp" android:layout_toEndOf="@id/tv_hco3_label" android:layout_marginStart="8dp" android:src="@drawable/ic_warning" app:tint="#139487" android:layout_centerVertical="true" />
+                        <TextView android:id="@+id/tv_hco3_target" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_alignParentEnd="true" android:background="#F0FDF4" android:paddingHorizontal="8dp" android:paddingVertical="2dp" android:text="Normal: 22 - 26" android:textColor="#166534" android:textSize="10sp" android:textStyle="bold" />
                     </RelativeLayout>
+
                     <LinearLayout android:layout_width="wrap_content" android:layout_height="wrap_content" android:orientation="horizontal" android:gravity="center_vertical" android:layout_marginTop="8dp">
-                        <TextView style="@style/TrendValue" android:text="20" android:textColor="#139487" />
+                        <TextView android:id="@+id/tv_hco3_value" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="--" android:textColor="#139487" android:textSize="28sp" android:textStyle="bold" />
                         <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text=" mmol/L" android:textColor="#64748B" android:textSize="12sp" />
-                        <ImageView android:layout_width="16dp" android:layout_height="16dp" android:layout_marginStart="8dp" android:src="@drawable/ic_trending_down" app:tint="#139487" />
+                        <ImageView android:id="@+id/iv_hco3_trend" android:layout_width="16dp" android:layout_height="16dp" android:layout_marginStart="8dp" android:src="@drawable/ic_trending_down" app:tint="#139487" />
                     </LinearLayout>
-                    <ImageView
+
+                    <com.simats.cdss.views.SparkLineView
+                        android:id="@+id/chart_hco3"
                         android:layout_width="match_parent"
-                        android:layout_height="100dp"
-                        android:layout_marginTop="16dp"
-                        android:scaleType="fitXY"
-                        android:src="@drawable/hco3" />
+                        android:layout_height="130dp"
+                        android:layout_marginTop="12dp" />
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 
-            <com.google.android.material.card.MaterialCardView style="@style/TrendCard">
-                <LinearLayout style="@style/TrendCardContent">
+            <!-- ═══════════════════════════════ -->
+            <!-- FiO2 Card -->
+            <!-- ═══════════════════════════════ -->
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                app:cardBackgroundColor="#FFFFFF"
+                app:cardCornerRadius="16dp"
+                app:cardElevation="2dp"
+                app:strokeWidth="0dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="20dp">
+
                     <RelativeLayout android:layout_width="match_parent" android:layout_height="wrap_content">
-                        <TextView android:id="@+id/tv_fio2_title" style="@style/TrendTitle" android:text="Oxygen Delivery (FiO2)" />
-                        <TextView style="@style/TrendTarget" android:text="Titrate to Target SpO2" android:layout_alignParentEnd="true" android:background="#F0FDF4" android:textColor="#166534" />
+                        <TextView android:id="@+id/tv_fio2_label" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Oxygen Delivery (FiO₂)" android:textColor="#1A1C1E" android:textStyle="bold" android:textSize="14sp" />
+                        <TextView android:id="@+id/tv_fio2_target" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_alignParentEnd="true" android:background="#F0FDF4" android:paddingHorizontal="8dp" android:paddingVertical="2dp" android:text="Titrate to Target SpO₂" android:textColor="#166534" android:textSize="10sp" android:textStyle="bold" />
                     </RelativeLayout>
+
                     <LinearLayout android:layout_width="wrap_content" android:layout_height="wrap_content" android:orientation="horizontal" android:gravity="center_vertical" android:layout_marginTop="8dp">
-                        <TextView style="@style/TrendValue" android:text="35" android:textColor="#139487" />
+                        <TextView android:id="@+id/tv_fio2_value" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="--" android:textColor="#139487" android:textSize="28sp" android:textStyle="bold" />
                         <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text=" %" android:textColor="#64748B" android:textSize="12sp" />
-                        <ImageView android:layout_width="16dp" android:layout_height="16dp" android:layout_marginStart="8dp" android:src="@drawable/ic_trending_up" app:tint="#139487" />
+                        <ImageView android:id="@+id/iv_fio2_trend" android:layout_width="16dp" android:layout_height="16dp" android:layout_marginStart="8dp" android:src="@drawable/ic_trending_up" app:tint="#139487" />
                     </LinearLayout>
-                    <ImageView
+
+                    <com.simats.cdss.views.SparkLineView
+                        android:id="@+id/chart_fio2"
                         android:layout_width="match_parent"
-                        android:layout_height="100dp"
-                        android:layout_marginTop="16dp"
-                        android:scaleType="fitXY"
-                        android:src="@drawable/o_delivery" />
+                        android:layout_height="130dp"
+                        android:layout_marginTop="12dp" />
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 
@@ -308,10 +399,11 @@
                         <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Trend Analysis" android:textColor="#2563EB" android:textStyle="bold" android:layout_marginStart="8dp" />
                     </LinearLayout>
                     <TextView
+                        android:id="@+id/tv_trend_analysis"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="8dp"
-                        android:text="Patient is demonstrating worsening respiratory acidosis with rising PaCO2 despite increasing FiO2. This suggests Type II respiratory failure progression."
+                        android:text="Loading trend analysis..."
                         android:textColor="#1E40AF"
                         android:textSize="13sp" />
                 </LinearLayout>

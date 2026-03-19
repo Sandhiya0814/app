@@ -6,13 +6,17 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.content.FileProvider;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.InputStream;
 
 public class ClinicalGuidelinesActivity extends AppCompatActivity {
+
+    // GOLD 2024 Report PDF URL
+    private static final String GOLD_2024_PDF_URL =
+            "https://goldcopd.org/2024-gold-report/";
+
+    // BTS Oxygen Guidelines PDF URL
+    private static final String BTS_OXYGEN_PDF_URL =
+            "https://www.brit-thoracic.org.uk/quality-improvement/guidelines/emergency-oxygen/";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -23,44 +27,27 @@ public class ClinicalGuidelinesActivity extends AppCompatActivity {
 
         // Handle click on "View PDF" for GOLD 2024 Report
         findViewById(R.id.btn_view_gold).setOnClickListener(v -> {
-            openPdfFromDrawable("GOLD-2024.pdf");
+            openPdfUrl(GOLD_2024_PDF_URL, "GOLD 2024 Report");
+        });
+
+        // Handle click on "View PDF" for BTS Oxygen Guidelines
+        findViewById(R.id.btn_view_bts).setOnClickListener(v -> {
+            openPdfUrl(BTS_OXYGEN_PDF_URL, "BTS Oxygen Guidelines");
         });
 
         setupBottomNav();
     }
 
-    private void openPdfFromDrawable(String fileName) {
+    private void openPdfUrl(String url, String title) {
         try {
-            // Copy file from drawable to internal storage to open it via Intent
-            // Note: Standard way is to put PDFs in 'assets' or 'raw', 
-            // but since it's in drawable as requested:
-            InputStream is = getResources().openRawResource(
-                    getResources().getIdentifier("gold_2024", "drawable", getPackageName())
-            );
-            
-            File file = new File(getExternalFilesDir(null), fileName);
-            FileOutputStream fos = new FileOutputStream(file);
-            byte[] buffer = new byte[1024];
-            int read;
-            while ((read = is.read(buffer)) != -1) {
-                fos.write(buffer, 0, read);
-            }
-            fos.flush();
-            fos.close();
-            is.close();
-
-            // Create URI using FileProvider
-            Uri uri = FileProvider.getUriForFile(this, getPackageName() + ".provider", file);
-
-            // Create Intent to view PDF
             Intent intent = new Intent(Intent.ACTION_VIEW);
-            intent.setDataAndType(uri, "application/pdf");
-            intent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION | Intent.FLAG_ACTIVITY_NO_HISTORY);
-
+            intent.setData(Uri.parse(url));
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             startActivity(intent);
-
+        } catch (ActivityNotFoundException e) {
+            Toast.makeText(this, "No browser available to open " + title, Toast.LENGTH_SHORT).show();
         } catch (Exception e) {
-            Toast.makeText(this, "Unable to open PDF: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Unable to open " + title + ": " + e.getMessage(), Toast.LENGTH_SHORT).show();
             e.printStackTrace();
         }
     }

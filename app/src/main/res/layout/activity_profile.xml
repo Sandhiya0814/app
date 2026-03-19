@@ -66,6 +66,7 @@
                     app:strokeWidth="0dp">
 
                     <TextView
+                        android:id="@+id/tv_initials"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
@@ -73,9 +74,17 @@
                         android:textColor="#065F46"
                         android:textSize="32sp"
                         android:textStyle="bold" />
+
+                    <ImageView
+                        android:id="@+id/iv_profile_image"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:scaleType="centerCrop"
+                        android:visibility="gone" />
                 </com.google.android.material.card.MaterialCardView>
 
                 <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/btn_camera"
                     android:layout_width="36dp"
                     android:layout_height="36dp"
                     android:layout_gravity="bottom|end"
@@ -98,30 +107,21 @@
             <!-- Input Fields -->
             <TextView style="@style/ProfileLabel" android:text="Full Name" />
             <EditText
+                android:id="@+id/et_full_name"
                 style="@style/ProfileEditText"
                 android:hint="Dr. Sarah Wilson"
                 android:inputType="textPersonName" />
 
             <TextView style="@style/ProfileLabel" android:text="Email Address" />
             <EditText
+                android:id="@+id/et_email_address"
                 style="@style/ProfileEditText"
                 android:hint="sarah.w@hospital.com"
                 android:inputType="textEmailAddress" />
 
-            <TextView style="@style/ProfileLabel" android:text="Department" />
-            <EditText
-                style="@style/ProfileEditText"
-                android:hint="Respiratory Medicine"
-                android:inputType="text" />
-
-            <TextView style="@style/ProfileLabel" android:text="Medical License ID" />
-            <EditText
-                style="@style/ProfileEditText"
-                android:hint="GMP-2024-8892"
-                android:inputType="text" />
-
             <TextView style="@style/ProfileLabel" android:text="Role" />
             <EditText
+                android:id="@+id/et_role"
                 style="@style/ProfileEditText"
                 android:enabled="false"
                 android:hint="Respiratory Therapist"

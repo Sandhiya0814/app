@@ -68,6 +68,7 @@
             </com.google.android.material.card.MaterialCardView>
 
             <TextView
+                android:id="@+id/tv_niv_mode"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="24dp"
@@ -77,6 +78,7 @@
                 android:textStyle="bold" />
 
             <TextView
+                android:id="@+id/tv_niv_indication"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
@@ -122,7 +124,8 @@
                             android:layout_weight="1"
                             android:gravity="center"
                             android:orientation="vertical">
-                            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="IPAP (cmH₂O)" android:textColor="#E2E8F0" android:textSize="14sp" />
+                            <TextView android:id="@+id/tv_ipap_val" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="--" android:textColor="#1A1C1E" android:textSize="24sp" android:textStyle="bold" />
+                            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="IPAP (cmH₂O)" android:textColor="#64748B" android:textSize="14sp" />
                         </LinearLayout>
 
                         <LinearLayout
@@ -131,7 +134,8 @@
                             android:layout_weight="1"
                             android:gravity="center"
                             android:orientation="vertical">
-                            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="EPAP (cmH₂O)" android:textColor="#E2E8F0" android:textSize="14sp" />
+                            <TextView android:id="@+id/tv_epap_val" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="--" android:textColor="#1A1C1E" android:textSize="24sp" android:textStyle="bold" />
+                            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="EPAP (cmH₂O)" android:textColor="#64748B" android:textSize="14sp" />
                         </LinearLayout>
                     </LinearLayout>
 

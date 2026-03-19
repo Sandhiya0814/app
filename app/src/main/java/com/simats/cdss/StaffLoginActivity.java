@@ -65,6 +65,9 @@ public class StaffLoginActivity extends AppCompatActivity {
 
                     SessionManager session = new SessionManager(StaffLoginActivity.this);
                     session.saveEmail(email);
+                    if (loginResponse.getName() != null) {
+                        session.saveName(loginResponse.getName());
+                    }
 
                     if ("otp_sent".equals(responseStatus)) {
                         // FIRST-TIME LOGIN → Navigate to OTP Verification Screen

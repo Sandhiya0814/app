@@ -43,104 +43,227 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:gravity="center_vertical"
-                android:orientation="horizontal"
+                android:gravity="center"
+                android:orientation="vertical"
                 android:padding="24dp">
 
-                <com.google.android.material.card.MaterialCardView
-                    android:layout_width="64dp"
-                    android:layout_height="64dp"
-                    app:cardBackgroundColor="#D1FAE5"
-                    app:cardCornerRadius="32dp"
+                <androidx.cardview.widget.CardView
+                    android:layout_width="120dp"
+                    android:layout_height="120dp"
+                    app:cardCornerRadius="60dp"
                     app:cardElevation="0dp"
-                    app:strokeWidth="0dp">
+                    app:cardBackgroundColor="@android:color/transparent">
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:text="SW"
-                        android:textColor="#065F46"
-                        android:textSize="20sp"
-                        android:textStyle="bold" />
-                </com.google.android.material.card.MaterialCardView>
+                    <FrameLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:background="@drawable/circle_green_bg">
+
+                        <TextView
+                            android:id="@+id/tv_initials"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:text="SW"
+                            android:textColor="#065F46"
+                            android:textSize="40sp"
+                            android:textStyle="bold" />
+
+                        <ImageView
+                            android:id="@+id/iv_profile_image"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:scaleType="centerCrop"
+                            android:visibility="gone" />
+                    </FrameLayout>
+                </androidx.cardview.widget.CardView>
 
                 <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="16dp"
+                    android:gravity="center"
                     android:orientation="vertical">
 
                     <TextView
+                        android:id="@+id/tv_name"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Dr. Sarah Wilson"
-                        android:textColor="#1A1C1E"
-                        android:textSize="18sp"
+                        android:textColor="#2E3A59"
+                        android:textSize="24sp"
                         android:textStyle="bold" />
 
                     <TextView
+                        android:id="@+id/tv_specialty"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="4dp"
                         android:text="Respiratory Medicine"
                         android:textColor="#64748B"
-                        android:textSize="14sp" />
+                        android:textSize="16sp" />
                 </LinearLayout>
             </LinearLayout>
 
-            <!-- Settings Options -->
-            <com.google.android.material.card.MaterialCardView
+            <!-- Profile Information Card -->
+            <LinearLayout
                 android:id="@+id/card_profile"
-                style="@style/SettingsCard">
-                <LinearLayout style="@style/SettingsItemContent">
-                    <ImageView style="@style/SettingsIcon" android:src="@drawable/ic_person" />
-                    <LinearLayout style="@style/SettingsTextContainer">
-                        <TextView style="@style/SettingsOptionTitle" android:text="Profile Information" />
-                        <TextView style="@style/SettingsOptionSubtitle" android:text="Dr. Sarah Wilson" />
-                    </LinearLayout>
-                    <ImageView style="@style/SettingsChevron" android:src="@drawable/ic_chevron_right" />
-                </LinearLayout>
-            </com.google.android.material.card.MaterialCardView>
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="24dp"
+                android:layout_marginTop="16dp"
+                android:background="@drawable/settings_card_bg"
+                android:clickable="true"
+                android:focusable="true"
+                android:foreground="?attr/selectableItemBackground"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:padding="20dp">
 
-            <com.google.android.material.card.MaterialCardView
+                <ImageView
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:background="#F8FAFC"
+                    android:padding="10dp"
+                    android:src="@drawable/ic_person" />
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Profile Information"
+                        android:textColor="#1A1C1E"
+                        android:textSize="16sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/tv_profile_subtitle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="2dp"
+                        android:text="Dr. Sarah Wilson"
+                        android:textColor="#64748B"
+                        android:textSize="12sp" />
+                </LinearLayout>
+
+                <ImageView
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:alpha="0.3"
+                    android:src="@drawable/ic_chevron_right" />
+            </LinearLayout>
+
+            <!-- Clinical Guidelines Card -->
+            <LinearLayout
                 android:id="@+id/card_guidelines"
-                style="@style/SettingsCard">
-                <LinearLayout style="@style/SettingsItemContent">
-                    <ImageView style="@style/SettingsIcon" android:src="@drawable/ic_description" />
-                    <LinearLayout style="@style/SettingsTextContainer">
-                        <TextView style="@style/SettingsOptionTitle" android:text="Clinical Guidelines" />
-                        <TextView style="@style/SettingsOptionSubtitle" android:text="GOLD 2024 Report" />
-                    </LinearLayout>
-                    <ImageView style="@style/SettingsChevron" android:src="@drawable/ic_chevron_right" />
-                </LinearLayout>
-            </com.google.android.material.card.MaterialCardView>
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="24dp"
+                android:layout_marginTop="16dp"
+                android:background="@drawable/settings_card_bg"
+                android:clickable="true"
+                android:focusable="true"
+                android:foreground="?attr/selectableItemBackground"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:padding="20dp">
 
-            <com.google.android.material.card.MaterialCardView
-                android:id="@+id/card_notifications"
-                style="@style/SettingsCard">
-                <LinearLayout style="@style/SettingsItemContent">
-                    <ImageView style="@style/SettingsIcon" android:src="@drawable/ic_notifications" />
-                    <LinearLayout style="@style/SettingsTextContainer">
-                        <TextView style="@style/SettingsOptionTitle" android:text="Notification Preferences" />
-                        <TextView style="@style/SettingsOptionSubtitle" android:text="Push, Email" />
-                    </LinearLayout>
-                    <ImageView style="@style/SettingsChevron" android:src="@drawable/ic_chevron_right" />
-                </LinearLayout>
-            </com.google.android.material.card.MaterialCardView>
+                <ImageView
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:background="#F8FAFC"
+                    android:padding="10dp"
+                    android:src="@drawable/ic_description" />
 
-            <com.google.android.material.card.MaterialCardView
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Clinical Guidelines"
+                        android:textColor="#1A1C1E"
+                        android:textSize="16sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="2dp"
+                        android:text="GOLD 2024 Report"
+                        android:textColor="#64748B"
+                        android:textSize="12sp" />
+                </LinearLayout>
+
+                <ImageView
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:alpha="0.3"
+                    android:src="@drawable/ic_chevron_right" />
+            </LinearLayout>
+
+            <!-- Help & Support Card -->
+            <LinearLayout
                 android:id="@+id/card_help"
-                style="@style/SettingsCard">
-                <LinearLayout style="@style/SettingsItemContent">
-                    <ImageView style="@style/SettingsIcon" android:src="@drawable/ic_help" />
-                    <LinearLayout style="@style/SettingsTextContainer">
-                        <TextView style="@style/SettingsOptionTitle" android:text="Help &amp; Support" />
-                        <TextView style="@style/SettingsOptionSubtitle" android:text="FAQs, Contact" />
-                    </LinearLayout>
-                    <ImageView style="@style/SettingsChevron" android:src="@drawable/ic_chevron_right" />
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="24dp"
+                android:layout_marginTop="16dp"
+                android:background="@drawable/settings_card_bg"
+                android:clickable="true"
+                android:focusable="true"
+                android:foreground="?attr/selectableItemBackground"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:padding="20dp">
+
+                <ImageView
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:background="#F8FAFC"
+                    android:padding="10dp"
+                    android:src="@drawable/ic_help" />
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Help &amp; Support"
+                        android:textColor="#1A1C1E"
+                        android:textSize="16sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="2dp"
+                        android:text="FAQs, Contact"
+                        android:textColor="#64748B"
+                        android:textSize="12sp" />
                 </LinearLayout>
-            </com.google.android.material.card.MaterialCardView>
+
+                <ImageView
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:alpha="0.3"
+                    android:src="@drawable/ic_chevron_right" />
+            </LinearLayout>
 
             <!-- Logout Button -->
             <LinearLayout
@@ -148,7 +271,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:layout_marginTop="32dp"
+                android:layout_marginTop="64dp"
                 android:background="?attr/selectableItemBackground"
                 android:clickable="true"
                 android:focusable="true"

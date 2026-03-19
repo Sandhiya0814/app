@@ -67,6 +67,9 @@ public class DoctorLoginActivity extends AppCompatActivity {
 
                     SessionManager session = new SessionManager(DoctorLoginActivity.this);
                     session.saveEmail(username);
+                    if (loginResponse.getName() != null) {
+                        session.saveName(loginResponse.getName());
+                    }
 
                     if ("otp_sent".equals(responseStatus)) {
                         // FIRST-TIME LOGIN → Navigate to OTP Verification Screen

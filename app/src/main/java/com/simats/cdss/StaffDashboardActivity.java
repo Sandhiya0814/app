@@ -164,7 +164,6 @@ public class StaffDashboardActivity extends AppCompatActivity {
     private void setupBottomNav() {
         BottomNavigationView bottomNav = findViewById(R.id.bottom_navigation);
         if (bottomNav != null) {
-            bottomNav.setSelectedItemId(R.id.nav_home);
             bottomNav.setOnItemSelectedListener(item -> {
                 int itemId = item.getItemId();
                 if (itemId == R.id.nav_patients) {
@@ -179,6 +178,7 @@ public class StaffDashboardActivity extends AppCompatActivity {
                 }
                 return itemId == R.id.nav_home;
             });
+            bottomNav.setSelectedItemId(R.id.nav_home);
         }
     }
 }
