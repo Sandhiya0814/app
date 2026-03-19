@@ -40,9 +40,9 @@ public class SparkLineView extends View {
     private Path fillPath;
 
     private float padLeft = 8f;
-    private float padRight = 8f;
+    private float padRight = 16f;
     private float padTop = 20f;
-    private float padBottom = 28f; // Extra space for time labels
+    private float padBottom = 32f; // Extra space for time labels
 
     public SparkLineView(Context context) {
         super(context);

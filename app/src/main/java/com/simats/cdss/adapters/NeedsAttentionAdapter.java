@@ -47,7 +47,7 @@ public class NeedsAttentionAdapter extends RecyclerView.Adapter<NeedsAttentionAd
         holder.tvSpo2Chip.setText("SpO2 " + spo2 + "%");
 
         // Color logic based on SpO2 value
-        if (spo2 < 90) {
+        if (spo2 < 88) {
             // CRITICAL → RED
             holder.ivStatusIcon.setImageResource(R.drawable.ic_notifications);
             holder.ivStatusIcon.setImageTintList(ColorStateList.valueOf(Color.parseColor("#EF4444")));

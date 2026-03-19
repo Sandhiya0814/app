@@ -117,6 +117,16 @@
                 android:textSize="18sp"
                 android:textStyle="bold" />
 
+            <ProgressBar
+                android:id="@+id/progress_loading"
+                style="?android:attr/progressBarStyleHorizontal"
+                android:layout_width="match_parent"
+                android:layout_height="4dp"
+                android:layout_marginTop="8dp"
+                android:indeterminate="true"
+                android:indeterminateTint="#139487"
+                android:visibility="gone" />
+
             <!-- ════════════════════════════════════════ -->
             <!-- Venturi Mask Card -->
             <!-- ════════════════════════════════════════ -->

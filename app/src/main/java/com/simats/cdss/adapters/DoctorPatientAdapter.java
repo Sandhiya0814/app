@@ -46,19 +46,19 @@ public class DoctorPatientAdapter extends RecyclerView.Adapter<DoctorPatientAdap
 
         holder.tvName.setText(patient.getName() != null ? patient.getName() : "Unknown");
 
-        // Requirement: Replace age display ("yrs") with Ward Number
+        // Show Ward + Room like staff patients screen
         String ward = patient.getWardNo() != null ? patient.getWardNo() : "--";
-        holder.tvDetails.setText("Ward: " + ward);
+        String room = patient.getRoomNo() != null ? patient.getRoomNo() : "--";
+        holder.tvDetails.setText("Ward " + ward + " • Room " + room);
 
-        // Requirement: SpO2 -> vitals.spo2, Respiratory -> vitals.respiratory_rate
-        // Do not show null or default values, show real data from database
-        String spo2Str = (patient.getSpo2() != null && !patient.getSpo2().isEmpty()) ? "SpO2: " + patient.getSpo2() + "%" : "";
+        // Always show vitals section with "--" as placeholder (matching staff screen style)
+        holder.layoutSpo2.setVisibility(View.VISIBLE);
+        String spo2Str = patient.getSpo2() != null && !patient.getSpo2().isEmpty() ? patient.getSpo2() + "%" : "--";
         holder.tvSpo2.setText(spo2Str);
-        holder.layoutSpo2.setVisibility(spo2Str.isEmpty() ? View.GONE : View.VISIBLE);
 
-        String respVal = (patient.getRespiratoryRate() != null && !patient.getRespiratoryRate().isEmpty()) ? "Respiratory: " + patient.getRespiratoryRate() : "";
+        holder.layoutResp.setVisibility(View.VISIBLE);
+        String respVal = patient.getRespiratoryRate() != null && !patient.getRespiratoryRate().isEmpty() ? patient.getRespiratoryRate() : "--";
         holder.tvResp.setText(respVal);
-        holder.layoutResp.setVisibility(respVal.isEmpty() ? View.GONE : View.VISIBLE);
 
         String status = patient.getStatus();
         if (status != null) {
@@ -67,20 +67,24 @@ public class DoctorPatientAdapter extends RecyclerView.Adapter<DoctorPatientAdap
                 holder.tvStatus.setTextColor(Color.parseColor("#EF4444"));
                 holder.tvStatus.setBackgroundTintList(android.content.res.ColorStateList.valueOf(Color.parseColor("#FEE2E2")));
                 holder.tvStatus.setBackgroundResource(R.drawable.chip_red_rounded);
+                holder.tvSpo2.setTextColor(Color.parseColor("#EF4444"));
             } else if (status.equalsIgnoreCase("warning")) {
                 holder.tvStatus.setTextColor(Color.parseColor("#854D0E"));
                 holder.tvStatus.setBackgroundTintList(android.content.res.ColorStateList.valueOf(Color.parseColor("#FEF3C7")));
                 holder.tvStatus.setBackgroundResource(R.drawable.chip_orange_rounded);
+                holder.tvSpo2.setTextColor(Color.parseColor("#F59E0B"));
             } else {
                 holder.tvStatus.setTextColor(Color.parseColor("#475569"));
                 holder.tvStatus.setBackgroundTintList(android.content.res.ColorStateList.valueOf(Color.parseColor("#F1F5F9")));
                 holder.tvStatus.setBackgroundResource(R.drawable.chip_green_rounded);
+                holder.tvSpo2.setTextColor(Color.parseColor("#139487"));
             }
         } else {
             holder.tvStatus.setText("STABLE");
             holder.tvStatus.setTextColor(Color.parseColor("#475569"));
             holder.tvStatus.setBackgroundTintList(android.content.res.ColorStateList.valueOf(Color.parseColor("#F1F5F9")));
             holder.tvStatus.setBackgroundResource(R.drawable.chip_green_rounded);
+            holder.tvSpo2.setTextColor(Color.parseColor("#139487"));
         }
 
         holder.itemView.setOnClickListener(v -> {

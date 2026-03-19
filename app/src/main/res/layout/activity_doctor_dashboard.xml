@@ -192,53 +192,7 @@
                 android:textSize="14sp"
                 android:visibility="gone" />
 
-            <!-- Quick Actions -->
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:paddingHorizontal="24dp"
-                android:paddingTop="32dp"
-                android:paddingBottom="12dp"
-                android:text="Quick Actions"
-                android:textColor="@color/text_dark"
-                android:textSize="18sp"
-                android:textStyle="bold" />
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:paddingHorizontal="16dp">
-
-                <com.google.android.material.card.MaterialCardView
-                    android:id="@+id/card_patient_list"
-                    style="@style/QuickActionCard"
-                    android:layout_width="200dp"
-                    android:layout_height="wrap_content">
-                    <LinearLayout style="@style/QuickActionContent">
-                        <FrameLayout
-                            android:layout_width="48dp"
-                            android:layout_height="48dp">
-                            <View
-                                android:layout_width="match_parent"
-                                android:layout_height="match_parent"
-                                android:background="@drawable/circle_bg_light_teal"
-                                android:alpha="0.5" />
-                            <ImageView
-                                android:layout_width="24dp"
-                                android:layout_height="24dp"
-                                android:layout_gravity="center"
-                                android:src="@drawable/ic_patients"
-                                app:tint="@color/qa_patient_icon" />
-                        </FrameLayout>
-                        <TextView 
-                            style="@style/QuickActionLabel" 
-                            android:text="Patient List" 
-                            android:textSize="14sp"
-                            android:layout_marginTop="12dp"/>
-                    </LinearLayout>
-                </com.google.android.material.card.MaterialCardView>
-            </LinearLayout>
 
         </LinearLayout>
     </ScrollView>

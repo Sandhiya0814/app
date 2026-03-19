@@ -64,10 +64,6 @@ public class DoctordashboardActivity extends AppCompatActivity {
             startActivity(new Intent(this, DoctorPatientsActivity.class));
         });
 
-        findViewById(R.id.card_patient_list).setOnClickListener(v -> {
-            startActivity(new Intent(this, DoctorPatientsActivity.class));
-        });
-
         findViewById(R.id.tv_view_all).setOnClickListener(v -> {
             startActivity(new Intent(this, DoctorPatientsActivity.class));
         });

@@ -4,8 +4,10 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
+import android.util.LruCache;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -29,6 +31,9 @@ public class DeviceSelectionActivity extends AppCompatActivity {
 
     private static final String TAG = "DeviceSelection";
 
+    // Cache for ML device recommendations (patient_id -> device_name)
+    private static final LruCache<Integer, String> recommendationCache = new LruCache<>(20);
+
     // Green highlight colors
     private static final int COLOR_RECOMMENDED_BORDER = Color.parseColor("#1FA37A");
     private static final int COLOR_RECOMMENDED_BG = Color.parseColor("#F0FDF4");
@@ -43,6 +48,7 @@ public class DeviceSelectionActivity extends AppCompatActivity {
     private MaterialCardView recommendedCard = null;
 
     private Button btnConfirm;
+    private ProgressBar progressLoading;
     private MaterialCardView cardVenturi, cardNasal, cardHighFlow, cardNonRebreather;
 
     // Individual badges for each card
@@ -57,6 +63,7 @@ public class DeviceSelectionActivity extends AppCompatActivity {
 
         btnConfirm = findViewById(R.id.btn_confirm);
         btnConfirm.setEnabled(false);
+        progressLoading = findViewById(R.id.progress_loading);
 
         // Initialize Cards
         cardVenturi = findViewById(R.id.card_venturi);
@@ -74,7 +81,8 @@ public class DeviceSelectionActivity extends AppCompatActivity {
 
         setupSelectionListeners();
 
-        // Fetch AI recommendation
+        // Try cache first for instant display, then fetch fresh data
+        loadRecommendationFromCache();
         fetchDeviceRecommendation();
 
         btnConfirm.setOnClickListener(v -> {
@@ -92,18 +100,35 @@ public class DeviceSelectionActivity extends AppCompatActivity {
         setupBottomNav();
     }
 
+    private void loadRecommendationFromCache() {
+        if (patientId == -1) return;
+        String cached = recommendationCache.get(patientId);
+        if (cached != null && !cached.isEmpty()) {
+            Log.d(TAG, "Using cached recommendation: " + cached);
+            recommendedDeviceName = cached;
+            highlightRecommendedDevice(cached);
+        }
+    }
+
     private void fetchDeviceRecommendation() {
         if (patientId == -1) return;
+
+        // Show loading indicator while fetching
+        if (progressLoading != null) progressLoading.setVisibility(View.VISIBLE);
 
         ApiService apiService = RetrofitClient.getClient(this).create(ApiService.class);
         apiService.getDeviceRecommendation(patientId).enqueue(new Callback<DeviceRecommendationResponse>() {
             @Override
             public void onResponse(Call<DeviceRecommendationResponse> call, Response<DeviceRecommendationResponse> response) {
+                if (progressLoading != null) progressLoading.setVisibility(View.GONE);
                 if (response.isSuccessful() && response.body() != null) {
                     DeviceRecommendationResponse rec = response.body();
                     recommendedDeviceName = rec.getRecommendedDevice();
                     Log.d(TAG, "AI Recommended: " + recommendedDeviceName +
                             " (confidence: " + rec.getConfidenceScore() + ")");
+
+                    // Cache the result for instant display next time
+                    recommendationCache.put(patientId, recommendedDeviceName);
 
                     highlightRecommendedDevice(recommendedDeviceName);
                 } else {
@@ -113,6 +138,7 @@ public class DeviceSelectionActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<DeviceRecommendationResponse> call, Throwable t) {
+                if (progressLoading != null) progressLoading.setVisibility(View.GONE);
                 Log.e(TAG, "Recommendation Network Error: " + t.getMessage());
             }
         });
